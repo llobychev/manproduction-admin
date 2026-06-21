@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ManProduction Admin</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#16181a;--bg2:#1e2124;--bg3:#272a2e;
+  --accent:#2dd4bf;--accent2:#5eead4;
+  --text:#e8eaed;--text2:#9aa0a6;--text3:#5f6368;
+  --border:rgba(45,212,191,0.15);--red:#e05555;--amber:#e0a83a;
+}
+html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Display',BlinkMacSystemFont,sans-serif;overflow:hidden;}
+.app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;position:relative;}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.screen.active{display:flex;}
+.screen::-webkit-scrollbar{display:none;}
+#splash{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:999;}
+#splash .s-logo{font-size:14px;font-weight:700;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;}
+#splash .s-spin{width:30px;height:30px;border:2px solid rgba(45,212,191,0.2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.btn-accent{width:100%;padding:14px;border:none;border-radius:12px;background-color:var(--accent);color:#0a1413;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.02em;display:block;text-align:center;-webkit-appearance:none;appearance:none;}
+.btn-accent:active{background-color:var(--accent2);}
+.btn-ghost{width:100%;padding:13px;border:0.5px solid var(--border);border-radius:12px;background:var(--bg3);color:var(--text2);font-size:13px;cursor:pointer;text-align:center;}
+
+/* WAITING / REGISTER */
+.reg-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 26px;text-align:center;}
+.reg-logo{font-size:12px;font-weight:700;letter-spacing:0.14em;color:var(--accent);text-transform:uppercase;margin-bottom:10px;}
+.reg-icon{font-size:52px;margin-bottom:22px;}
+.reg-title{font-size:21px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.3;}
+.reg-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:28px;}
+.reg-form{width:100%;}
+.form-input{width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:11px;padding:12px 14px;font-size:14px;color:var(--text);outline:none;-webkit-appearance:none;margin-bottom:10px;}
+.form-input::placeholder{color:var(--text3);}
+.form-input:focus{border-color:rgba(45,212,191,0.45);}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:18px;}
+.status-badge.pending{background:rgba(224,168,58,0.12);color:var(--amber);border:0.5px solid rgba(224,168,58,0.3);}
+.status-badge.rejected{background:rgba(224,85,85,0.12);color:var(--red);border:0.5px solid rgba(224,85,85,0.3);}
+
+/* TOPBAR / NAV */
+.app-wrap{position:absolute;inset:0;display:none;flex-direction:column;}
+.app-wrap.active{display:flex;}
+.app-screen{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;display:none;flex-direction:column;-webkit-overflow-scrolling:touch;}
+.app-screen.active{display:flex;}
+.app-screen::-webkit-scrollbar{display:none;}
+.topbar{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);background:var(--bg);flex-shrink:0;position:sticky;top:0;z-index:10;}
+.topbar-logo{font-size:14px;font-weight:700;letter-spacing:0.07em;color:var(--accent);text-transform:uppercase;}
+.topbar-sub{font-size:10px;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase;margin-top:1px;}
+.role-pill{font-size:10px;padding:3px 9px;border-radius:7px;background:rgba(45,212,191,0.12);color:var(--accent2);font-weight:600;border:0.5px solid rgba(45,212,191,0.3);}
+.manage-hub-item{display:flex;align-items:center;gap:14px;background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;}
+.manage-hub-icon{font-size:24px;width:40px;height:40px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.manage-hub-info{flex:1;}
+.manage-hub-title{font-size:14px;font-weight:600;color:var(--text);}
+.manage-hub-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.manage-hub-arrow{font-size:18px;color:var(--text3);}
+.bottomnav{height:64px;background:var(--bg2);border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 2px env(safe-area-inset-bottom,6px);flex-shrink:0;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;border-radius:10px;position:relative;min-width:44px;}
+.nav-item.active .nav-icon,.nav-item.active .nav-label{color:var(--accent);}
+.nav-icon{font-size:20px;color:var(--text3);line-height:1;}
+.nav-label{font-size:9px;color:var(--text3);text-transform:uppercase;}
+.nav-badge{position:absolute;top:2px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--bg2);}
+
+.content{padding:0 16px 24px;flex:1;}
+.section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin:18px 0 10px;}
+.empty-state{text-align:center;color:var(--text3);font-size:13px;padding:36px 16px;line-height:1.6;}
+
+/* PENDING REQUEST CARD */
+.req-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
+.req-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.req-meta{font-size:11px;color:var(--text3);margin-bottom:12px;}
+.req-role-grid{display:flex;gap:8px;margin-bottom:10px;}
+.role-opt{flex:1;padding:9px 6px;border-radius:9px;border:0.5px solid var(--border);background:var(--bg2);text-align:center;cursor:pointer;font-size:11px;color:var(--text2);}
+.role-opt.selected{border-color:var(--accent);background:rgba(45,212,191,0.1);color:var(--accent2);font-weight:600;}
+.req-actions{display:flex;gap:8px;}
+.req-btn{flex:1;padding:10px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;border:0.5px solid var(--border);}
+.req-btn.approve{background:rgba(45,212,191,0.12);border-color:rgba(45,212,191,0.35);color:var(--accent2);}
+.req-btn.reject{background:rgba(224,85,85,0.1);border-color:rgba(224,85,85,0.3);color:var(--red);}
+
+/* USERS LIST */
+.user-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg3);border-radius:12px;margin-bottom:8px;border:0.5px solid var(--border);}
+.user-ava{width:38px;height:38px;border-radius:50%;background:var(--bg2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent2);font-weight:700;flex-shrink:0;}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:13px;font-weight:600;color:var(--text);}
+.user-role-label{font-size:11px;color:var(--text3);margin-top:1px;}
+.user-row-actions{display:flex;gap:6px;}
+.icon-btn{width:30px;height:30px;border-radius:8px;background:var(--bg2);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--text2);}
+
+/* NEWS */
+.news-item{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
+.news-item-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.news-item-body{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px;white-space:pre-wrap;}
+.news-item-meta{font-size:10px;color:var(--text3);margin-bottom:10px;}
+.news-item-actions{display:flex;gap:8px;}
+.add-fab{position:fixed;bottom:80px;right:20px;width:52px;height:52px;border-radius:50%;background-color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:26px;color:#0a1413;cursor:pointer;box-shadow:0 4px 14px rgba(45,212,191,0.35);z-index:50;}
+
+/* TASKS placeholder */
+.task-stub{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;}
+.task-stub-icon{font-size:46px;margin-bottom:16px;opacity:0.6;}
+.task-stub-text{font-size:13px;color:var(--text3);line-height:1.6;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:flex-end;z-index:200;}
+.modal-overlay.active{display:flex;}
+.modal-box{width:100%;background:var(--bg2);border-radius:18px 18px 0 0;padding:20px;border-top:0.5px solid var(--border);padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));max-height:85vh;overflow-y:auto;}
+.modal-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px;}
+.modal-input{width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;color:var(--text);outline:none;margin-bottom:10px;-webkit-appearance:none;}
+.modal-input::placeholder{color:var(--text3);}
+.modal-textarea{min-height:120px;resize:none;font-family:inherit;line-height:1.5;}
+.modal-btns{display:flex;gap:10px;margin-top:6px;}
+.btn-cancel{flex:1;padding:12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;color:var(--text2);font-size:14px;cursor:pointer;}
+.btn-delete{padding:12px 16px;background:rgba(224,85,85,0.1);border:0.5px solid rgba(224,85,85,0.3);border-radius:10px;color:var(--red);font-size:14px;cursor:pointer;}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:10px 18px;font-size:12px;color:var(--text);z-index:300;display:none;}
+.toast.show{display:block;}
+</style>
+</head>
+<body>
+<div class="app" id="root">
+
+<div id="splash"><div class="s-logo">ManProduction Admin</div><div class="s-spin"></div></div>
+
+<!-- REGISTER / PENDING / REJECTED SCREEN -->
+<div class="screen" id="s-register">
+  <div class="reg-wrap">
+    <div class="reg-logo">ManProduction Admin</div>
+    <div class="reg-icon" id="reg-icon">🔐</div>
+    <div class="reg-title" id="reg-title">Регистрация в системе</div>
+    <div class="reg-sub" id="reg-sub">Заполни имя — заявка попадёт админу на рассмотрение</div>
+    <div class="reg-form" id="reg-form">
+      <input class="form-input" id="reg-name" placeholder="Имя Фамилия">
+      <button class="btn-accent" onclick="submitRegistration()">Отправить заявку →</button>
+    </div>
+    <div id="reg-status-wrap" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app-wrap" id="main-app">
+
+  <!-- REQUESTS (admin only) -->
+  <div class="app-screen active" id="s-requests">
+    <div class="topbar"><div><div class="topbar-logo">Заявки</div><div class="topbar-sub">Ожидают рассмотрения</div></div><span class="role-pill" id="my-role-pill">Админ</span></div>
+    <div class="content" style="padding-top:14px;">
+      <div id="requests-list"></div>
+      <div class="section-title">Команда</div>
+      <div id="users-list"></div>
+    </div>
+  </div>
+
+  <!-- MANAGE HUB (admin only) -->
+  <div class="app-screen" id="s-manage">
+    <div class="topbar"><div><div class="topbar-logo">Управление</div><div class="topbar-sub">Основное приложение ManProduction</div></div></div>
+    <div class="content" style="padding-top:14px;">
+      <div class="manage-hub-item" id="hub-item-news" onclick="switchTab('news')">
+        <div class="manage-hub-icon">📰</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Новости</div><div class="manage-hub-sub">Лента ManProduction</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+      <div class="manage-hub-item" id="hub-item-challenges" onclick="switchTab('challenges')">
+        <div class="manage-hub-icon">🏆</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Челленджи</div><div class="manage-hub-sub">Соревнования участников</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+      <div class="manage-hub-item" id="hub-item-tasks" onclick="switchTab('tasks')">
+        <div class="manage-hub-icon">🛠️</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Задачи</div><div class="manage-hub-sub">Для команды</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWS -->
+  <div class="app-screen" id="s-news">
+    <div class="topbar"><div><div class="topbar-logo">Новости</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;" id="news-content">
+      <div id="news-list"></div>
+    </div>
+    <div class="add-fab" onclick="openNewsModal()">＋</div>
+  </div>
+
+  <!-- CHALLENGES -->
+  <div class="app-screen" id="s-challenges">
+    <div class="topbar"><div><div class="topbar-logo">Челленджи</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;" id="challenges-content">
+      <div id="challenges-list"></div>
+    </div>
+    <div class="add-fab" onclick="openChallengeModal()">＋</div>
+  </div>
+
+  <!-- TASKS -->
+  <div class="app-screen" id="s-tasks">
+    <div class="topbar"><div><div class="topbar-logo">Задачи</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="task-stub"><div class="task-stub-icon">🛠️</div><div class="task-stub-text">Раздел задач в разработке.<br>Скоро здесь можно будет раздавать задачи команде.</div></div>
+  </div>
+
+  <nav class="bottomnav" id="bottomnav">
+    <div class="nav-item active" id="nav-requests" onclick="switchTab('requests')"><div class="nav-icon">📋</div><div class="nav-label">Заявки</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
+    <div class="nav-item" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div></div>
+  </nav>
+</div>
+
+<!-- MODAL: news create/edit -->
+<div class="modal-overlay" id="news-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="news-modal-title">Новая новость</div>
+    <input class="modal-input" id="news-title" placeholder="Заголовок">
+    <textarea class="modal-input modal-textarea" id="news-body" placeholder="Текст новости..."></textarea>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeNewsModal()">Отмена</button>
+      <button class="btn-delete" id="news-btn-delete" style="display:none" onclick="deleteNews()">🗑</button>
+      <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="news-btn-save" onclick="saveNews()">Опубликовать</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="challenge-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="challenge-modal-title">Новый челлендж</div>
+    <input class="modal-input" id="challenge-title" placeholder="Название челленджа">
+    <textarea class="modal-input modal-textarea" id="challenge-description" placeholder="Описание и условия..."></textarea>
+    <div class="modal-row" style="display:flex;gap:10px;">
+      <input class="modal-input" id="challenge-duration" type="number" placeholder="Срок, дней" min="1" style="flex:1;">
+      <input class="modal-input" id="challenge-points" type="number" placeholder="Баллов за выполнение" min="0" style="flex:1;">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeChallengeModal()">Отмена</button>
+      <button class="btn-delete" id="challenge-btn-delete" style="display:none" onclick="deleteChallenge()">🗑</button>
+      <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="challenge-btn-save" onclick="saveChallenge()">Создать</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+var firebaseConfig={
+  apiKey:"AIzaSyD195j33cTr6labXodSH_jTeZsvs4L3U4w",
+  authDomain:"manproduction-club.firebaseapp.com",
+  projectId:"manproduction-club",
+  storageBucket:"manproduction-club.firebasestorage.app",
+  messagingSenderId:"962650441642",
+  appId:"1:962650441642:web:1be30d07d1ca62058c0dd3"
+};
+var fbDb=null;
+try{
+  if(window.firebase){
+    firebase.initializeApp(firebaseConfig);
+    fbDb=firebase.firestore();
+  }
+}catch(e){console.warn('Firebase init failed',e);}
+
+var SUPER_ADMIN_ID='1410479822'; // Always Admin, no approval needed
+var ROLES=[{id:'admin',label:'Админ'},{id:'news_editor',label:'Ред. новостей'},{id:'staff',label:'Сотрудник'}];
+
+var myTgId=null;
+var myTgName='';
+var myUser=null; // { id, name, role, status } loaded from admin_users collection
+var editingNewsId=null;
+var pendingRequests=[];
+var approvedUsers=[];
+var newsItems=[];
+
+function roleLabel(id){var r=ROLES.find(function(x){return x.id===id;});return r?r.label:id;}
+
+function getTg(){return window.Telegram&&window.Telegram.WebApp;}
+
+window.addEventListener('load',function(){
+  var tg=getTg();
+  if(tg){tg.ready();tg.expand();}
+  var u=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user)||null;
+  myTgId=u?String(u.id):('test_'+Math.floor(Math.random()*100000));
+  myTgName=u?((u.first_name||'')+' '+(u.last_name||'')).trim():'';
+
+  document.getElementById('splash').style.display='none';
+
+  if(myTgId===SUPER_ADMIN_ID){
+    myUser={id:myTgId,name:myTgName||'Админ',role:'admin',status:'approved'};
+    launchApp();
+    return;
+  }
+
+  if(!fbDb){
+    showToast('Нет подключения к базе');
+    showScreen('s-register');
+    return;
+  }
+
+  fbDb.collection('admin_users').doc(myTgId).get().then(function(doc){
+    if(doc.exists){
+      myUser=doc.data();
+      if(myUser.status==='approved'){
+        launchApp();
+      } else if(myUser.status==='pending'){
+        showPendingScreen();
+      } else if(myUser.status==='rejected'){
+        showRejectedScreen();
+      }
+    } else {
+      showScreen('s-register');
+    }
+  }).catch(function(err){
+    console.warn('Failed to check user status', err);
+    showScreen('s-register');
+  });
+});
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+}
+
+function submitRegistration(){
+  var name=document.getElementById('reg-name').value.trim();
+  if(!name){showToast('Введи имя');return;}
+  if(!fbDb){showToast('Нет подключения к базе');return;}
+  var data={id:myTgId,name:name,role:'pending_role',status:'pending',requestedAt:Date.now()};
+  fbDb.collection('admin_users').doc(myTgId).set(data).then(function(){
+    myUser=data;
+    showPendingScreen();
+  }).catch(function(err){
+    console.warn(err);
+    showToast('Ошибка отправки заявки');
+  });
+}
+
+function showPendingScreen(){
+  document.getElementById('reg-icon').textContent='⏳';
+  document.getElementById('reg-title').textContent='Заявка на рассмотрении';
+  document.getElementById('reg-sub').textContent='Админ клуба скоро подтвердит твой доступ и назначит роль.';
+  document.getElementById('reg-form').style.display='none';
+  document.getElementById('reg-status-wrap').style.display='block';
+  document.getElementById('reg-status-wrap').innerHTML='<div class="status-badge pending">⏳ Ожидает подтверждения</div>';
+  showScreen('s-register');
+}
+function showRejectedScreen(){
+  document.getElementById('reg-icon').textContent='🚫';
+  document.getElementById('reg-title').textContent='Доступ отклонён';
+  document.getElementById('reg-sub').textContent='Обратись к администратору клуба за подробностями.';
+  document.getElementById('reg-form').style.display='none';
+  document.getElementById('reg-status-wrap').style.display='block';
+  document.getElementById('reg-status-wrap').innerHTML='<div class="status-badge rejected">🚫 Отклонено</div>';
+  showScreen('s-register');
+}
+
+function launchApp(){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('main-app').classList.add('active');
+  document.getElementById('my-role-pill').textContent=roleLabel(myUser.role);
+  setupNavForRole();
+  if(myUser.role==='admin'){loadRequestsAndUsers();}
+  loadNews();
+  loadChallenges();
+}
+
+function setupNavForRole(){
+  var role=myUser.role;
+  var navReq=document.getElementById('nav-requests');
+  var navManage=document.getElementById('nav-manage');
+  var hubNews=document.getElementById('hub-item-news');
+  var hubChallenges=document.getElementById('hub-item-challenges');
+  var hubTasks=document.getElementById('hub-item-tasks');
+  if(role==='admin'){
+    navReq.style.display='';navManage.style.display='';
+    hubNews.style.display='';hubChallenges.style.display='';hubTasks.style.display='';
+    switchTab('requests');
+  } else if(role==='news_editor'){
+    navReq.style.display='none';
+    hubNews.style.display='';hubChallenges.style.display='none';hubTasks.style.display='none';
+    switchTab('news');
+  } else { // staff
+    navReq.style.display='none';
+    hubNews.style.display='none';hubChallenges.style.display='none';hubTasks.style.display='';
+    switchTab('tasks');
+  }
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  document.getElementById('s-'+tab).classList.add('active');
+  var navEl=document.getElementById('nav-'+tab);
+  if(navEl)navEl.classList.add('active');
+}
+
+// REQUESTS & USERS (admin only)
+function loadRequestsAndUsers(){
+  if(!fbDb)return;
+  fbDb.collection('admin_users').get().then(function(snap){
+    pendingRequests=[];approvedUsers=[];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      if(d.status==='pending')pendingRequests.push(d);
+      else if(d.status==='approved')approvedUsers.push(d);
+    });
+    renderRequests();renderUsers();
+  }).catch(function(err){console.warn(err);});
+}
+function renderRequests(){
+  var wrap=document.getElementById('requests-list');wrap.innerHTML='';
+  var badge=document.getElementById('req-badge');
+  badge.style.display=pendingRequests.length?'block':'none';
+  if(!pendingRequests.length){wrap.innerHTML='<div class="empty-state">Новых заявок нет</div>';return;}
+  pendingRequests.forEach(function(req){
+    var selectedRole='news_editor';
+    var card=document.createElement('div');card.className='req-card';
+    card.innerHTML='<div class="req-name">'+req.name+'</div><div class="req-meta">ID '+req.id+'</div>'+
+      '<div class="req-role-grid" id="rg-'+req.id+'">'+
+        ROLES.filter(function(r){return r.id!=='admin';}).map(function(r){return '<div class="role-opt'+(r.id===selectedRole?' selected':'')+'" data-role="'+r.id+'">'+r.label+'</div>';}).join('')+
+      '</div>'+
+      '<div class="req-actions"><div class="req-btn approve">✓ Одобрить</div><div class="req-btn reject">✕ Отклонить</div></div>';
+    var roleGrid=card.querySelector('.req-role-grid');
+    roleGrid.querySelectorAll('.role-opt').forEach(function(opt){
+      opt.onclick=function(){roleGrid.querySelectorAll('.role-opt').forEach(function(o){o.classList.remove('selected');});opt.classList.add('selected');selectedRole=opt.dataset.role;};
+    });
+    card.querySelector('.approve').onclick=function(){approveRequest(req.id,selectedRole);};
+    card.querySelector('.reject').onclick=function(){rejectRequest(req.id);};
+    wrap.appendChild(card);
+  });
+}
+function renderUsers(){
+  var wrap=document.getElementById('users-list');wrap.innerHTML='';
+  if(!approvedUsers.length){wrap.innerHTML='<div class="empty-state">Команда пока пуста</div>';return;}
+  approvedUsers.forEach(function(u){
+    var initials=u.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+    var row=document.createElement('div');row.className='user-row';
+    row.innerHTML='<div class="user-ava">'+initials+'</div><div class="user-info"><div class="user-name">'+u.name+'</div><div class="user-role-label">'+roleLabel(u.role)+'</div></div><div class="user-row-actions"><div class="icon-btn" title="Удалить">🗑</div></div>';
+    row.querySelector('.icon-btn').onclick=function(){removeUser(u.id);};
+    wrap.appendChild(row);
+  });
+}
+function approveRequest(id,role){
+  fbDb.collection('admin_users').doc(id).update({status:'approved',role:role,approvedAt:Date.now()}).then(function(){
+    showToast('Одобрено');loadRequestsAndUsers();
+  }).catch(function(err){console.warn(err);showToast('Ошибка');});
+}
+function rejectRequest(id){
+  fbDb.collection('admin_users').doc(id).update({status:'rejected'}).then(function(){
+    showToast('Отклонено');loadRequestsAndUsers();
+  }).catch(function(err){console.warn(err);showToast('Ошибка');});
+}
+function removeUser(id){
+  fbDb.collection('admin_users').doc(id).delete().then(function(){
+    showToast('Удалено');loadRequestsAndUsers();
+  }).catch(function(err){console.warn(err);showToast('Ошибка');});
+}
+
+// NEWS
+function loadNews(){
+  if(!fbDb)return;
+  fbDb.collection('news').orderBy('createdAt','desc').get().then(function(snap){
+    newsItems=[];
+    snap.forEach(function(doc){var d=doc.data();d._id=doc.id;newsItems.push(d);});
+    renderNews();
+  }).catch(function(err){console.warn(err);document.getElementById('news-list').innerHTML='<div class="empty-state">Не удалось загрузить новости</div>';});
+}
+function renderNews(){
+  var wrap=document.getElementById('news-list');wrap.innerHTML='';
+  if(!newsItems.length){wrap.innerHTML='<div class="empty-state">Новостей пока нет.<br>Нажми ＋ чтобы добавить первую.</div>';return;}
+  newsItems.forEach(function(n){
+    var date=n.createdAt?new Date(n.createdAt).toLocaleDateString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+    var item=document.createElement('div');item.className='news-item';
+    item.innerHTML='<div class="news-item-title">'+escHtml(n.title||'')+'</div><div class="news-item-body">'+escHtml(n.body||'')+'</div><div class="news-item-meta">'+date+' · '+escHtml(n.authorName||'')+'</div><div class="news-item-actions"><div class="btn-ghost" style="flex:1;padding:9px;" data-act="edit">✏️ Изменить</div></div>';
+    item.querySelector('[data-act="edit"]').onclick=function(){openNewsModal(n._id);};
+    wrap.appendChild(item);
+  });
+}
+function openNewsModal(id){
+  editingNewsId=id||null;
+  var isEdit=!!editingNewsId;
+  document.getElementById('news-modal-title').textContent=isEdit?'Редактировать новость':'Новая новость';
+  document.getElementById('news-btn-save').textContent=isEdit?'Сохранить':'Опубликовать';
+  document.getElementById('news-btn-delete').style.display=isEdit?'block':'none';
+  if(isEdit){
+    var n=newsItems.find(function(x){return x._id===id;});
+    document.getElementById('news-title').value=n?n.title:'';
+    document.getElementById('news-body').value=n?n.body:'';
+  } else {
+    document.getElementById('news-title').value='';
+    document.getElementById('news-body').value='';
+  }
+  document.getElementById('news-modal').classList.add('active');
+}
+function closeNewsModal(){document.getElementById('news-modal').classList.remove('active');editingNewsId=null;}
+function saveNews(){
+  var title=document.getElementById('news-title').value.trim();
+  var body=document.getElementById('news-body').value.trim();
+  if(!title||!body){showToast('Заполни заголовок и текст');return;}
+  if(editingNewsId){
+    fbDb.collection('news').doc(editingNewsId).update({title:title,body:body,updatedAt:Date.now()}).then(function(){
+      showToast('Сохранено');closeNewsModal();loadNews();
+    }).catch(function(err){console.warn(err);showToast('Ошибка сохранения');});
+  } else {
+    fbDb.collection('news').add({title:title,body:body,authorId:myTgId,authorName:myUser.name,createdAt:Date.now()}).then(function(){
+      showToast('Опубликовано');closeNewsModal();loadNews();
+    }).catch(function(err){console.warn(err);showToast('Ошибка публикации');});
+  }
+}
+function deleteNews(){
+  if(!editingNewsId)return;
+  fbDb.collection('news').doc(editingNewsId).delete().then(function(){
+    showToast('Удалено');closeNewsModal();loadNews();
+  }).catch(function(err){console.warn(err);showToast('Ошибка удаления');});
+}
+
+// CHALLENGES
+var editingChallengeId=null;
+var challengeItems=[];
+function loadChallenges(){
+  if(!fbDb)return;
+  fbDb.collection('challenges').orderBy('createdAt','desc').get().then(function(snap){
+    challengeItems=[];
+    snap.forEach(function(doc){var d=doc.data();d._id=doc.id;challengeItems.push(d);});
+    renderChallenges();
+  }).catch(function(err){console.warn(err);document.getElementById('challenges-list').innerHTML='<div class="empty-state">Не удалось загрузить челленджи</div>';});
+}
+function renderChallenges(){
+  var wrap=document.getElementById('challenges-list');wrap.innerHTML='';
+  if(!challengeItems.length){wrap.innerHTML='<div class="empty-state">Челленджей пока нет.<br>Нажми ＋ чтобы создать первый.</div>';return;}
+  challengeItems.forEach(function(c){
+    var date=c.createdAt?new Date(c.createdAt).toLocaleDateString('ru-RU',{day:'numeric',month:'short'}):'';
+    var item=document.createElement('div');item.className='news-item';
+    item.innerHTML='<div class="news-item-title">🏆 '+escHtml(c.title||'')+'</div><div class="news-item-body">'+escHtml(c.description||'')+'</div><div class="news-item-meta">'+(c.durationDays||0)+' дн. · '+(c.points||0)+' баллов · создано '+date+'</div><div class="news-item-actions"><div class="btn-ghost" style="flex:1;padding:9px;" data-act="edit">✏️ Изменить</div></div>';
+    item.querySelector('[data-act="edit"]').onclick=function(){openChallengeModal(c._id);};
+    wrap.appendChild(item);
+  });
+}
+function openChallengeModal(id){
+  editingChallengeId=id||null;
+  var isEdit=!!editingChallengeId;
+  document.getElementById('challenge-modal-title').textContent=isEdit?'Редактировать челлендж':'Новый челлендж';
+  document.getElementById('challenge-btn-save').textContent=isEdit?'Сохранить':'Создать';
+  document.getElementById('challenge-btn-delete').style.display=isEdit?'block':'none';
+  if(isEdit){
+    var c=challengeItems.find(function(x){return x._id===id;});
+    document.getElementById('challenge-title').value=c?c.title:'';
+    document.getElementById('challenge-description').value=c?c.description:'';
+    document.getElementById('challenge-duration').value=c?c.durationDays:'';
+    document.getElementById('challenge-points').value=c?c.points:'';
+  } else {
+    document.getElementById('challenge-title').value='';
+    document.getElementById('challenge-description').value='';
+    document.getElementById('challenge-duration').value='';
+    document.getElementById('challenge-points').value='';
+  }
+  document.getElementById('challenge-modal').classList.add('active');
+}
+function closeChallengeModal(){document.getElementById('challenge-modal').classList.remove('active');editingChallengeId=null;}
+function saveChallenge(){
+  var title=document.getElementById('challenge-title').value.trim();
+  var description=document.getElementById('challenge-description').value.trim();
+  var durationDays=parseInt(document.getElementById('challenge-duration').value,10);
+  var points=parseInt(document.getElementById('challenge-points').value,10)||0;
+  if(!title||!description||!durationDays){showToast('Заполни название, описание и срок');return;}
+  if(editingChallengeId){
+    fbDb.collection('challenges').doc(editingChallengeId).update({title:title,description:description,durationDays:durationDays,points:points,updatedAt:Date.now()}).then(function(){
+      showToast('Сохранено');closeChallengeModal();loadChallenges();
+    }).catch(function(err){console.warn(err);showToast('Ошибка сохранения');});
+  } else {
+    fbDb.collection('challenges').add({title:title,description:description,durationDays:durationDays,points:points,authorId:myTgId,authorName:myUser.name,createdAt:Date.now()}).then(function(){
+      showToast('Создано');closeChallengeModal();loadChallenges();
+    }).catch(function(err){console.warn(err);showToast('Ошибка создания');});
+  }
+}
+function deleteChallenge(){
+  if(!editingChallengeId)return;
+  fbDb.collection('challenges').doc(editingChallengeId).delete().then(function(){
+    showToast('Удалено');closeChallengeModal();loadChallenges();
+  }).catch(function(err){console.warn(err);showToast('Ошибка удаления');});
+}
+
+function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer=setTimeout(function(){t.classList.remove('show');},2200);
+}
+
+// Keyboard fix: scroll focused input into view above on-screen keyboard
+document.addEventListener('focusin',function(e){
+  var tag=e.target.tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'){
+    setTimeout(function(){e.target.scrollIntoView({block:'center',behavior:'smooth'});},300);
+  }
+});
+</script>
+</body>
+</html>
