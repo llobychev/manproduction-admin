@@ -53,6 +53,12 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 .topbar-logo{font-size:14px;font-weight:700;letter-spacing:0.07em;color:var(--accent);text-transform:uppercase;}
 .topbar-sub{font-size:10px;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase;margin-top:1px;}
 .role-pill{font-size:10px;padding:3px 9px;border-radius:7px;background:rgba(45,212,191,0.12);color:var(--accent2);font-weight:600;border:0.5px solid rgba(45,212,191,0.3);}
+.manage-hub-item{display:flex;align-items:center;gap:14px;background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;}
+.manage-hub-icon{font-size:24px;width:40px;height:40px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.manage-hub-info{flex:1;}
+.manage-hub-title{font-size:14px;font-weight:600;color:var(--text);}
+.manage-hub-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.manage-hub-arrow{font-size:18px;color:var(--text3);}
 .bottomnav{height:64px;background:var(--bg2);border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 2px env(safe-area-inset-bottom,6px);flex-shrink:0;}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;border-radius:10px;position:relative;min-width:44px;}
 .nav-item.active .nav-icon,.nav-item.active .nav-label{color:var(--accent);}
@@ -147,25 +153,55 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     </div>
   </div>
 
+  <!-- MANAGE HUB (admin only) -->
+  <div class="app-screen" id="s-manage">
+    <div class="topbar"><div><div class="topbar-logo">Управление</div><div class="topbar-sub">Основное приложение ManProduction</div></div></div>
+    <div class="content" style="padding-top:14px;">
+      <div class="manage-hub-item" id="hub-item-news" onclick="switchTab('news')">
+        <div class="manage-hub-icon">📰</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Новости</div><div class="manage-hub-sub">Лента ManProduction</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+      <div class="manage-hub-item" id="hub-item-challenges" onclick="switchTab('challenges')">
+        <div class="manage-hub-icon">🏆</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Челленджи</div><div class="manage-hub-sub">Соревнования участников</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+      <div class="manage-hub-item" id="hub-item-tasks" onclick="switchTab('tasks')">
+        <div class="manage-hub-icon">🛠️</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Задачи</div><div class="manage-hub-sub">Для команды</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
   <!-- NEWS -->
   <div class="app-screen" id="s-news">
-    <div class="topbar"><div><div class="topbar-logo">Новости</div><div class="topbar-sub">Лента ManProduction</div></div></div>
+    <div class="topbar"><div><div class="topbar-logo">Новости</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
     <div class="content" style="padding-top:14px;" id="news-content">
       <div id="news-list"></div>
     </div>
     <div class="add-fab" onclick="openNewsModal()">＋</div>
   </div>
 
+  <!-- CHALLENGES -->
+  <div class="app-screen" id="s-challenges">
+    <div class="topbar"><div><div class="topbar-logo">Челленджи</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;" id="challenges-content">
+      <div id="challenges-list"></div>
+    </div>
+    <div class="add-fab" onclick="openChallengeModal()">＋</div>
+  </div>
+
   <!-- TASKS -->
   <div class="app-screen" id="s-tasks">
-    <div class="topbar"><div><div class="topbar-logo">Задачи</div><div class="topbar-sub">Для команды</div></div></div>
+    <div class="topbar"><div><div class="topbar-logo">Задачи</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
     <div class="task-stub"><div class="task-stub-icon">🛠️</div><div class="task-stub-text">Раздел задач в разработке.<br>Скоро здесь можно будет раздавать задачи команде.</div></div>
   </div>
 
   <nav class="bottomnav" id="bottomnav">
     <div class="nav-item active" id="nav-requests" onclick="switchTab('requests')"><div class="nav-icon">📋</div><div class="nav-label">Заявки</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
-    <div class="nav-item" id="nav-news" onclick="switchTab('news')"><div class="nav-icon">📰</div><div class="nav-label">Новости</div></div>
-    <div class="nav-item" id="nav-tasks" onclick="switchTab('tasks')"><div class="nav-icon">🛠️</div><div class="nav-label">Задачи</div></div>
+    <div class="nav-item" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div></div>
   </nav>
 </div>
 
@@ -179,6 +215,23 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
       <button class="btn-cancel" onclick="closeNewsModal()">Отмена</button>
       <button class="btn-delete" id="news-btn-delete" style="display:none" onclick="deleteNews()">🗑</button>
       <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="news-btn-save" onclick="saveNews()">Опубликовать</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="challenge-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="challenge-modal-title">Новый челлендж</div>
+    <input class="modal-input" id="challenge-title" placeholder="Название челленджа">
+    <textarea class="modal-input modal-textarea" id="challenge-description" placeholder="Описание и условия..."></textarea>
+    <div class="modal-row" style="display:flex;gap:10px;">
+      <input class="modal-input" id="challenge-duration" type="number" placeholder="Срок, дней" min="1" style="flex:1;">
+      <input class="modal-input" id="challenge-points" type="number" placeholder="Баллов за выполнение" min="0" style="flex:1;">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeChallengeModal()">Отмена</button>
+      <button class="btn-delete" id="challenge-btn-delete" style="display:none" onclick="deleteChallenge()">🗑</button>
+      <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="challenge-btn-save" onclick="saveChallenge()">Создать</button>
     </div>
   </div>
 </div>
@@ -304,21 +357,27 @@ function launchApp(){
   setupNavForRole();
   if(myUser.role==='admin'){loadRequestsAndUsers();}
   loadNews();
+  loadChallenges();
 }
 
 function setupNavForRole(){
   var role=myUser.role;
   var navReq=document.getElementById('nav-requests');
-  var navNews=document.getElementById('nav-news');
-  var navTasks=document.getElementById('nav-tasks');
+  var navManage=document.getElementById('nav-manage');
+  var hubNews=document.getElementById('hub-item-news');
+  var hubChallenges=document.getElementById('hub-item-challenges');
+  var hubTasks=document.getElementById('hub-item-tasks');
   if(role==='admin'){
-    navReq.style.display='';navNews.style.display='';navTasks.style.display='';
+    navReq.style.display='';navManage.style.display='';
+    hubNews.style.display='';hubChallenges.style.display='';hubTasks.style.display='';
     switchTab('requests');
   } else if(role==='news_editor'){
-    navReq.style.display='none';navTasks.style.display='none';navNews.style.display='';
+    navReq.style.display='none';
+    hubNews.style.display='';hubChallenges.style.display='none';hubTasks.style.display='none';
     switchTab('news');
   } else { // staff
-    navReq.style.display='none';navNews.style.display='none';navTasks.style.display='';
+    navReq.style.display='none';
+    hubNews.style.display='none';hubChallenges.style.display='none';hubTasks.style.display='';
     switchTab('tasks');
   }
 }
@@ -448,6 +507,72 @@ function deleteNews(){
   if(!editingNewsId)return;
   fbDb.collection('news').doc(editingNewsId).delete().then(function(){
     showToast('Удалено');closeNewsModal();loadNews();
+  }).catch(function(err){console.warn(err);showToast('Ошибка удаления');});
+}
+
+// CHALLENGES
+var editingChallengeId=null;
+var challengeItems=[];
+function loadChallenges(){
+  if(!fbDb)return;
+  fbDb.collection('challenges').orderBy('createdAt','desc').get().then(function(snap){
+    challengeItems=[];
+    snap.forEach(function(doc){var d=doc.data();d._id=doc.id;challengeItems.push(d);});
+    renderChallenges();
+  }).catch(function(err){console.warn(err);document.getElementById('challenges-list').innerHTML='<div class="empty-state">Не удалось загрузить челленджи</div>';});
+}
+function renderChallenges(){
+  var wrap=document.getElementById('challenges-list');wrap.innerHTML='';
+  if(!challengeItems.length){wrap.innerHTML='<div class="empty-state">Челленджей пока нет.<br>Нажми ＋ чтобы создать первый.</div>';return;}
+  challengeItems.forEach(function(c){
+    var date=c.createdAt?new Date(c.createdAt).toLocaleDateString('ru-RU',{day:'numeric',month:'short'}):'';
+    var item=document.createElement('div');item.className='news-item';
+    item.innerHTML='<div class="news-item-title">🏆 '+escHtml(c.title||'')+'</div><div class="news-item-body">'+escHtml(c.description||'')+'</div><div class="news-item-meta">'+(c.durationDays||0)+' дн. · '+(c.points||0)+' баллов · создано '+date+'</div><div class="news-item-actions"><div class="btn-ghost" style="flex:1;padding:9px;" data-act="edit">✏️ Изменить</div></div>';
+    item.querySelector('[data-act="edit"]').onclick=function(){openChallengeModal(c._id);};
+    wrap.appendChild(item);
+  });
+}
+function openChallengeModal(id){
+  editingChallengeId=id||null;
+  var isEdit=!!editingChallengeId;
+  document.getElementById('challenge-modal-title').textContent=isEdit?'Редактировать челлендж':'Новый челлендж';
+  document.getElementById('challenge-btn-save').textContent=isEdit?'Сохранить':'Создать';
+  document.getElementById('challenge-btn-delete').style.display=isEdit?'block':'none';
+  if(isEdit){
+    var c=challengeItems.find(function(x){return x._id===id;});
+    document.getElementById('challenge-title').value=c?c.title:'';
+    document.getElementById('challenge-description').value=c?c.description:'';
+    document.getElementById('challenge-duration').value=c?c.durationDays:'';
+    document.getElementById('challenge-points').value=c?c.points:'';
+  } else {
+    document.getElementById('challenge-title').value='';
+    document.getElementById('challenge-description').value='';
+    document.getElementById('challenge-duration').value='';
+    document.getElementById('challenge-points').value='';
+  }
+  document.getElementById('challenge-modal').classList.add('active');
+}
+function closeChallengeModal(){document.getElementById('challenge-modal').classList.remove('active');editingChallengeId=null;}
+function saveChallenge(){
+  var title=document.getElementById('challenge-title').value.trim();
+  var description=document.getElementById('challenge-description').value.trim();
+  var durationDays=parseInt(document.getElementById('challenge-duration').value,10);
+  var points=parseInt(document.getElementById('challenge-points').value,10)||0;
+  if(!title||!description||!durationDays){showToast('Заполни название, описание и срок');return;}
+  if(editingChallengeId){
+    fbDb.collection('challenges').doc(editingChallengeId).update({title:title,description:description,durationDays:durationDays,points:points,updatedAt:Date.now()}).then(function(){
+      showToast('Сохранено');closeChallengeModal();loadChallenges();
+    }).catch(function(err){console.warn(err);showToast('Ошибка сохранения');});
+  } else {
+    fbDb.collection('challenges').add({title:title,description:description,durationDays:durationDays,points:points,authorId:myTgId,authorName:myUser.name,createdAt:Date.now()}).then(function(){
+      showToast('Создано');closeChallengeModal();loadChallenges();
+    }).catch(function(err){console.warn(err);showToast('Ошибка создания');});
+  }
+}
+function deleteChallenge(){
+  if(!editingChallengeId)return;
+  fbDb.collection('challenges').doc(editingChallengeId).delete().then(function(){
+    showToast('Удалено');closeChallengeModal();loadChallenges();
   }).catch(function(err){console.warn(err);showToast('Ошибка удаления');});
 }
 
