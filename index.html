@@ -77,6 +77,8 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 .req-role-grid{display:flex;gap:8px;margin-bottom:10px;}
 .role-opt{flex:1;padding:9px 6px;border-radius:9px;border:0.5px solid var(--border);background:var(--bg2);text-align:center;cursor:pointer;font-size:11px;color:var(--text2);}
 .role-opt.selected{border-color:var(--accent);background:rgba(45,212,191,0.1);color:var(--accent2);font-weight:600;}
+.type-chip{flex:1;padding:9px 6px;border-radius:9px;border:0.5px solid var(--border);background:var(--bg2);text-align:center;cursor:pointer;font-size:12px;color:var(--text2);}
+.type-chip.selected{border-color:var(--accent);background:rgba(45,212,191,0.1);color:var(--accent2);font-weight:600;}
 .req-actions{display:flex;gap:8px;}
 .req-btn{flex:1;padding:10px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;border:0.5px solid var(--border);}
 .req-btn.approve{background:rgba(45,212,191,0.12);border-color:rgba(45,212,191,0.35);color:var(--accent2);}
@@ -228,6 +230,13 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
       <input class="modal-input" id="challenge-duration" type="number" placeholder="Срок, дней" min="1" style="flex:1;">
       <input class="modal-input" id="challenge-points" type="number" placeholder="Баллов за выполнение" min="0" style="flex:1;">
     </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Тип участия</div>
+    <div class="type-chip-row" id="challenge-type-chips" style="display:flex;gap:8px;margin-bottom:14px;">
+      <div class="type-chip" data-type="solo">Соло</div>
+      <div class="type-chip" data-type="team">Командный</div>
+      <div class="type-chip" data-type="both">И то, и то</div>
+    </div>
+    <input class="modal-input" id="challenge-team-limit" type="number" placeholder="Максимум участников в команде" min="2" style="display:none;">
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeChallengeModal()">Отмена</button>
       <button class="btn-delete" id="challenge-btn-delete" style="display:none" onclick="deleteChallenge()">🗑</button>
@@ -524,14 +533,17 @@ function loadChallenges(){
 function renderChallenges(){
   var wrap=document.getElementById('challenges-list');wrap.innerHTML='';
   if(!challengeItems.length){wrap.innerHTML='<div class="empty-state">Челленджей пока нет.<br>Нажми ＋ чтобы создать первый.</div>';return;}
+  var typeLabels={solo:'Соло',team:'Командный',both:'Соло + Командный'};
   challengeItems.forEach(function(c){
     var date=c.createdAt?new Date(c.createdAt).toLocaleDateString('ru-RU',{day:'numeric',month:'short'}):'';
+    var typeLabel=typeLabels[c.type]||'Соло';
     var item=document.createElement('div');item.className='news-item';
-    item.innerHTML='<div class="news-item-title">🏆 '+escHtml(c.title||'')+'</div><div class="news-item-body">'+escHtml(c.description||'')+'</div><div class="news-item-meta">'+(c.durationDays||0)+' дн. · '+(c.points||0)+' баллов · создано '+date+'</div><div class="news-item-actions"><div class="btn-ghost" style="flex:1;padding:9px;" data-act="edit">✏️ Изменить</div></div>';
+    item.innerHTML='<div class="news-item-title">🏆 '+escHtml(c.title||'')+'</div><div class="news-item-body">'+escHtml(c.description||'')+'</div><div class="news-item-meta">'+(c.durationDays||0)+' дн. · '+(c.points||0)+' баллов · '+typeLabel+(c.teamLimit?' (до '+c.teamLimit+' чел.)':'')+' · создано '+date+'</div><div class="news-item-actions"><div class="btn-ghost" style="flex:1;padding:9px;" data-act="edit">✏️ Изменить</div></div>';
     item.querySelector('[data-act="edit"]').onclick=function(){openChallengeModal(c._id);};
     wrap.appendChild(item);
   });
 }
+var selectedChallengeType='solo';
 function openChallengeModal(id){
   editingChallengeId=id||null;
   var isEdit=!!editingChallengeId;
@@ -544,13 +556,26 @@ function openChallengeModal(id){
     document.getElementById('challenge-description').value=c?c.description:'';
     document.getElementById('challenge-duration').value=c?c.durationDays:'';
     document.getElementById('challenge-points').value=c?c.points:'';
+    document.getElementById('challenge-team-limit').value=c&&c.teamLimit?c.teamLimit:'';
+    selectedChallengeType=c&&c.type?c.type:'solo';
   } else {
     document.getElementById('challenge-title').value='';
     document.getElementById('challenge-description').value='';
     document.getElementById('challenge-duration').value='';
     document.getElementById('challenge-points').value='';
+    document.getElementById('challenge-team-limit').value='';
+    selectedChallengeType='solo';
   }
+  renderChallengeTypeChips();
   document.getElementById('challenge-modal').classList.add('active');
+}
+function renderChallengeTypeChips(){
+  var wrap=document.getElementById('challenge-type-chips');
+  wrap.querySelectorAll('.type-chip').forEach(function(chip){
+    chip.classList.toggle('selected',chip.dataset.type===selectedChallengeType);
+    chip.onclick=function(){selectedChallengeType=this.dataset.type;renderChallengeTypeChips();};
+  });
+  document.getElementById('challenge-team-limit').style.display=(selectedChallengeType==='team'||selectedChallengeType==='both')?'block':'none';
 }
 function closeChallengeModal(){document.getElementById('challenge-modal').classList.remove('active');editingChallengeId=null;}
 function saveChallenge(){
@@ -558,13 +583,19 @@ function saveChallenge(){
   var description=document.getElementById('challenge-description').value.trim();
   var durationDays=parseInt(document.getElementById('challenge-duration').value,10);
   var points=parseInt(document.getElementById('challenge-points').value,10)||0;
+  var needsTeamLimit=(selectedChallengeType==='team'||selectedChallengeType==='both');
+  var teamLimit=needsTeamLimit?parseInt(document.getElementById('challenge-team-limit').value,10):null;
   if(!title||!description||!durationDays){showToast('Заполни название, описание и срок');return;}
+  if(needsTeamLimit&&!teamLimit){showToast('Укажи максимум участников в команде');return;}
+  var payload={title:title,description:description,durationDays:durationDays,points:points,type:selectedChallengeType,teamLimit:teamLimit};
   if(editingChallengeId){
-    fbDb.collection('challenges').doc(editingChallengeId).update({title:title,description:description,durationDays:durationDays,points:points,updatedAt:Date.now()}).then(function(){
+    payload.updatedAt=Date.now();
+    fbDb.collection('challenges').doc(editingChallengeId).update(payload).then(function(){
       showToast('Сохранено');closeChallengeModal();loadChallenges();
     }).catch(function(err){console.warn(err);showToast('Ошибка сохранения');});
   } else {
-    fbDb.collection('challenges').add({title:title,description:description,durationDays:durationDays,points:points,authorId:myTgId,authorName:myUser.name,createdAt:Date.now()}).then(function(){
+    payload.authorId=myTgId;payload.authorName=myUser.name;payload.createdAt=Date.now();
+    fbDb.collection('challenges').add(payload).then(function(){
       showToast('Создано');closeChallengeModal();loadChallenges();
     }).catch(function(err){console.warn(err);showToast('Ошибка создания');});
   }
