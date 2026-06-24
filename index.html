@@ -174,6 +174,11 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
         <div class="manage-hub-info"><div class="manage-hub-title">Задачи</div><div class="manage-hub-sub">Для команды</div></div>
         <div class="manage-hub-arrow">›</div>
       </div>
+      <div class="manage-hub-item" id="hub-item-quests" onclick="switchTab('quests')">
+        <div class="manage-hub-icon">🎯</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Квесты дня</div><div class="manage-hub-sub">Ежедневные задания</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
     </div>
   </div>
 
@@ -199,6 +204,15 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
   <div class="app-screen" id="s-tasks">
     <div class="topbar"><div><div class="topbar-logo">Задачи</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
     <div class="task-stub"><div class="task-stub-icon">🛠️</div><div class="task-stub-text">Раздел задач в разработке.<br>Скоро здесь можно будет раздавать задачи команде.</div></div>
+  </div>
+
+  <!-- QUESTS -->
+  <div class="app-screen" id="s-quests">
+    <div class="topbar"><div><div class="topbar-logo">Квесты дня</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;" id="quests-content">
+      <div id="quests-list"></div>
+    </div>
+    <div class="add-fab" onclick="openQuestModal()">＋</div>
   </div>
 
   <nav class="bottomnav" id="bottomnav">
@@ -246,6 +260,25 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- MODAL: quest create/edit -->
+<div class="modal-overlay" id="quest-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="quest-modal-title">Новый квест</div>
+    <input class="modal-input" id="quest-text" placeholder="Текст задания (напр. Посмотри урок)">
+    <input class="modal-input" id="quest-points" type="number" placeholder="Баллов за выполнение" min="1">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <label style="font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer;">
+        <input type="checkbox" id="quest-active" checked> Активен
+      </label>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeQuestModal()">Отмена</button>
+      <button class="btn-delete" id="quest-btn-delete" style="display:none" onclick="deleteQuest()">🗑</button>
+      <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="quest-btn-save" onclick="saveQuest()">Создать</button>
+    </div>
+  </div>
+</div>
 
 </div>
 
@@ -367,6 +400,7 @@ function launchApp(){
   if(myUser.role==='admin'){loadRequestsAndUsers();}
   loadNews();
   loadChallenges();
+  loadQuests();
 }
 
 function setupNavForRole(){
@@ -376,17 +410,18 @@ function setupNavForRole(){
   var hubNews=document.getElementById('hub-item-news');
   var hubChallenges=document.getElementById('hub-item-challenges');
   var hubTasks=document.getElementById('hub-item-tasks');
+  var hubQuests=document.getElementById('hub-item-quests');
   if(role==='admin'){
     navReq.style.display='';navManage.style.display='';
-    hubNews.style.display='';hubChallenges.style.display='';hubTasks.style.display='';
+    hubNews.style.display='';hubChallenges.style.display='';hubTasks.style.display='';hubQuests.style.display='';
     switchTab('requests');
   } else if(role==='news_editor'){
     navReq.style.display='none';
-    hubNews.style.display='';hubChallenges.style.display='none';hubTasks.style.display='none';
+    hubNews.style.display='';hubChallenges.style.display='none';hubTasks.style.display='none';hubQuests.style.display='none';
     switchTab('news');
   } else { // staff
     navReq.style.display='none';
-    hubNews.style.display='none';hubChallenges.style.display='none';hubTasks.style.display='';
+    hubNews.style.display='none';hubChallenges.style.display='none';hubTasks.style.display='';hubQuests.style.display='none';
     switchTab('tasks');
   }
 }
@@ -604,6 +639,69 @@ function deleteChallenge(){
   if(!editingChallengeId)return;
   fbDb.collection('challenges').doc(editingChallengeId).delete().then(function(){
     showToast('Удалено');closeChallengeModal();loadChallenges();
+  }).catch(function(err){console.warn(err);showToast('Ошибка удаления');});
+}
+
+// QUESTS
+var editingQuestId=null;
+var questItems=[];
+function loadQuests(){
+  if(!fbDb)return;
+  fbDb.collection('daily_quests').orderBy('createdAt','desc').get().then(function(snap){
+    questItems=[];
+    snap.forEach(function(doc){var d=doc.data();d._id=doc.id;questItems.push(d);});
+    renderQuestsList();
+  }).catch(function(err){console.warn(err);document.getElementById('quests-list').innerHTML='<div class="empty-state">Не удалось загрузить квесты</div>';});
+}
+function renderQuestsList(){
+  var wrap=document.getElementById('quests-list');wrap.innerHTML='';
+  if(!questItems.length){wrap.innerHTML='<div class="empty-state">Квестов пока нет.<br>Нажми ＋ чтобы добавить первый.</div>';return;}
+  questItems.forEach(function(q){
+    var statusText=q.active!==false?'✅ Активен':'⏸️ Неактивен';
+    var item=document.createElement('div');item.className='news-item';
+    item.innerHTML='<div class="news-item-title">🎯 '+escHtml(q.text||'')+'</div><div class="news-item-body">+'+q.points+' ⚡ баллов · '+statusText+'</div><div class="news-item-actions"><div class="btn-ghost" style="flex:1;padding:9px;" data-act="edit">✏️ Изменить</div></div>';
+    item.querySelector('[data-act="edit"]').onclick=function(){openQuestModal(q._id);};
+    wrap.appendChild(item);
+  });
+}
+function openQuestModal(id){
+  editingQuestId=id||null;
+  var isEdit=!!editingQuestId;
+  document.getElementById('quest-modal-title').textContent=isEdit?'Редактировать квест':'Новый квест';
+  document.getElementById('quest-btn-save').textContent=isEdit?'Сохранить':'Создать';
+  document.getElementById('quest-btn-delete').style.display=isEdit?'block':'none';
+  if(isEdit){
+    var q=questItems.find(function(x){return x._id===id;});
+    document.getElementById('quest-text').value=q?q.text:'';
+    document.getElementById('quest-points').value=q?q.points:'';
+    document.getElementById('quest-active').checked=q?q.active!==false:true;
+  } else {
+    document.getElementById('quest-text').value='';
+    document.getElementById('quest-points').value='';
+    document.getElementById('quest-active').checked=true;
+  }
+  document.getElementById('quest-modal').classList.add('active');
+}
+function closeQuestModal(){document.getElementById('quest-modal').classList.remove('active');editingQuestId=null;}
+function saveQuest(){
+  var text=document.getElementById('quest-text').value.trim();
+  var points=parseInt(document.getElementById('quest-points').value,10)||0;
+  var active=document.getElementById('quest-active').checked;
+  if(!text||!points){showToast('Заполни текст и баллы');return;}
+  if(editingQuestId){
+    fbDb.collection('daily_quests').doc(editingQuestId).update({text:text,points:points,active:active,updatedAt:Date.now()}).then(function(){
+      showToast('Сохранено');closeQuestModal();loadQuests();
+    }).catch(function(err){console.warn(err);showToast('Ошибка сохранения');});
+  } else {
+    fbDb.collection('daily_quests').add({text:text,points:points,active:active,createdAt:Date.now()}).then(function(){
+      showToast('Создано');closeQuestModal();loadQuests();
+    }).catch(function(err){console.warn(err);showToast('Ошибка создания');});
+  }
+}
+function deleteQuest(){
+  if(!editingQuestId)return;
+  fbDb.collection('daily_quests').doc(editingQuestId).delete().then(function(){
+    showToast('Удалено');closeQuestModal();loadQuests();
   }).catch(function(err){console.warn(err);showToast('Ошибка удаления');});
 }
 
