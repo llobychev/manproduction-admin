@@ -120,6 +120,67 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:10px 18px;font-size:12px;color:var(--text);z-index:300;display:none;}
 .toast.show{display:block;}
+
+/* TRAINING */
+.training-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;}
+.training-card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.training-card-icon{font-size:28px;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.training-card-icon.purple{background:rgba(130,100,220,0.15);}
+.training-card-icon.teal{background:rgba(45,212,191,0.15);}
+.training-card-icon.amber{background:rgba(224,168,58,0.15);}
+.training-card-info{flex:1;}
+.training-card-title{font-size:15px;font-weight:600;color:var(--text);}
+.training-card-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.training-progress{height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;}
+.training-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s;}
+.training-stats{display:flex;gap:12px;margin-top:10px;}
+.training-stat{font-size:11px;color:var(--text3);}
+.training-stat b{color:var(--accent2);font-weight:600;}
+
+.lesson-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.lesson-num{width:32px;height:32px;border-radius:50%;background:var(--bg2);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);flex-shrink:0;}
+.lesson-num.done{background:rgba(45,212,191,0.15);border-color:rgba(45,212,191,0.3);color:var(--accent);}
+.lesson-info{flex:1;}
+.lesson-title{font-size:13px;font-weight:600;color:var(--text);}
+.lesson-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+.lesson-arrow{font-size:16px;color:var(--text3);}
+
+.lesson-content{padding:0 16px 24px;}
+.lesson-section{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.lesson-section-title{font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em;}
+.lesson-text{font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;}
+
+.quiz-wrap{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.quiz-q{font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;}
+.quiz-opt{padding:11px 14px;background:var(--bg2);border:0.5px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.2s;}
+.quiz-opt:active{transform:scale(0.98);}
+.quiz-opt.correct{background:rgba(45,212,191,0.12);border-color:rgba(45,212,191,0.4);color:var(--accent2);}
+.quiz-opt.wrong{background:rgba(224,85,85,0.1);border-color:rgba(224,85,85,0.3);color:var(--red);}
+.quiz-opt.disabled{pointer-events:none;opacity:0.6;}
+.quiz-result{text-align:center;padding:16px;font-size:14px;font-weight:600;color:var(--accent2);}
+
+.achievement-popup{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:300;flex-direction:column;gap:16px;text-align:center;padding:32px;}
+.achievement-popup.active{display:flex;}
+.ach-icon{font-size:64px;animation:achBounce 0.6s ease-out;}
+.ach-title{font-size:20px;font-weight:700;color:var(--accent2);}
+.ach-desc{font-size:13px;color:var(--text2);max-width:280px;}
+.ach-btn{padding:12px 32px;background:var(--accent);color:#0a1413;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+@keyframes achBounce{0%{transform:scale(0);opacity:0;}50%{transform:scale(1.2);}100%{transform:scale(1);opacity:1;}}
+
+.points-bar{display:flex;align-items:center;gap:10px;background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:16px;}
+.points-icon{font-size:22px;}
+.points-num{font-size:18px;font-weight:700;color:var(--accent2);}
+.points-label{font-size:11px;color:var(--text3);}
+.points-right{margin-left:auto;text-align:right;}
+
+.prize-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.prize-icon{font-size:24px;}
+.prize-info{flex:1;}
+.prize-name{font-size:13px;font-weight:600;color:var(--text);}
+.prize-cost{font-size:11px;color:var(--text3);margin-top:2px;}
+.prize-btn{padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:0.5px solid var(--border);}
+.prize-btn.available{background:rgba(45,212,191,0.12);border-color:rgba(45,212,191,0.3);color:var(--accent2);}
+.prize-btn.locked{background:var(--bg2);color:var(--text3);pointer-events:none;}
 </style>
 </head>
 <body>
@@ -215,9 +276,54 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     <div class="add-fab" onclick="openQuestModal()">＋</div>
   </div>
 
+
+  <!-- TRAINING HUB -->
+  <div class="app-screen" id="s-training">
+    <div class="topbar"><div><div class="topbar-logo">Обучения</div><div class="topbar-sub">Развитие команды</div></div></div>
+    <div class="content" style="padding-top:16px;">
+      
+      <div class="points-bar">
+        <div class="points-icon">⭐</div>
+        <div><div class="points-num" id="training-points">0</div><div class="points-label">баллов</div></div>
+        <div class="points-right"><div style="font-size:12px;color:var(--text2)" id="training-level">Новичок</div><div style="font-size:10px;color:var(--text3)" id="training-ach-count">0 ачивок</div></div>
+      </div>
+      
+      <div class="section-title">Направления</div>
+      <div id="training-courses-list"></div>
+      
+      <div class="section-title">Призы</div>
+      <div id="training-prizes-list"></div>
+      
+      <div class="section-title">Ачивки</div>
+      <div id="training-achievements-list"></div>
+      
+    </div>
+  </div>
+
+  <!-- TRAINING COURSE -->
+  <div class="app-screen" id="s-training-course">
+    <div class="topbar"><div><div class="topbar-logo" id="course-title">Курс</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('training')">← Обучения</div></div></div>
+    <div class="content" style="padding-top:16px;">
+      <div class="points-bar" style="margin-bottom:12px;">
+        <div class="points-icon" id="course-icon">📚</div>
+        <div><div style="font-size:14px;font-weight:600;color:var(--text)" id="course-desc">Описание</div></div>
+      </div>
+      <div class="training-progress" style="margin-bottom:16px;"><div class="training-progress-fill" id="course-progress-bar" style="width:0%"></div></div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:16px;" id="course-progress-text">0 из 5 уроков</div>
+      <div id="course-lessons-list"></div>
+    </div>
+  </div>
+
+  <!-- TRAINING LESSON -->
+  <div class="app-screen" id="s-training-lesson">
+    <div class="topbar"><div><div class="topbar-logo" id="lesson-topbar-title">Урок</div><div class="topbar-sub" style="cursor:pointer" id="lesson-back-btn">← Назад</div></div></div>
+    <div class="lesson-content" style="padding-top:16px;" id="lesson-content-area"></div>
+  </div>
+
   <nav class="bottomnav" id="bottomnav">
     <div class="nav-item active" id="nav-requests" onclick="switchTab('requests')"><div class="nav-icon">📋</div><div class="nav-label">Заявки</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
     <div class="nav-item" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div></div>
+    <div class="nav-item" id="nav-training" onclick="switchTab('training')"><div class="nav-icon">📚</div><div class="nav-label">Обучения</div></div>
   </nav>
 </div>
 
@@ -260,6 +366,7 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="achievement-popup" id="ach-popup"><div class="ach-icon" id="ach-popup-icon">🏆</div><div class="ach-title" id="ach-popup-title">Ачивка!</div><div class="ach-desc" id="ach-popup-desc">Описание</div><button class="ach-btn" onclick="closeAchPopup()">Круто!</button></div>
 
 <!-- MODAL: quest create/edit -->
 <div class="modal-overlay" id="quest-modal">
@@ -712,6 +819,458 @@ function showToast(msg){
   clearTimeout(t._timer);
   t._timer=setTimeout(function(){t.classList.remove('show');},2200);
 }
+
+
+
+// ===== TRAINING SYSTEM =====
+var TRAINING_COURSES = [
+  {
+    id: 'claude',
+    icon: '🤖',
+    colorClass: 'purple',
+    title: 'Работа с Claude',
+    desc: 'Для всей команды',
+    lessons: [
+      {
+        id: 'claude-1',
+        title: 'Промпты',
+        meta: '~5 мин',
+        content: [
+          {title:'Что такое промпт',text:'Промпт — это текстовый запрос к AI. Качество ответа напрямую зависит от того, как ты сформулируешь вопрос.\n\nПлохой промпт: "напиши текст"\nХороший промпт: "напиши пост для Telegram канала мужского клуба, тон — спокойный наставник, длина 150-200 слов, тема: как перестать откладывать тренировки"'},
+          {title:'Структура хорошего промпта',text:'1. Роль — кто ты для AI (ты копирайтер, ты менеджер)\n2. Задача — что конкретно сделать\n3. Контекст — для кого, где будет использоваться\n4. Формат — длина, стиль, структура\n5. Примеры — покажи как должно выглядеть'},
+          {title:'Итерация',text:'Не жди идеальный ответ с первого раза. Уточняй:\n- "Сделай короче"\n- "Замени на более простые слова"\n- "Добавь примеры"\n- "Переделай в формате списка"\n\nКаждое уточнение делает результат лучше.'}
+        ],
+        quiz: [
+          {q:'Что больше всего влияет на качество ответа AI?',opts:['Скорость интернета','Качество промпта','Время суток','Длина запроса'],correct:1},
+          {q:'Какой элемент НЕ входит в структуру хорошего промпта?',opts:['Роль','Задача','Пароль от аккаунта','Контекст'],correct:2},
+          {q:'Что делать если первый ответ AI не подошёл?',opts:['Закрыть и забыть','Уточнить и переспросить','Написать в поддержку','Перезагрузить компьютер'],correct:1}
+        ]
+      },
+      {
+        id: 'claude-2',
+        title: 'Проекты и Memory',
+        meta: '~5 мин',
+        content: [
+          {title:'Проекты в Claude',text:'Проект — это рабочее пространство с сохранённым контекстом. Claude помнит всё что ты загрузил в проект: файлы, инструкции, предыдущие ответы.\n\nЗачем:\n- Не повторять контекст каждый раз\n- Работать над большими задачами поэтапно\n- Хранить стиль, правила, шаблоны'},
+          {title:'Memory',text:'Memory — это заметки Claude о тебе и твоих предпочтениях.\n\nClaude запоминает:\n- Твой стиль общения\n- Предпочтения по формату\n- Контекст проектов\n\nМожно попросить: "Запомни что я предпочитаю короткие ответы без emoji"'},
+          {title:'Артефакты',text:'Артефакты — это файлы которые Claude создаёт прямо в чате: код, документы, таблицы, диаграммы.\n\nИх можно:\n- Скачать\n- Редактировать\n- Использовать как основу для следующего запроса'}
+        ],
+        quiz: [
+          {q:'Что такое Проект в Claude?',opts:['Отдельный аккаунт','Рабочее пространство с контекстом','Платная функция','Плагин'],correct:1},
+          {q:'Что Claude может запомнить через Memory?',opts:['Пароли','Стиль общения и предпочтения','Номер телефона','Адрес офиса'],correct:1},
+          {q:'Артефакт — это...',opts:['Ошибка в коде','Файл созданный Claude в чате','Вирус','Резервная копия'],correct:1}
+        ]
+      },
+      {
+        id: 'claude-3',
+        title: 'Практика: реальные задачи',
+        meta: '~7 мин',
+        content: [
+          {title:'Тексты',text:'Claude отлично пишет:\n- Посты для соцсетей\n- Ответы клиентам\n- Описания услуг\n- Скрипты продаж\n\nВсегда указывай тон, аудиторию и платформу.'},
+          {title:'Анализ и таблицы',text:'Claude может:\n- Анализировать данные из таблиц\n- Создавать отчёты\n- Сравнивать варианты\n- Считать метрики\n\nЗагрузи файл и попроси проанализировать.'},
+          {title:'Автоматизация рутины',text:'Примеры автоматизации:\n- Шаблоны ответов клиентам\n- Чек-листы для процессов\n- Генерация контент-плана на неделю\n- Подготовка отчётов из сырых данных\n\nПравило: если делаешь что-то больше 3 раз — автоматизируй через Claude.'}
+        ],
+        quiz: [
+          {q:'Что нужно указать при запросе на написание поста?',opts:['Только тему','Тон, аудиторию и платформу','Дату публикации','Количество лайков'],correct:1},
+          {q:'Когда стоит автоматизировать задачу через Claude?',opts:['Никогда','Если делаешь её больше 3 раз','Только по пятницам','Только для текстов'],correct:1}
+        ]
+      },
+      {
+        id: 'claude-4',
+        title: 'Ошибки и ограничения',
+        meta: '~4 мин',
+        content: [
+          {title:'Галлюцинации',text:'AI может уверенно выдать неправильную информацию. Это называется "галлюцинация".\n\nКак защититься:\n- Проверяй факты и цифры\n- Не доверяй ссылкам без проверки\n- Спрашивай "ты уверен?" — Claude скажет если не уверен'},
+          {title:'Чего не делать',text:'❌ Не отправляй пароли и конфиденциальные данные\n❌ Не принимай первый ответ без проверки\n❌ Не пиши размытые запросы ("сделай хорошо")\n❌ Не используй для юридических и медицинских решений без проверки специалистом'},
+          {title:'Ограничения',text:'Claude не может:\n- Помнить между отдельными чатами (без Memory/проекта)\n- Выходить в интернет сам (без web search)\n- Выполнять действия в реальном мире\n- Гарантировать 100% точность фактов'}
+        ],
+        quiz: [
+          {q:'Что такое "галлюцинация" AI?',opts:['Баг в программе','Уверенная выдача неправильной информации','Медленная работа','Отказ отвечать'],correct:1},
+          {q:'Что нельзя отправлять в Claude?',opts:['Тексты для редактирования','Пароли и конфиденциальные данные','Вопросы о бизнесе','Запросы на анализ'],correct:1}
+        ]
+      },
+      {
+        id: 'claude-5',
+        title: 'Продвинутые техники',
+        meta: '~5 мин',
+        content: [
+          {title:'Chain of Thought',text:'Попроси Claude думать шаг за шагом:\n"Подумай шаг за шагом и объясни свою логику"\n\nЭто улучшает качество сложных ответов: анализ, планирование, решение задач.'},
+          {title:'Роли и персоны',text:'Задавай роль в начале:\n"Ты опытный маркетолог с 10-летним стажем в digital"\n"Ты строгий редактор, который не пропускает слабые тексты"\n\nРоль меняет стиль и глубину ответа.'},
+          {title:'Форматы вывода',text:'Указывай формат:\n- "Ответь в формате таблицы"\n- "Дай 5 вариантов, каждый с плюсами и минусами"\n- "Формат: JSON с полями name, description, priority"\n\nЧем точнее формат — тем полезнее ответ.'}
+        ],
+        quiz: [
+          {q:'Что делает "Chain of Thought"?',opts:['Ускоряет ответ','Улучшает качество через пошаговое мышление','Добавляет картинки','Переводит на другой язык'],correct:1},
+          {q:'Зачем задавать роль в промпте?',opts:['Для красоты','Чтобы изменить стиль и глубину ответа','Это обязательно','Чтобы Claude работал быстрее'],correct:1}
+        ]
+      }
+    ]
+  },
+  {
+    id: 'assistant',
+    icon: '🧰',
+    colorClass: 'teal',
+    title: 'Универсальный ассистент',
+    desc: 'База по всему понемногу',
+    lessons: [
+      {id:'asst-1',title:'Работа с клиентами',meta:'~5 мин',
+        content:[{title:'Стандарты сервиса',text:'Правила общения с клиентами:\n\n1. Отвечай в течение 15 минут в рабочее время\n2. Всегда обращайся по имени\n3. Не используй канцелярский язык\n4. Если не знаешь ответ — скажи "уточню и вернусь"\n5. Завершай диалог вопросом: "Могу ещё чем-то помочь?"'},{title:'Сложные ситуации',text:'Клиент недоволен:\n- Выслушай, не перебивай\n- Извинись за неудобства\n- Предложи решение\n- Не спорь и не оправдывайся\n\nКлиент молчит:\n- Напомни о себе через 24 часа\n- Задай конкретный вопрос\n- Предложи удобное время для звонка'}],
+        quiz:[{q:'Какой максимальный срок ответа клиенту?',opts:['1 час','15 минут','1 день','Когда будет время'],correct:1},{q:'Что делать если не знаешь ответ?',opts:['Придумать','Уточнить и вернуться','Промолчать','Перенаправить к другому'],correct:1}]
+      },
+      {id:'asst-2',title:'Приложения и инструменты',meta:'~5 мин',
+        content:[{title:'Основные инструменты',text:'CRM — система учёта клиентов. Записывай каждый контакт.\n\nМессенджеры — Telegram, WhatsApp. Один аккаунт для работы.\n\nТаск-менеджеры — Notion, Trello. Каждая задача записана, ничего в голове.\n\nКалендарь — все встречи и дедлайны. Без исключений.'},{title:'Правила работы',text:'- Каждое утро: проверь задачи на сегодня\n- Каждый контакт с клиентом: запиши в CRM\n- Каждая задача: зафиксируй дедлайн\n- Каждый вечер: отметь что сделано'}],
+        quiz:[{q:'Где записывать контакты с клиентами?',opts:['В голове','В CRM','В заметках телефона','Нигде'],correct:1},{q:'Когда нужно проверять задачи?',opts:['Раз в неделю','Каждое утро','По настроению','Только когда напомнят'],correct:1}]
+      },
+      {id:'asst-3',title:'Процессы и SOP',meta:'~5 мин',
+        content:[{title:'Что такое SOP',text:'SOP (Standard Operating Procedure) — пошаговая инструкция для типовой задачи.\n\nЗачем:\n- Не забыть ни один шаг\n- Новый человек разберётся без тебя\n- Одинаковое качество каждый раз\n\nПример: SOP для обработки заявки, SOP для публикации поста'},{title:'Как написать SOP',text:'1. Выбери задачу которую делаешь регулярно\n2. Запиши каждый шаг (даже очевидный)\n3. Добавь чек-лист в конце\n4. Попроси коллегу пройти по инструкции\n5. Исправь непонятные места'}],
+        quiz:[{q:'Что такое SOP?',opts:['Вид отчёта','Пошаговая инструкция','Программа','Тип клиента'],correct:1},{q:'Кто должен уметь выполнить задачу по SOP?',opts:['Только автор','Только руководитель','Любой новый человек','Только опытные сотрудники'],correct:2}]
+      },
+      {id:'asst-4',title:'Коммуникация',meta:'~5 мин',
+        content:[{title:'Переписка',text:'Правила деловой переписки:\n- Одно сообщение — одна мысль\n- Без голосовых (если не договорились иначе)\n- Отвечай на конкретный вопрос, а не "ок"\n- Используй структуру: факт + вопрос/действие'},{title:'Звонки',text:'Перед звонком:\n- Подготовь список вопросов\n- Предупреди о звонке в чате\n\nВо время:\n- Представься\n- Обозначь цель звонка\n- Фиксируй договорённости\n\nПосле:\n- Отправь резюме звонка в чат'}],
+        quiz:[{q:'Что отправить после звонка?',opts:['Ничего','Резюме звонка в чат','Голосовое сообщение','Фото экрана'],correct:1}]
+      },
+      {id:'asst-5',title:'Задачи и приоритеты',meta:'~5 мин',
+        content:[{title:'Матрица приоритетов',text:'Все задачи делятся на 4 типа:\n\n🔴 Срочно + Важно → Делай СЕЙЧАС\n🟡 Важно + Не срочно → Запланируй\n🟠 Срочно + Не важно → Делегируй\n⚪ Не срочно + Не важно → Удали\n\nБольшинство задач попадают в "Важно + Не срочно" — именно их люди откладывают.'},{title:'Планирование дня',text:'Утро:\n1. Посмотри задачи на сегодня\n2. Выбери 3 главные (не больше!)\n3. Начни с самой сложной\n\nВечер:\n1. Отметь что сделано\n2. Перенеси незавершённое\n3. Запиши задачи на завтра'}],
+        quiz:[{q:'Сколько главных задач выбирать на день?',opts:['1','3','10','Все'],correct:1},{q:'С какой задачи начинать день?',opts:['С самой лёгкой','С самой сложной','С любой','С почты'],correct:1}]
+      }
+    ]
+  },
+  {
+    id: 'team',
+    icon: '👥',
+    colorClass: 'amber',
+    title: 'Команда',
+    desc: 'Построение и управление',
+    lessons: [
+      {id:'team-1',title:'Набор команды',meta:'~5 мин',
+        content:[{title:'Где искать',text:'Каналы поиска:\n- Telegram каналы с вакансиями\n- Рекомендации знакомых\n- Фриланс площадки (для тестовых задач)\n- Соцсети (LinkedIn, hh.ru)\n\nЛучший канал — рекомендации. Спроси у команды: "Кого знаете?"'},{title:'Как отбирать',text:'1. Тестовое задание (реальная задача на 1-2 часа)\n2. Короткий звонок (15 мин — ценности, мотивация)\n3. Пробный период (1-2 недели с оплатой)\n\nНе нанимай по резюме — нанимай по результату тестового.'}],
+        quiz:[{q:'Лучший канал поиска сотрудников?',opts:['Объявления','Рекомендации','Случайный поиск','Реклама'],correct:1},{q:'По чему нанимать?',opts:['По резюме','По результату тестового','По внешности','По возрасту'],correct:1}]
+      },
+      {id:'team-2',title:'Адаптация',meta:'~5 мин',
+        content:[{title:'Первые 30 дней',text:'Неделя 1: Знакомство\n- Покажи как всё работает\n- Дай доступы\n- Назначь ментора\n\nНеделя 2-3: Простые задачи\n- Начни с лёгких задач\n- Давай обратную связь каждый день\n\nНеделя 4: Оценка\n- Обсуди результаты\n- Скорректируй ожидания'},{title:'Чек-лист онбординга',text:'☐ Доступы ко всем системам\n☐ Знакомство с командой\n☐ Объяснение процессов (SOP)\n☐ Первые 3 задачи\n☐ Ежедневная обратная связь\n☐ Встреча по итогам первой недели\n☐ Встреча по итогам месяца'}],
+        quiz:[{q:'Когда давать обратную связь новому сотруднику?',opts:['Через месяц','Каждый день в первые недели','Только при ошибках','Никогда'],correct:1}]
+      },
+      {id:'team-3',title:'Управление и делегирование',meta:'~5 мин',
+        content:[{title:'Как делегировать',text:'Формула делегирования:\n1. ЧТО — конкретная задача\n2. ЗАЧЕМ — почему это важно\n3. КОГДА — дедлайн\n4. КАК — формат результата\n5. ПРОВЕРКА — когда и как проверишь\n\n❌ "Сделай презентацию"\n✅ "Сделай 5 слайдов о росте за Q2, с графиками, к пятнице 18:00, покажи черновик в среду"'},{title:'KPI',text:'KPI — измеримые показатели работы.\n\nПримеры:\n- Время ответа клиенту (< 15 мин)\n- Количество обработанных заявок в день\n- Процент выполненных задач в срок\n\nПравило: если нельзя измерить — нельзя улучшить.'}],
+        quiz:[{q:'Что обязательно указать при делегировании?',opts:['Только задачу','Задачу, дедлайн и формат результата','Только дедлайн','Ничего, сами разберутся'],correct:1}]
+      },
+      {id:'team-4',title:'Мотивация',meta:'~5 мин',
+        content:[{title:'Виды мотивации',text:'Материальная:\n- Бонусы за KPI\n- Подписки на сервисы\n- Оплата обучения\n\nНематериальная:\n- Публичная похвала\n- Рост ответственности\n- Свобода в принятии решений\n- Гибкий график\n\nВажно: нематериальная мотивация работает ТОЛЬКО когда закрыта материальная база.'},{title:'Обратная связь',text:'Формула обратной связи:\n1. Факт — что конкретно произошло\n2. Влияние — как это повлияло\n3. Ожидание — что делать дальше\n\n❌ "Ты плохо работаешь"\n✅ "Вчера клиент ждал ответ 2 часа (факт). Из-за этого он написал негативный отзыв (влияние). Давай договоримся отвечать в течение 15 минут (ожидание)"'}],
+        quiz:[{q:'Когда нематериальная мотивация работает?',opts:['Всегда','Когда закрыта материальная база','Никогда','Только для новичков'],correct:1},{q:'Что НЕ входит в формулу обратной связи?',opts:['Факт','Влияние','Личные оценки характера','Ожидание'],correct:2}]
+      },
+      {id:'team-5',title:'Культура команды',meta:'~5 мин',
+        content:[{title:'Ценности',text:'Ценности — это правила которым следуют ВСЕ, включая руководителя.\n\nПримеры:\n- "Мы отвечаем в течение 15 минут"\n- "Мы не обсуждаем людей за спиной"\n- "Ошибки — это нормально, главное сообщить"\n- "Мы празднуем победы вместе"\n\nЦенности работают только если ты сам их соблюдаешь.'},{title:'Традиции',text:'Простые традиции укрепляют команду:\n- Утренний стендап (5 мин, что делаю сегодня)\n- Пятничный итог (что получилось на этой неделе)\n- Празднование маленьких побед\n- Совместный обед/кофе раз в неделю\n\nТрадиции должны быть лёгкими и приятными, а не обязательными.'}],
+        quiz:[{q:'Кто должен соблюдать ценности команды?',opts:['Только новички','Только сотрудники','Все, включая руководителя','Только на камеру'],correct:2}]
+      }
+    ]
+  }
+];
+
+var TRAINING_ACHIEVEMENTS = [
+  {id:'first-lesson',icon:'📖',title:'Первый урок',desc:'Пройди первый урок',check:function(p){return p.lessonsCompleted>=1;}},
+  {id:'quiz-master',icon:'🧠',title:'Мозг',desc:'Ответь правильно на 10 вопросов',check:function(p){return p.correctAnswers>=10;}},
+  {id:'claude-done',icon:'🤖',title:'Мастер Claude',desc:'Пройди все уроки по Claude',check:function(p){return isCourseComplete('claude',p);}},
+  {id:'asst-done',icon:'🧰',title:'Универсал',desc:'Пройди все уроки ассистента',check:function(p){return isCourseComplete('assistant',p);}},
+  {id:'team-done',icon:'👥',title:'Лидер',desc:'Пройди все уроки по команде',check:function(p){return isCourseComplete('team',p);}},
+  {id:'all-done',icon:'👑',title:'Выпускник',desc:'Пройди ВСЕ обучения',check:function(p){return p.lessonsCompleted>=15;}},
+  {id:'streak-3',icon:'🔥',title:'Серия 3',desc:'Учись 3 дня подряд',check:function(p){return p.streak>=3;}},
+  {id:'streak-7',icon:'💎',title:'Серия 7',desc:'Учись 7 дней подряд',check:function(p){return p.streak>=7;}},
+  {id:'points-100',icon:'⭐',title:'Сотка',desc:'Набери 100 баллов',check:function(p){return p.points>=100;}},
+  {id:'points-500',icon:'🌟',title:'Полтысячи',desc:'Набери 500 баллов',check:function(p){return p.points>=500;}}
+];
+
+var TRAINING_PRIZES = [
+  {id:'prize-1',icon:'🎁',name:'Приз 1 (заглушка)',cost:100},
+  {id:'prize-2',icon:'🎉',name:'Приз 2 (заглушка)',cost:250},
+  {id:'prize-3',icon:'🏆',name:'Приз 3 (заглушка)',cost:500}
+];
+
+var trainingProgress = {
+  points: 0,
+  lessonsCompleted: 0,
+  correctAnswers: 0,
+  completedLessons: {},
+  achievements: {},
+  streak: 0,
+  lastTrainingDate: ''
+};
+var currentCourseId = null;
+var currentLessonId = null;
+
+function isCourseComplete(courseId, p) {
+  var course = TRAINING_COURSES.find(function(c){return c.id===courseId;});
+  if (!course) return false;
+  var done = 0;
+  course.lessons.forEach(function(l){if(p.completedLessons[l.id])done++;});
+  return done >= course.lessons.length;
+}
+
+function loadTrainingProgress() {
+  if (!fbDb) return;
+  fbDb.collection('training_progress').doc(myTgId).get().then(function(doc) {
+    if (doc.exists) {
+      var d = doc.data();
+      trainingProgress.points = d.points || 0;
+      trainingProgress.lessonsCompleted = d.lessonsCompleted || 0;
+      trainingProgress.correctAnswers = d.correctAnswers || 0;
+      trainingProgress.completedLessons = d.completedLessons || {};
+      trainingProgress.achievements = d.achievements || {};
+      trainingProgress.streak = d.streak || 0;
+      trainingProgress.lastTrainingDate = d.lastTrainingDate || '';
+    }
+    renderTrainingHub();
+  }).catch(function(err){console.warn(err);renderTrainingHub();});
+}
+
+function saveTrainingProgress() {
+  if (!fbDb) return;
+  fbDb.collection('training_progress').doc(myTgId).set(trainingProgress, {merge:true})
+    .catch(function(err){console.warn('Training save error:', err);});
+}
+
+function updateStreak() {
+  var today = new Date().toISOString().split('T')[0];
+  if (trainingProgress.lastTrainingDate === today) return;
+  var yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  if (trainingProgress.lastTrainingDate === yesterday) {
+    trainingProgress.streak++;
+  } else if (trainingProgress.lastTrainingDate !== today) {
+    trainingProgress.streak = 1;
+  }
+  trainingProgress.lastTrainingDate = today;
+}
+
+function addPoints(amount) {
+  trainingProgress.points += amount;
+  updateStreak();
+  saveTrainingProgress();
+  checkAchievements();
+}
+
+function checkAchievements() {
+  TRAINING_ACHIEVEMENTS.forEach(function(ach) {
+    if (!trainingProgress.achievements[ach.id] && ach.check(trainingProgress)) {
+      trainingProgress.achievements[ach.id] = Date.now();
+      saveTrainingProgress();
+      showAchievementPopup(ach);
+    }
+  });
+}
+
+function showAchievementPopup(ach) {
+  document.getElementById('ach-popup-icon').textContent = ach.icon;
+  document.getElementById('ach-popup-title').textContent = ach.title;
+  document.getElementById('ach-popup-desc').textContent = ach.desc;
+  document.getElementById('ach-popup').classList.add('active');
+}
+
+function closeAchPopup() {
+  document.getElementById('ach-popup').classList.remove('active');
+}
+
+// ===== RENDER FUNCTIONS =====
+
+function renderTrainingHub() {
+  // Points bar
+  document.getElementById('training-points').textContent = trainingProgress.points;
+  var achCount = Object.keys(trainingProgress.achievements).length;
+  document.getElementById('training-ach-count').textContent = achCount + ' ачивок';
+  
+  // Level
+  var lvl = 'Новичок';
+  if (trainingProgress.points >= 500) lvl = 'Эксперт';
+  else if (trainingProgress.points >= 250) lvl = 'Продвинутый';
+  else if (trainingProgress.points >= 100) lvl = 'Практик';
+  else if (trainingProgress.points >= 30) lvl = 'Ученик';
+  document.getElementById('training-level').textContent = lvl;
+  
+  // Courses
+  var cList = document.getElementById('training-courses-list');
+  cList.innerHTML = '';
+  TRAINING_COURSES.forEach(function(course) {
+    var done = 0;
+    course.lessons.forEach(function(l){if(trainingProgress.completedLessons[l.id])done++;});
+    var total = course.lessons.length;
+    var pct = total > 0 ? Math.round(done / total * 100) : 0;
+    
+    var card = document.createElement('div');
+    card.className = 'training-card';
+    card.onclick = function(){openCourse(course.id);};
+    card.innerHTML = '<div class="training-card-head"><div class="training-card-icon '+course.colorClass+'">'+course.icon+'</div><div class="training-card-info"><div class="training-card-title">'+course.title+'</div><div class="training-card-sub">'+course.desc+'</div></div></div>' +
+      '<div class="training-progress"><div class="training-progress-fill" style="width:'+pct+'%"></div></div>' +
+      '<div class="training-stats"><div class="training-stat"><b>'+done+'</b>/'+total+' уроков</div><div class="training-stat"><b>'+pct+'%</b> пройдено</div></div>';
+    cList.appendChild(card);
+  });
+  
+  // Prizes
+  var pList = document.getElementById('training-prizes-list');
+  pList.innerHTML = '';
+  TRAINING_PRIZES.forEach(function(prize) {
+    var canAfford = trainingProgress.points >= prize.cost;
+    var div = document.createElement('div');
+    div.className = 'prize-card';
+    div.innerHTML = '<div class="prize-icon">'+prize.icon+'</div><div class="prize-info"><div class="prize-name">'+prize.name+'</div><div class="prize-cost">'+prize.cost+' ⭐</div></div><div class="prize-btn '+(canAfford?'available':'locked')+'">'+(canAfford?'Получить':'🔒 '+prize.cost)+'</div>';
+    pList.appendChild(div);
+  });
+  
+  // Achievements
+  var aList = document.getElementById('training-achievements-list');
+  aList.innerHTML = '';
+  TRAINING_ACHIEVEMENTS.forEach(function(ach) {
+    var earned = !!trainingProgress.achievements[ach.id];
+    var div = document.createElement('div');
+    div.className = 'prize-card';
+    div.style.opacity = earned ? '1' : '0.5';
+    div.innerHTML = '<div class="prize-icon">'+ach.icon+'</div><div class="prize-info"><div class="prize-name">'+ach.title+'</div><div class="prize-cost">'+ach.desc+'</div></div><div style="font-size:16px">'+(earned?'✅':'🔒')+'</div>';
+    aList.appendChild(div);
+  });
+}
+
+function openCourse(courseId) {
+  currentCourseId = courseId;
+  var course = TRAINING_COURSES.find(function(c){return c.id===courseId;});
+  if (!course) return;
+  
+  document.getElementById('course-title').textContent = course.title;
+  document.getElementById('course-icon').textContent = course.icon;
+  document.getElementById('course-desc').textContent = course.desc;
+  
+  var done = 0;
+  course.lessons.forEach(function(l){if(trainingProgress.completedLessons[l.id])done++;});
+  var total = course.lessons.length;
+  var pct = total > 0 ? Math.round(done / total * 100) : 0;
+  
+  document.getElementById('course-progress-bar').style.width = pct + '%';
+  document.getElementById('course-progress-text').textContent = done + ' из ' + total + ' уроков';
+  
+  var list = document.getElementById('course-lessons-list');
+  list.innerHTML = '';
+  course.lessons.forEach(function(lesson, i) {
+    var isDone = !!trainingProgress.completedLessons[lesson.id];
+    var div = document.createElement('div');
+    div.className = 'lesson-card';
+    div.onclick = function(){openLesson(courseId, lesson.id);};
+    div.innerHTML = '<div class="lesson-num '+(isDone?'done':'')+'">'+(isDone?'✓':(i+1))+'</div><div class="lesson-info"><div class="lesson-title">'+lesson.title+'</div><div class="lesson-meta">'+lesson.meta+(isDone?' · ✅ Пройден':'')+'</div></div><div class="lesson-arrow">›</div>';
+    list.appendChild(div);
+  });
+  
+  switchTab('training-course');
+}
+
+function openLesson(courseId, lessonId) {
+  currentCourseId = courseId;
+  currentLessonId = lessonId;
+  
+  var course = TRAINING_COURSES.find(function(c){return c.id===courseId;});
+  var lesson = course.lessons.find(function(l){return l.id===lessonId;});
+  if (!lesson) return;
+  
+  document.getElementById('lesson-topbar-title').textContent = lesson.title;
+  document.getElementById('lesson-back-btn').textContent = '← ' + course.title;
+  document.getElementById('lesson-back-btn').onclick = function(){openCourse(courseId);};
+  
+  var area = document.getElementById('lesson-content-area');
+  area.innerHTML = '';
+  
+  // Content sections
+  lesson.content.forEach(function(section) {
+    var div = document.createElement('div');
+    div.className = 'lesson-section';
+    div.innerHTML = '<div class="lesson-section-title">'+escHtml(section.title)+'</div><div class="lesson-text">'+escHtml(section.text)+'</div>';
+    area.appendChild(div);
+  });
+  
+  // Quiz
+  if (lesson.quiz && lesson.quiz.length > 0) {
+    var quizWrap = document.createElement('div');
+    quizWrap.className = 'quiz-wrap';
+    quizWrap.innerHTML = '<div class="lesson-section-title">Проверь себя</div>';
+    
+    var qIdx = 0;
+    var correctCount = 0;
+    
+    function renderQuizQuestion() {
+      if (qIdx >= lesson.quiz.length) {
+        // Quiz done
+        var resultDiv = document.createElement('div');
+        resultDiv.className = 'quiz-result';
+        var allCorrect = correctCount === lesson.quiz.length;
+        resultDiv.innerHTML = allCorrect 
+          ? '🎉 Все ответы верные! +' + (correctCount * 5) + ' баллов'
+          : '✅ ' + correctCount + '/' + lesson.quiz.length + ' правильно · +' + (correctCount * 5) + ' баллов';
+        quizWrap.appendChild(resultDiv);
+        
+        // Mark lesson as complete
+        if (!trainingProgress.completedLessons[lessonId]) {
+          trainingProgress.completedLessons[lessonId] = Date.now();
+          trainingProgress.lessonsCompleted++;
+          trainingProgress.correctAnswers += correctCount;
+          addPoints(10 + correctCount * 5); // 10 for lesson + 5 per correct
+          
+          // Complete button
+          var doneBtn = document.createElement('button');
+          doneBtn.className = 'btn-accent';
+          doneBtn.style.marginTop = '12px';
+          doneBtn.textContent = '🎉 Урок пройден! Вернуться';
+          doneBtn.onclick = function(){openCourse(currentCourseId);};
+          quizWrap.appendChild(doneBtn);
+        } else {
+          var backBtn = document.createElement('button');
+          backBtn.className = 'btn-ghost';
+          backBtn.style.marginTop = '12px';
+          backBtn.textContent = '← Вернуться';
+          backBtn.onclick = function(){openCourse(currentCourseId);};
+          quizWrap.appendChild(backBtn);
+        }
+        return;
+      }
+      
+      var q = lesson.quiz[qIdx];
+      var qDiv = document.createElement('div');
+      qDiv.style.marginBottom = '16px';
+      qDiv.innerHTML = '<div class="quiz-q">' + (qIdx+1) + '. ' + escHtml(q.q) + '</div>';
+      
+      q.opts.forEach(function(opt, oi) {
+        var optDiv = document.createElement('div');
+        optDiv.className = 'quiz-opt';
+        optDiv.textContent = opt;
+        optDiv.onclick = function() {
+          // Disable all options
+          qDiv.querySelectorAll('.quiz-opt').forEach(function(o,j){
+            o.classList.add('disabled');
+            if(j === q.correct) o.classList.add('correct');
+          });
+          if (oi === q.correct) {
+            optDiv.classList.add('correct');
+            correctCount++;
+          } else {
+            optDiv.classList.add('wrong');
+          }
+          // Next question after delay
+          setTimeout(function(){qIdx++;renderQuizQuestion();}, 800);
+        };
+        qDiv.appendChild(optDiv);
+      });
+      
+      quizWrap.appendChild(qDiv);
+    }
+    
+    renderQuizQuestion();
+    area.appendChild(quizWrap);
+  }
+  
+  switchTab('training-lesson');
+}
+
+// Load training on tab switch
+var origSwitchTab = switchTab;
+switchTab = function(tab) {
+  origSwitchTab(tab);
+  if (tab === 'training') {
+    loadTrainingProgress();
+  }
+};
+
+// ===== END TRAINING SYSTEM =====
 
 // Keyboard fix: scroll focused input into view above on-screen keyboard
 document.addEventListener('focusin',function(e){
