@@ -60,7 +60,7 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 .manage-hub-sub{font-size:12px;color:var(--text3);margin-top:2px;}
 .manage-hub-arrow{font-size:18px;color:var(--text3);}
 .bottomnav{height:64px;background:var(--bg2);border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 2px env(safe-area-inset-bottom,6px);flex-shrink:0;}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;border-radius:10px;position:relative;min-width:44px;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 6px;border-radius:10px;position:relative;min-width:36px;}
 .nav-item.active .nav-icon,.nav-item.active .nav-label{color:var(--accent);}
 .nav-icon{font-size:20px;color:var(--text3);line-height:1;}
 .nav-label{font-size:9px;color:var(--text3);text-transform:uppercase;}
@@ -181,6 +181,17 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 .prize-btn{padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:0.5px solid var(--border);}
 .prize-btn.available{background:rgba(45,212,191,0.12);border-color:rgba(45,212,191,0.3);color:var(--accent2);}
 .prize-btn.locked{background:var(--bg2);color:var(--text3);pointer-events:none;}
+/* INSTRUCTIONS */
+.instr-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.instr-card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.instr-card-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px;}
+.instr-link{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(45,212,191,0.08);border:0.5px solid rgba(45,212,191,0.25);border-radius:10px;color:var(--accent2);font-size:13px;font-weight:600;text-decoration:none;margin-bottom:6px;cursor:pointer;}
+.instr-step{display:flex;gap:10px;margin-bottom:10px;}
+.instr-num{width:24px;height:24px;border-radius:50%;background:rgba(45,212,191,0.12);border:0.5px solid rgba(45,212,191,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;margin-top:1px;}
+.instr-text{font-size:12px;color:var(--text2);line-height:1.6;}
+.instr-section{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:18px 0 10px;}
+.instr-code{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:11px;color:var(--accent2);line-height:1.5;word-break:break-all;margin:6px 0 10px;}
+.instr-warn{background:rgba(224,168,58,0.08);border:0.5px solid rgba(224,168,58,0.25);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--amber);line-height:1.5;margin-bottom:10px;}
 </style>
 </head>
 <body>
@@ -320,10 +331,95 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     <div class="lesson-content" style="padding-top:16px;" id="lesson-content-area"></div>
   </div>
 
+  <!-- INSTRUCTIONS -->
+  <div class="app-screen" id="s-instructions">
+    <div class="topbar"><div><div class="topbar-logo">Инструкции</div><div class="topbar-sub">Для команды</div></div></div>
+    <div class="content" style="padding-top:16px;">
+
+      <!-- POSTING BOT -->
+      <div class="instr-card">
+        <div class="instr-card-title">📤 Бот отложенной отправки</div>
+        <div class="instr-card-desc">Планируй посты в каналы по расписанию. Текст, фото, видео, опросы, кнопки — всё через бота.</div>
+        
+        <a class="instr-link" href="https://t.me/ManClubadminPoster_bot" target="_blank">🤖 Открыть @ManClubadminPoster_bot</a>
+        
+        <div class="instr-section">Быстрый старт</div>
+        
+        <div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Открой <b>@ManClubadminPoster_bot</b> в Telegram и напиши <b>/start</b></div></div>
+        <div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Отправь боту <b>текст, фото или видео</b> — это станет постом</div></div>
+        <div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Выбери <b>канал</b> для публикации</div></div>
+        <div class="instr-step"><div class="instr-num">4</div><div class="instr-text">Выбери <b>время</b>: сейчас, через час, завтра или свою дату</div></div>
+        <div class="instr-step"><div class="instr-num">5</div><div class="instr-text">Проверь <b>предпросмотр</b> и подтверди</div></div>
+        
+        <div class="instr-section">Команды бота</div>
+        
+        <div class="instr-code">/newpost — создать новый пост
+/poll — создать опрос
+/queue — очередь постов
+/drafts — черновики
+/channels — список каналов
+/addchannel @ch — добавить канал
+/stats — статистика отправок
+/team — управление командой
+/help — справка</div>
+
+        <div class="instr-section">Кнопки к постам</div>
+        <div class="instr-card-desc">При создании поста нажми "Добавить кнопки". Формат ввода:</div>
+        <div class="instr-code">Текст кнопки | https://ссылка
+
+Несколько в ряд через запятую:
+Сайт | https://example.com, Связь | https://t.me/user
+
+Каждый новый ряд — с новой строки.</div>
+
+        <div class="instr-section">Опросы</div>
+        <div class="instr-card-desc">Команда <b>/poll</b> → бот попросит ввести вопрос, затем варианты ответов (каждый с новой строки, от 2 до 10).</div>
+
+        <div class="instr-section">Повторяющиеся посты</div>
+        <div class="instr-card-desc">После выбора времени бот спросит "Повторять?". Можно выбрать: каждый день, каждую неделю или каждый месяц. Пост будет автоматически отправляться по расписанию.</div>
+
+        <div class="instr-section">Управление командой</div>
+        <div class="instr-card-desc">Владелец может приглашать людей:</div>
+        <div class="instr-code">/invite @username editor — доступ к созданию постов
+/invite @username viewer — только просмотр
+/remove @username — удалить из команды</div>
+
+        <div class="instr-warn">⚠️ Часовой пояс: Иркутск (UTC+8). Все времена указываются по Иркутску.</div>
+      </div>
+
+      <!-- ADMIN APP -->
+      <div class="instr-card">
+        <div class="instr-card-title">⚙️ Админ панель</div>
+        <div class="instr-card-desc">Это приложение. Управление новостями, челленджами, квестами и обучениями для клуба ManClub in Siberia.</div>
+        
+        <div class="instr-section">Вкладки</div>
+        <div class="instr-step"><div class="instr-num">📋</div><div class="instr-text"><b>Заявки</b> — одобрение/отклонение заявок на доступ к админке</div></div>
+        <div class="instr-step"><div class="instr-num">⚙️</div><div class="instr-text"><b>Управление</b> — новости, челленджи, квесты, задачи</div></div>
+        <div class="instr-step"><div class="instr-num">📚</div><div class="instr-text"><b>Обучения</b> — курсы для команды с квизами и баллами</div></div>
+        <div class="instr-step"><div class="instr-num">📄</div><div class="instr-text"><b>Инструкции</b> — эта страница</div></div>
+      </div>
+
+      <!-- MAIN APP -->
+      <div class="instr-card">
+        <div class="instr-card-title">📱 Основное приложение</div>
+        <div class="instr-card-desc">Клубное мини-приложение для участников ManClub in Siberia.</div>
+        <a class="instr-link" href="https://t.me/games_lis_bot" target="_blank">📱 Открыть @games_lis_bot</a>
+      </div>
+
+      <!-- ROULETTE -->
+      <div class="instr-card">
+        <div class="instr-card-title">🎰 Рулетка</div>
+        <div class="instr-card-desc">Маркетинговое мини-приложение с призами для привлечения новых участников.</div>
+      </div>
+
+    </div>
+  </div>
+
   <nav class="bottomnav" id="bottomnav">
     <div class="nav-item active" id="nav-requests" onclick="switchTab('requests')"><div class="nav-icon">📋</div><div class="nav-label">Заявки</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
     <div class="nav-item" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div></div>
     <div class="nav-item" id="nav-training" onclick="switchTab('training')"><div class="nav-icon">📚</div><div class="nav-label">Обучения</div></div>
+    <div class="nav-item" id="nav-instructions" onclick="switchTab('instructions')"><div class="nav-icon">📄</div><div class="nav-label">Инструкции</div></div>
   </nav>
 </div>
 
