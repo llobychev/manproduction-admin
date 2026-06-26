@@ -553,36 +553,37 @@ window.addEventListener('load',function(){
   myTgName=u?((u.first_name||'')+' '+(u.last_name||'')).trim():'';
 
   firebaseAuth(function(){
-  document.getElementById('splash').style.display='none';
+    document.getElementById('splash').style.display='none';
 
-  if(myTgId===SUPER_ADMIN_ID){
-    myUser={id:myTgId,name:myTgName||'Админ',role:'admin',status:'approved'};
-    launchApp();
-    return;
-  }
-
-  if(!fbDb){
-    showToast('Нет подключения к базе');
-    showScreen('s-register');
-    return;
-  }
-
-  fbDb.collection('admin_users').doc(myTgId).get().then(function(doc){
-    if(doc.exists){
-      myUser=doc.data();
-      if(myUser.status==='approved'){
-        launchApp();
-      } else if(myUser.status==='pending'){
-        showPendingScreen();
-      } else if(myUser.status==='rejected'){
-        showRejectedScreen();
-      }
-    } else {
-      showScreen('s-register');
+    if(myTgId===SUPER_ADMIN_ID){
+      myUser={id:myTgId,name:myTgName||'\u0410\u0434\u043c\u0438\u043d',role:'admin',status:'approved'};
+      launchApp();
+      return;
     }
-  }).catch(function(err){
-    console.warn('Failed to check user status', err);
-    showScreen('s-register');
+
+    if(!fbDb){
+      showToast('\u041d\u0435\u0442 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u043a \u0431\u0430\u0437\u0435');
+      showScreen('s-register');
+      return;
+    }
+
+    fbDb.collection('admin_users').doc(myTgId).get().then(function(doc){
+      if(doc.exists){
+        myUser=doc.data();
+        if(myUser.status==='approved'){
+          launchApp();
+        } else if(myUser.status==='pending'){
+          showPendingScreen();
+        } else if(myUser.status==='rejected'){
+          showRejectedScreen();
+        }
+      } else {
+        showScreen('s-register');
+      }
+    }).catch(function(err){
+      console.warn('Failed to check user status', err);
+      showScreen('s-register');
+    });
   });
 });
 
