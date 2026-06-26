@@ -7,6 +7,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -517,6 +518,33 @@ function roleLabel(id){var r=ROLES.find(function(x){return x.id===id;});return r
 
 function getTg(){return window.Telegram&&window.Telegram.WebApp;}
 
+
+// ===== FIREBASE AUTH =====
+var AUTH_SERVER='https://llobychev-manproduction-networking-server-6f2d.twc1.net';
+function firebaseAuth(callback){
+  callback=callback||function(){};
+  var tg=getTg();
+  if(!tg||!tg.initData){console.warn('No initData, skipping auth');callback();return;}
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST',AUTH_SERVER+'/auth',true);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.onload=function(){
+    if(xhr.status===200){
+      try{
+        var data=JSON.parse(xhr.responseText);
+        if(data.token){
+          firebase.auth().signInWithCustomToken(data.token)
+            .then(function(){console.log('Firebase Auth: signed in as',firebase.auth().currentUser.uid);callback();})
+            .catch(function(err){console.warn('Auth signIn error:',err);callback();});
+        }else{callback();}
+      }catch(e){console.warn('Auth parse error:',e);callback();}
+    }else{console.warn('Auth server error:',xhr.status);callback();}
+  };
+  xhr.onerror=function(){console.warn('Auth network error');callback();};
+  xhr.send(JSON.stringify({initData:tg.initData}));
+}
+// ===== END FIREBASE AUTH =====
+
 window.addEventListener('load',function(){
   var tg=getTg();
   if(tg){tg.ready();tg.expand();}
@@ -524,6 +552,7 @@ window.addEventListener('load',function(){
   myTgId=u?String(u.id):('test_'+Math.floor(Math.random()*100000));
   myTgName=u?((u.first_name||'')+' '+(u.last_name||'')).trim():'';
 
+  firebaseAuth(function(){
   document.getElementById('splash').style.display='none';
 
   if(myTgId===SUPER_ADMIN_ID){
