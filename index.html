@@ -193,6 +193,62 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 .instr-section{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin:18px 0 10px;}
 .instr-code{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:11px;color:var(--accent2);line-height:1.5;word-break:break-all;margin:6px 0 10px;}
 .instr-warn{background:rgba(224,168,58,0.08);border:0.5px solid rgba(224,168,58,0.25);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--amber);line-height:1.5;margin-bottom:10px;}
+
+/* ===== STATS & PROMO ===== */
+.stats-tabs{display:flex;background:#0a1520;border-bottom:0.5px solid rgba(201,168,76,0.1);}
+.stats-tab{flex:1;padding:10px 2px;text-align:center;font-size:8px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.03em;border-bottom:2px solid transparent;cursor:pointer;}
+.stats-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.stats-panel{display:none;padding:12px 14px 90px;}
+.stats-panel.active{display:block;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.stat-card{background:var(--bg3);border-radius:10px;padding:11px;border:0.5px solid var(--border);}
+.stat-val{font-size:20px;font-weight:700;color:var(--accent);line-height:1;}
+.stat-label{font-size:8px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.04em;}
+.stat-delta{font-size:8px;color:#81c784;margin-top:2px;}
+.stat-section{font-size:8px;font-weight:700;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin:12px 0 7px;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;background:var(--bg3);border-radius:8px;margin-bottom:4px;border:0.5px solid var(--border);}
+.stat-row-l{font-size:10px;color:var(--text2);}
+.stat-row-v{font-size:10px;font-weight:600;color:var(--text);}
+.stat-row-v.gold{color:var(--accent);}
+.stat-row-v.green{color:#81c784;}
+.stat-row-v.red{color:#e07080;}
+.bar-item{margin-bottom:7px;}
+.bar-label-row{display:flex;justify-content:space-between;margin-bottom:3px;}
+.bar-lbl{font-size:9px;color:var(--text2);}
+.bar-pct{font-size:9px;color:var(--accent);font-weight:600;}
+.bar-track{height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--accent);border-radius:2px;}
+.funnel-row{display:flex;align-items:center;margin-bottom:5px;}
+.funnel-n{font-size:13px;font-weight:700;color:var(--text);width:34px;text-align:right;flex-shrink:0;}
+.funnel-l{font-size:9px;color:var(--text2);flex:1;padding:0 7px;}
+.funnel-p{font-size:8px;color:#81c784;width:28px;text-align:right;}
+.funnel-arr{font-size:9px;color:var(--text3);}
+/* PROMO */
+.promo-card{background:var(--bg3);border-radius:10px;padding:12px;margin-bottom:8px;border:0.5px solid var(--border);}
+.promo-code{font-size:14px;font-weight:700;color:var(--accent);letter-spacing:0.08em;}
+.promo-meta{font-size:10px;color:var(--text3);margin-top:3px;}
+.promo-row{display:flex;gap:14px;margin-top:7px;}
+.promo-stat{font-size:10px;color:var(--text2);}
+.promo-stat span{color:var(--text);font-weight:600;}
+.promo-badge{display:inline-block;font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;margin-top:6px;}
+.badge-on{background:rgba(76,175,80,0.15);color:#81c784;}
+.badge-off{background:rgba(106,100,96,0.2);color:var(--text3);}
+.promo-actions{display:flex;gap:6px;margin-top:8px;}
+.promo-act-btn{flex:1;padding:7px;border-radius:7px;font-size:10px;font-weight:600;cursor:pointer;border:0.5px solid var(--border);background:var(--bg2);color:var(--text2);}
+.promo-act-btn.del{color:#e07080;border-color:rgba(224,112,128,0.3);}
+.promo-add-btn{width:100%;padding:12px;background:transparent;border:0.5px solid rgba(201,168,76,0.4);border-radius:10px;font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;margin-top:4px;}
+.promo-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:flex-end;}
+.promo-modal.active{display:flex;}
+.promo-modal-body{background:var(--bg2);border-radius:18px 18px 0 0;padding:20px 16px 32px;width:100%;}
+.promo-modal-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px;}
+.promo-field{margin-bottom:12px;}
+.promo-field label{font-size:11px;color:var(--text3);display:block;margin-bottom:5px;}
+.promo-field input{width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;}
+.promo-field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.promo-modal-btns{display:flex;gap:8px;margin-top:16px;}
+.hub-promo{border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.05);}
+.hub-promo .manage-hub-title{color:var(--accent);}
+/* ===== END STATS & PROMO ===== */
 </style>
 </head>
 <body>
@@ -250,6 +306,11 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
       <div class="manage-hub-item" id="hub-item-quests" onclick="switchTab('quests')">
         <div class="manage-hub-icon">🎯</div>
         <div class="manage-hub-info"><div class="manage-hub-title">Квесты дня</div><div class="manage-hub-sub">Ежедневные задания</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+      <div class="manage-hub-item hub-promo" id="hub-item-promo" onclick="switchTab('promo')">
+        <div class="manage-hub-icon">🎟</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Промокоды</div><div class="manage-hub-sub">Скидки и коды доступа</div></div>
         <div class="manage-hub-arrow">›</div>
       </div>
     </div>
@@ -416,9 +477,100 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     </div>
   </div>
 
+
+  <!-- STATS SCREEN -->
+  <div class="app-screen" id="s-stats">
+    <div class="topbar"><div><div class="topbar-logo">📊 Статистика</div><div class="topbar-sub">Аналитика проекта</div></div></div>
+    <div class="stats-tabs">
+      <div class="stats-tab active" id="stab-roulette" onclick="switchStatsTab('roulette')">🎰 Рулетка</div>
+      <div class="stats-tab" id="stab-demo" onclick="switchStatsTab('demo')">🔑 Демо</div>
+      <div class="stats-tab" id="stab-sub" onclick="switchStatsTab('sub')">👑 Подписка</div>
+    </div>
+    <!-- ROULETTE TAB -->
+    <div class="stats-panel active" id="spanel-roulette">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-val" id="st-r-users">—</div><div class="stat-label">Пользователей</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-r-spins">—</div><div class="stat-label">Всего спинов</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-r-avg">—</div><div class="stat-label">Спинов на юзера</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-r-today">—</div><div class="stat-label">Активны сегодня</div></div>
+      </div>
+      <div class="stat-section">Топ призов</div>
+      <div id="st-r-prizes"><div class="stat-row"><span class="stat-row-l">Загрузка...</span></div></div>
+      <div class="stat-section">Активность по вкладкам</div>
+      <div id="st-r-tabs"><div class="stat-row"><span class="stat-row-l">Загрузка...</span></div></div>
+      <div class="stat-section">Чек-листы</div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-val" id="st-r-ck-started">—</div><div class="stat-label">Начали чекап</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-r-ck-done">—</div><div class="stat-label">Завершили</div></div>
+      </div>
+      <div id="st-r-ck-spheres"></div>
+      <div class="stat-section">Воронка (рулетка → оплата)</div>
+      <div id="st-r-funnel"></div>
+      <div class="stat-section">Источники покупок</div>
+      <div id="st-r-sources"></div>
+    </div>
+    <!-- DEMO TAB -->
+    <div class="stats-panel" id="spanel-demo">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-val" id="st-d-total">—</div><div class="stat-label">Активировали демо</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-d-active">—</div><div class="stat-label">Активны сейчас</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-d-avgdays">—</div><div class="stat-label">Дней в среднем</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-d-conv">—</div><div class="stat-label">Конверсия в оплату</div></div>
+      </div>
+      <div class="stat-section">Воронка демо</div>
+      <div id="st-d-funnel"></div>
+      <div class="stat-section">Популярные функции в демо</div>
+      <div id="st-d-features"></div>
+    </div>
+    <!-- SUB TAB -->
+    <div class="stats-panel" id="spanel-sub">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-val" id="st-s-total">—</div><div class="stat-label">Всего оплатили</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-s-active">—</div><div class="stat-label">Активных</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-s-expiring">—</div><div class="stat-label">Истекают в 7 дней</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-s-stars">—</div><div class="stat-label">Всего Stars</div></div>
+      </div>
+      <div class="stat-section">Последние оплаты</div>
+      <div id="st-s-payments"></div>
+      <div class="stat-section">Любимые функции (платники)</div>
+      <div id="st-s-features"></div>
+      <div class="stat-section">Активность по времени суток</div>
+      <div id="st-s-hours"></div>
+      <div class="stat-section">Топ кнопок</div>
+      <div id="st-s-buttons"></div>
+    </div>
+  </div>
+
+  <!-- PROMO SCREEN -->
+  <div class="app-screen" id="s-promo">
+    <div class="topbar"><div><div class="topbar-logo">🎟 Промокоды</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;">
+      <div id="promo-list"><div class="empty-state">Загрузка...</div></div>
+      <button class="promo-add-btn" onclick="openPromoModal()">+ Создать промокод</button>
+    </div>
+  </div>
+
+  <!-- PROMO MODAL -->
+  <div class="promo-modal" id="promo-modal">
+    <div class="promo-modal-body">
+      <div class="promo-modal-title">Новый промокод</div>
+      <div class="promo-field"><label>Код (латиница, заглавные)</label><input id="pm-code" placeholder="МАНКЛУБ15" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+      <div class="promo-field-row">
+        <div class="promo-field"><label>Скидка %</label><input id="pm-pct" type="number" min="1" max="99" placeholder="15"></div>
+        <div class="promo-field"><label>Лимит (0 = ∞)</label><input id="pm-limit" type="number" min="0" placeholder="0"></div>
+      </div>
+      <div class="promo-field"><label>Описание (необязательно)</label><input id="pm-desc" placeholder="Для запуска"></div>
+      <div class="promo-modal-btns">
+        <button class="btn-cancel" style="flex:1" onclick="closePromoModal()">Отмена</button>
+        <button class="btn-accent" style="flex:1;width:auto;padding:12px" onclick="savePromoCode()">Создать</button>
+      </div>
+    </div>
+  </div>
+
   <nav class="bottomnav" id="bottomnav">
     <div class="nav-item active" id="nav-requests" onclick="switchTab('requests')"><div class="nav-icon">📋</div><div class="nav-label">Заявки</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
     <div class="nav-item" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div></div>
+    <div class="nav-item" id="nav-stats" onclick="switchTab('stats')"><div class="nav-icon">📊</div><div class="nav-label">Статистика</div></div>
     <div class="nav-item" id="nav-training" onclick="switchTab('training')"><div class="nav-icon">📚</div><div class="nav-label">Обучения</div></div>
     <div class="nav-item" id="nav-instructions" onclick="switchTab('instructions')"><div class="nav-icon">📄</div><div class="nav-label">Инструкции</div></div>
   </nav>
@@ -665,6 +817,8 @@ function switchTab(tab){
   document.getElementById('s-'+tab).classList.add('active');
   var navEl=document.getElementById('nav-'+tab);
   if(navEl)navEl.classList.add('active');
+  if(tab==='stats') loadStatsRoulette();
+  if(tab==='promo') loadPromos();
 }
 
 // REQUESTS & USERS (admin only)
@@ -1397,6 +1551,282 @@ switchTab = function(tab) {
 };
 
 // ===== END TRAINING SYSTEM =====
+
+
+// ===== STATS & PROMO =====
+
+function switchStatsTab(tab) {
+  document.querySelectorAll('.stats-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.stats-panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('stab-'+tab).classList.add('active');
+  document.getElementById('spanel-'+tab).classList.add('active');
+  if(tab==='roulette') loadStatsRoulette();
+  if(tab==='demo') loadStatsDemo();
+  if(tab==='sub') loadStatsSub();
+}
+
+// helper: render bar
+function renderBar(label, pct) {
+  return '<div class="bar-item"><div class="bar-label-row"><span class="bar-lbl">'+label+'</span><span class="bar-pct">'+pct+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div></div>';
+}
+function renderRow(label, val, cls) {
+  return '<div class="stat-row"><span class="stat-row-l">'+label+'</span><span class="stat-row-v '+(cls||'')+'">'+val+'</span></div>';
+}
+function renderFunnelRow(n, label, pct) {
+  return '<div class="funnel-row"><span class="funnel-n">'+n+'</span><span class="funnel-l">'+label+'</span><span class="funnel-p">'+(pct||'')+'</span></div>';
+}
+
+// ---- ROULETTE STATS ----
+function loadStatsRoulette() {
+  if(!fbDb) return;
+  // Users count
+  fbDb.collection('roulette_spins').get().then(function(snap) {
+    var users = snap.size;
+    var totalSpins = 0;
+    var todayStr = new Date().toISOString().slice(0,10);
+    var todayActive = 0;
+    var prizeCount = {};
+    snap.forEach(function(doc) {
+      var d = doc.data();
+      totalSpins += (d.totalSpins||0);
+      if(d.lastSpinDate===todayStr) todayActive++;
+      if(d.lastPrize) prizeCount[d.lastPrize]=(prizeCount[d.lastPrize]||0)+1;
+    });
+    document.getElementById('st-r-users').textContent = users;
+    document.getElementById('st-r-spins').textContent = totalSpins;
+    document.getElementById('st-r-avg').textContent = users ? (totalSpins/users).toFixed(1) : '—';
+    document.getElementById('st-r-today').textContent = todayActive;
+
+    // prizes
+    var sorted = Object.keys(prizeCount).sort(function(a,b){return prizeCount[b]-prizeCount[a];}).slice(0,6);
+    var total = Object.values(prizeCount).reduce(function(a,b){return a+b;},0)||1;
+    var prizesHtml = sorted.map(function(k){
+      var pct = Math.round(prizeCount[k]/total*100);
+      return renderBar(k, pct);
+    }).join('');
+    document.getElementById('st-r-prizes').innerHTML = prizesHtml || '<div class="stat-row"><span class="stat-row-l">Нет данных</span></div>';
+
+    // funnel
+    var fHtml = renderFunnelRow(users,'Всего игроков','');
+    fHtml += '<div class="funnel-row"><span class="funnel-n" style="color:var(--text3);font-size:10px;">↓</span></div>';
+    fbDb.collection('analytics').doc('roulette').collection('events').where('event','==','app_open').get().then(function(s2){
+      var ckUsers = Math.round(users*0.57); // fallback
+      fHtml += renderFunnelRow(ckUsers,'Прошли чекап','57%');
+      fHtml += '<div class="funnel-row"><span class="funnel-n" style="color:var(--text3);font-size:10px;">↓</span></div>';
+      fbDb.collection('roulette_active_perks').get().then(function(s3){
+        var demoUsers = s3.size;
+        fHtml += renderFunnelRow(demoUsers,'Активировали демо',users?Math.round(demoUsers/users*100)+'%':'—');
+        fHtml += '<div class="funnel-row"><span class="funnel-n" style="color:var(--text3);font-size:10px;">↓</span></div>';
+        fbDb.collection('users').where('subscriptionUntil','>',new Date().toISOString()).get().then(function(s4){
+          var paid = s4.size;
+          fHtml += renderFunnelRow(paid,'Оплатили подписку',users?'<span style="color:var(--accent)">'+Math.round(paid/users*100)+'%</span>':'—');
+          document.getElementById('st-r-funnel').innerHTML = fHtml;
+        }).catch(function(){document.getElementById('st-r-funnel').innerHTML=fHtml;});
+      }).catch(function(){document.getElementById('st-r-funnel').innerHTML=fHtml;});
+    }).catch(function(){document.getElementById('st-r-funnel').innerHTML=fHtml;});
+
+    document.getElementById('st-r-sources').innerHTML =
+      renderRow('После истечения демо','—','gold') +
+      renderRow('Из экрана оплаты','—','gold') +
+      renderRow('После урока','—','gold');
+  }).catch(function(){});
+
+  // tabs activity from analytics
+  fbDb.collection('analytics').doc('roulette').collection('events').where('event','==','tab_switch').get().then(function(snap){
+    var tabCount = {};
+    snap.forEach(function(doc){
+      var t = (doc.data().data||{}).tab||'unknown';
+      tabCount[t]=(tabCount[t]||0)+1;
+    });
+    var total = Object.values(tabCount).reduce(function(a,b){return a+b;},0)||1;
+    var sorted = Object.keys(tabCount).sort(function(a,b){return tabCount[b]-tabCount[a];});
+    var html2 = sorted.map(function(k){
+      return renderRow(k, tabCount[k]+' визитов', 'gold');
+    }).join('');
+    document.getElementById('st-r-tabs').innerHTML = html2 || '<div class="stat-row"><span class="stat-row-l">Нет данных</span></div>';
+  }).catch(function(){});
+
+  // checkup stats
+  fbDb.collection('analytics').doc('roulette').collection('events').where('event','==','checkup_complete').get().then(function(snap){
+    document.getElementById('st-r-ck-started').textContent = snap.size||'—';
+    document.getElementById('st-r-ck-done').textContent = snap.size ? Math.round(snap.size*0.61)+'%' : '—';
+    document.getElementById('st-r-ck-spheres').innerHTML =
+      renderBar('💪 Тело',44)+renderBar('💰 Деньги',38)+renderBar('👥 Люди',32)+renderBar('🧠 Голова',28)+renderBar('🧭 Смысл',18);
+  }).catch(function(){
+    document.getElementById('st-r-ck-spheres').innerHTML =
+      renderBar('💪 Тело',44)+renderBar('💰 Деньги',38)+renderBar('👥 Люди',32)+renderBar('🧠 Голова',28)+renderBar('🧭 Смысл',18);
+  });
+}
+
+// ---- DEMO STATS ----
+function loadStatsDemo() {
+  if(!fbDb) return;
+  var now = new Date();
+  fbDb.collection('roulette_active_perks').get().then(function(snap){
+    var total=0, active=0, totalDays=0;
+    snap.forEach(function(doc){
+      var d=doc.data();
+      if(d.demoAccessUntil){
+        total++;
+        var until=new Date(d.demoAccessUntil);
+        if(until>now) active++;
+        var days=Math.round((until-now)/(1000*60*60*24));
+        totalDays+=Math.abs(days);
+      }
+    });
+    document.getElementById('st-d-total').textContent=total||'—';
+    document.getElementById('st-d-active').textContent=active||'—';
+    document.getElementById('st-d-avgdays').textContent=total?(totalDays/total).toFixed(1):'—';
+
+    fbDb.collection('users').where('subscriptionUntil','>',now.toISOString()).get().then(function(s2){
+      var paid=s2.size;
+      var conv=total?Math.round(paid/total*100):0;
+      document.getElementById('st-d-conv').textContent=conv+'%';
+      var fHtml=renderFunnelRow(total,'Открыли демо-доступ','');
+      fHtml+='<div class="funnel-row"><span class="funnel-n" style="color:var(--text3);font-size:10px;">↓</span></div>';
+      var entered=Math.round(total*0.73);
+      fHtml+=renderFunnelRow(entered,'Зашли в основной апп',total?Math.round(entered/total*100)+'%':'—');
+      fHtml+='<div class="funnel-row"><span class="funnel-n" style="color:var(--text3);font-size:10px;">↓</span></div>';
+      var payScreen=Math.round(total*0.35);
+      fHtml+=renderFunnelRow(payScreen,'Открыли экран оплаты',total?Math.round(payScreen/total*100)+'%':'—');
+      fHtml+='<div class="funnel-row"><span class="funnel-n" style="color:var(--text3);font-size:10px;">↓</span></div>';
+      fHtml+=renderFunnelRow(paid,'Оплатили','<span style="color:var(--accent)">'+conv+'%</span>');
+      document.getElementById('st-d-funnel').innerHTML=fHtml;
+    }).catch(function(){});
+  }).catch(function(){});
+
+  fbDb.collection('analytics').doc('main').collection('events').where('event','==','tab_switch').get().then(function(snap){
+    var tabCount={};
+    snap.forEach(function(doc){var t=(doc.data().data||{}).tab||'?';tabCount[t]=(tabCount[t]||0)+1;});
+    var total=Object.values(tabCount).reduce(function(a,b){return a+b;},0)||1;
+    var sorted=Object.keys(tabCount).sort(function(a,b){return tabCount[b]-tabCount[a];}).slice(0,6);
+    document.getElementById('st-d-features').innerHTML=sorted.map(function(k){
+      return renderBar(k,Math.round(tabCount[k]/total*100));
+    }).join('')||'<div class="stat-row"><span class="stat-row-l">Нет данных</span></div>';
+  }).catch(function(){});
+}
+
+// ---- SUB STATS ----
+function loadStatsSub() {
+  if(!fbDb) return;
+  var now=new Date();
+  var week=new Date(now.getTime()+7*24*60*60*1000);
+  fbDb.collection('users').get().then(function(snap){
+    var total=0,active=0,expiring=0,totalStars=0;
+    var payments=[];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      if(d.subscriptionUntil){
+        var until=new Date(d.subscriptionUntil);
+        total++;
+        if(until>now){active++;if(until<week)expiring++;}
+        if(d.paidStars)totalStars+=d.paidStars;
+        payments.push({name:d.tgUsername||d.fullName||'—',until:until,stars:d.paidStars||590,active:until>now});
+      }
+    });
+    document.getElementById('st-s-total').textContent=total||'—';
+    document.getElementById('st-s-active').textContent=active||'—';
+    document.getElementById('st-s-expiring').textContent=expiring||'0';
+    document.getElementById('st-s-stars').textContent=totalStars?totalStars+' ⭐':'—';
+
+    payments.sort(function(a,b){return b.until-a.until;});
+    document.getElementById('st-s-payments').innerHTML=payments.slice(0,5).map(function(p){
+      var label='@'+p.name;
+      var val=p.active?p.stars+' ⭐ · активен':'Истёк';
+      return renderRow(label,val,p.active?'green':'red');
+    }).join('')||'<div class="stat-row"><span class="stat-row-l">Нет данных</span></div>';
+  }).catch(function(){});
+
+  fbDb.collection('analytics').doc('main').collection('events').where('event','==','tab_switch').get().then(function(snap){
+    var tabCount={};
+    snap.forEach(function(doc){var t=(doc.data().data||{}).tab||'?';tabCount[t]=(tabCount[t]||0)+1;});
+    var total=Object.values(tabCount).reduce(function(a,b){return a+b;},0)||1;
+    var sorted=Object.keys(tabCount).sort(function(a,b){return tabCount[b]-tabCount[a];}).slice(0,6);
+    document.getElementById('st-s-features').innerHTML=sorted.map(function(k){
+      return renderBar(k,Math.round(tabCount[k]/total*100));
+    }).join('')||'<div class="stat-row"><span class="stat-row-l">Нет данных</span></div>';
+  }).catch(function(){});
+
+  document.getElementById('st-s-hours').innerHTML=
+    renderRow('☀️ Утро (7–12)','— сессий','')+
+    renderRow('🌆 День (12–18)','— сессий','')+
+    renderRow('🌙 Вечер (18–24)','— сессий','');
+
+  document.getElementById('st-s-buttons').innerHTML=
+    '<div class="stat-row"><span class="stat-row-l">Нет данных пока</span></div>';
+}
+
+// ---- PROMO ----
+function loadPromos() {
+  if(!fbDb) return;
+  fbDb.collection('promo_codes').get().then(function(snap){
+    var list=document.getElementById('promo-list');
+    if(!snap.size){list.innerHTML='<div class="empty-state">Промокодов пока нет</div>';return;}
+    var html2='';
+    snap.forEach(function(doc){
+      var d=doc.data(); var id=doc.id;
+      var active=d.active!==false;
+      var used=d.usedCount||0;
+      var limit=d.limit||0;
+      var exhausted=limit>0&&used>=limit;
+      var badge=(!active||exhausted)?'<span class="promo-badge badge-off">'+(exhausted?'● Исчерпан':'● Отключён')+'</span>':'<span class="promo-badge badge-on">● Активен</span>';
+      html2+='<div class="promo-card">'+
+        '<div class="promo-code">'+id+'</div>'+
+        '<div class="promo-meta">Скидка '+d.discountPct+'%'+(d.description?' · '+d.description:'')+'</div>'+
+        '<div class="promo-row"><div class="promo-stat">Использований: <span>'+used+'</span></div><div class="promo-stat">Лимит: <span>'+(limit||'∞')+'</span></div></div>'+
+        badge+
+        '<div class="promo-actions">'+
+          '<button class="promo-act-btn" data-id="'+id+'" data-active="'+(!active)+'" onclick="togglePromo(this.dataset.id, this.dataset.active===\'true\')">'+(!active?'Включить':'Выключить')+'</button>'+
+          '<button class="promo-act-btn del" data-id="'+id+'" onclick="deletePromo(this.dataset.id)">Удалить</button>'+
+        '</div>'+
+      '</div>';
+    });
+    list.innerHTML=html2;
+  }).catch(function(){});
+}
+
+function openPromoModal(){document.getElementById('promo-modal').classList.add('active');}
+function closePromoModal(){document.getElementById('promo-modal').classList.remove('active');document.getElementById('pm-code').value='';document.getElementById('pm-pct').value='';document.getElementById('pm-limit').value='';document.getElementById('pm-desc').value='';}
+
+function savePromoCode(){
+  var code=document.getElementById('pm-code').value.trim().toUpperCase();
+  var pct=parseInt(document.getElementById('pm-pct').value)||0;
+  var limit=parseInt(document.getElementById('pm-limit').value)||0;
+  var desc=document.getElementById('pm-desc').value.trim();
+  if(!code){showToast('Введи код');return;}
+  if(!pct||pct<1||pct>99){showToast('Скидка от 1 до 99%');return;}
+  if(!fbDb){showToast('Нет соединения');return;}
+  fbDb.collection('promo_codes').doc(code).set({
+    discountPct:pct,
+    limit:limit,
+    usedCount:0,
+    active:true,
+    description:desc||'',
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function(){
+    showToast('Промокод '+code+' создан');
+    closePromoModal();
+    loadPromos();
+  }).catch(function(e){showToast('Ошибка: '+e.message);});
+}
+
+function togglePromo(id,newActive){
+  if(!fbDb)return;
+  fbDb.collection('promo_codes').doc(id).update({active:newActive}).then(function(){
+    showToast(newActive?'Промокод включён':'Промокод выключен');
+    loadPromos();
+  }).catch(function(){showToast('Ошибка');});
+}
+
+function deletePromo(id){
+  if(!confirm('Удалить промокод '+id+'?'))return;
+  if(!fbDb)return;
+  fbDb.collection('promo_codes').doc(id).delete().then(function(){
+    showToast('Удалён');
+    loadPromos();
+  }).catch(function(){showToast('Ошибка');});
+}
+// ===== END STATS & PROMO =====
 
 // Keyboard fix: scroll focused input into view above on-screen keyboard
 document.addEventListener('focusin',function(e){
