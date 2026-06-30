@@ -313,6 +313,11 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
         <div class="manage-hub-info"><div class="manage-hub-title">Промокоды</div><div class="manage-hub-sub">Скидки и коды доступа</div></div>
         <div class="manage-hub-arrow">›</div>
       </div>
+      <div class="manage-hub-item" id="hub-item-subscriptions" onclick="switchTab('subscriptions')">
+        <div class="manage-hub-icon">👑</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Подписки</div><div class="manage-hub-sub">Одобрить оплату вручную</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
     </div>
   </div>
 
@@ -542,6 +547,32 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
   </div>
 
   <!-- PROMO SCREEN -->
+  <div class="app-screen" id="s-subscriptions">
+    <div class="topbar"><div><div class="topbar-logo">👑 Подписки</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;">
+      <div class="promo-field"><label>Telegram username или ID</label><input id="sub-search-input" placeholder="@username или 123456789" oninput="handleSubSearchInput()"></div>
+      <div id="sub-search-results" style="margin-top:10px;"></div>
+
+      <div id="sub-approve-block" style="display:none;margin-top:18px;">
+        <div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;">
+          <div style="font-size:13px;color:var(--text2);margin-bottom:4px;">Пользователь</div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);" id="sub-selected-name">—</div>
+          <div style="font-size:12px;color:var(--text3);" id="sub-selected-id">—</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:6px;" id="sub-selected-current"></div>
+        </div>
+        <div class="promo-field"><label>Срок подписки</label>
+          <select id="sub-plan-select" style="width:100%;padding:12px 14px;background:var(--bg2);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;">
+            <option value="1">1 месяц</option>
+            <option value="3">3 месяца</option>
+            <option value="6">6 месяцев</option>
+            <option value="12">12 месяцев</option>
+          </select>
+        </div>
+        <button class="btn-accent" style="margin-top:14px;" onclick="approveSubscription()" id="sub-approve-btn">✅ Одобрить подписку</button>
+      </div>
+    </div>
+  </div>
+
   <div class="app-screen" id="s-promo">
     <div class="topbar"><div><div class="topbar-logo">🎟 Промокоды</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
     <div class="content" style="padding-top:14px;">
@@ -1827,6 +1858,130 @@ function deletePromo(id){
   }).catch(function(){showToast('Ошибка');});
 }
 // ===== END STATS & PROMO =====
+
+// ===== SUBSCRIPTIONS (manual approval) =====
+var subSearchTimeout=null;
+var subSelectedUid=null;
+
+function handleSubSearchInput(){
+  clearTimeout(subSearchTimeout);
+  var q=document.getElementById('sub-search-input').value.trim();
+  document.getElementById('sub-approve-block').style.display='none';
+  subSelectedUid=null;
+  if(q.length<2){
+    document.getElementById('sub-search-results').innerHTML='';
+    return;
+  }
+  subSearchTimeout=setTimeout(function(){ searchSubUsers(q); },350);
+}
+
+function searchSubUsers(q){
+  if(!fbDb){showToast('Нет подключения к базе');return;}
+  var resultsEl=document.getElementById('sub-search-results');
+  resultsEl.innerHTML='<div class="empty-state" style="padding:16px;">Ищу...</div>';
+  var cleanQ=q.replace('@','').toLowerCase();
+  var isNumeric=/^\d+$/.test(q);
+
+  if(isNumeric){
+    // search by Telegram ID (doc id in users collection)
+    fbDb.collection('users').doc(q).get().then(function(doc){
+      if(doc.exists){
+        renderSubResults([{id:doc.id,data:doc.data()}]);
+      } else {
+        resultsEl.innerHTML='<div class="empty-state" style="padding:16px;">Не найдено по ID</div>';
+      }
+    }).catch(function(){resultsEl.innerHTML='<div class="empty-state" style="padding:16px;">Ошибка поиска</div>';});
+  } else {
+    // search by username field — fetch all and filter client-side (small user base)
+    fbDb.collection('users').get().then(function(snap){
+      var matches=[];
+      snap.forEach(function(doc){
+        var d=doc.data();
+        var uname=(d.tgUsername||d.username||'').toLowerCase().replace('@','');
+        var fullName=(d.fullName||d.name||'').toLowerCase();
+        if(uname.indexOf(cleanQ)!==-1||fullName.indexOf(cleanQ)!==-1){
+          matches.push({id:doc.id,data:d});
+        }
+      });
+      if(matches.length===0){
+        resultsEl.innerHTML='<div class="empty-state" style="padding:16px;">Не найдено</div>';
+      } else {
+        renderSubResults(matches.slice(0,8));
+      }
+    }).catch(function(){resultsEl.innerHTML='<div class="empty-state" style="padding:16px;">Ошибка поиска</div>';});
+  }
+}
+
+function renderSubResults(list){
+  var resultsEl=document.getElementById('sub-search-results');
+  var html='';
+  list.forEach(function(item){
+    var d=item.data;
+    var name=d.fullName||d.name||(d.first||'')+' '+(d.last||'');
+    var uname=d.tgUsername||d.username||'';
+    html+='<div class="manage-hub-item" style="cursor:pointer;" onclick="selectSubUser(&apos;'+item.id+'&apos;)">'+
+      '<div class="manage-hub-icon">👤</div>'+
+      '<div class="manage-hub-info"><div class="manage-hub-title">'+(name.trim()||'Без имени')+'</div>'+
+      '<div class="manage-hub-sub">'+(uname?'@'+uname.replace('@',''):'ID: '+item.id)+'</div></div>'+
+      '<div class="manage-hub-arrow">›</div></div>';
+  });
+  resultsEl.innerHTML=html;
+}
+
+function selectSubUser(uid){
+  if(!fbDb)return;
+  subSelectedUid=uid;
+  fbDb.collection('users').doc(uid).get().then(function(doc){
+    if(!doc.exists){showToast('Пользователь не найден');return;}
+    var d=doc.data();
+    var name=d.fullName||d.name||(d.first||'')+' '+(d.last||'');
+    var uname=d.tgUsername||d.username||'';
+    document.getElementById('sub-selected-name').textContent=name.trim()||'Без имени';
+    document.getElementById('sub-selected-id').textContent=(uname?'@'+uname.replace('@',''):'')+' · ID: '+uid;
+    var currentEl=document.getElementById('sub-selected-current');
+    if(d.subscriptionUntil){
+      var until=new Date(d.subscriptionUntil);
+      if(until>new Date()){
+        currentEl.textContent='🟢 Активна до '+until.toLocaleDateString('ru-RU');
+      } else {
+        currentEl.textContent='⚫ Истекла '+until.toLocaleDateString('ru-RU');
+      }
+    } else {
+      currentEl.textContent='Подписки ещё не было';
+    }
+    document.getElementById('sub-approve-block').style.display='block';
+    document.getElementById('sub-search-results').innerHTML='';
+    document.getElementById('sub-search-input').value='';
+  }).catch(function(){showToast('Ошибка загрузки пользователя');});
+}
+
+function approveSubscription(){
+  if(!subSelectedUid){showToast('Сначала выбери пользователя');return;}
+  if(!fbDb){showToast('Нет подключения к базе');return;}
+  var months=parseInt(document.getElementById('sub-plan-select').value,10);
+  var btn=document.getElementById('sub-approve-btn');
+  btn.disabled=true;btn.textContent='⏳ Подтверждаем...';
+
+  var now=new Date();
+  var until=new Date(now);
+  until.setMonth(until.getMonth()+months);
+
+  fbDb.collection('users').doc(subSelectedUid).set({
+    subscriptionUntil: until.toISOString(),
+    subscriptionPlan: months+'m',
+    subscriptionApprovedBy: myTgId,
+    subscriptionApprovedAt: now.toISOString()
+  }, {merge:true}).then(function(){
+    btn.disabled=false;btn.textContent='✅ Одобрить подписку';
+    showToast('Подписка одобрена на '+months+' мес.');
+    document.getElementById('sub-approve-block').style.display='none';
+    subSelectedUid=null;
+  }).catch(function(err){
+    btn.disabled=false;btn.textContent='✅ Одобрить подписку';
+    showToast('Ошибка: '+err.message);
+  });
+}
+// ===== END SUBSCRIPTIONS =====
 
 // Keyboard fix: scroll focused input into view above on-screen keyboard
 document.addEventListener('focusin',function(e){
