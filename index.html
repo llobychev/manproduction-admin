@@ -249,6 +249,38 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 .hub-promo{border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.05);}
 .hub-promo .manage-hub-title{color:var(--accent);}
 /* ===== END STATS & PROMO ===== */
+/* TASKS */
+.task-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:8px;}
+.task-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.task-meta{font-size:11px;color:var(--text3);}
+.task-actions{display:flex;gap:6px;margin-top:10px;}
+.task-status-btn{flex:1;padding:7px;border-radius:7px;font-size:10px;font-weight:600;cursor:pointer;border:0.5px solid var(--border);background:var(--bg2);color:var(--text2);}
+.task-status-btn.active-st{background:rgba(45,212,191,0.12);border-color:rgba(45,212,191,0.35);color:var(--accent);}
+.priority-pill{display:inline-block;font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;margin-right:6px;}
+.p-high{background:rgba(224,85,85,0.15);color:#e07080;}
+.p-mid{background:rgba(224,168,58,0.15);color:var(--amber);}
+.p-low{background:rgba(45,212,191,0.1);color:var(--accent2);}
+/* KNOWLEDGE */
+.kn-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.kn-id{font-size:11px;font-weight:700;color:var(--accent2);min-width:0;flex:1;}
+.kn-cat{font-size:9px;color:var(--text3);margin-top:2px;}
+.kn-triggers{font-size:10px;color:var(--text2);margin-top:1px;}
+.kn-toggle{flex-shrink:0;font-size:18px;cursor:pointer;}
+.step-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.step-order{width:26px;height:26px;border-radius:50%;background:var(--bg2);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;}
+.step-info{flex:1;min-width:0;}
+.step-title{font-size:12px;font-weight:600;color:var(--text);}
+.step-meta{font-size:10px;color:var(--text3);margin-top:2px;}
+/* USERS LIST */
+.main-user-row{background:var(--bg3);border:0.5px solid var(--border);border-radius:11px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;}
+.main-user-ava{width:34px;height:34px;border-radius:50%;background:rgba(45,212,191,0.12);border:1px solid rgba(45,212,191,0.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent2);flex-shrink:0;}
+.main-user-info{flex:1;min-width:0;}
+.main-user-name{font-size:13px;font-weight:600;color:var(--text);}
+.main-user-meta{font-size:10px;color:var(--text3);margin-top:2px;}
+.sub-badge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:5px;font-weight:700;}
+.sub-active{background:rgba(76,175,80,0.15);color:#81c784;}
+.sub-expired{background:rgba(106,100,96,0.2);color:var(--text3);}
+.sub-none{display:none;}
 </style>
 </head>
 <body>
@@ -316,6 +348,21 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
       <div class="manage-hub-item" id="hub-item-subscriptions" onclick="switchTab('subscriptions')">
         <div class="manage-hub-icon">👑</div>
         <div class="manage-hub-info"><div class="manage-hub-title">Подписки</div><div class="manage-hub-sub">Одобрить оплату вручную</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+      <div class="manage-hub-item" id="hub-item-demo-access" onclick="switchTab('demo-access')">
+        <div class="manage-hub-icon">🔑</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Демо-доступ</div><div class="manage-hub-sub">Выдать демо конкретному пользователю</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+      <div class="manage-hub-item hub-promo" id="hub-item-lyova" onclick="switchTab('lyova')">
+        <div class="manage-hub-icon">🦁</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">База знаний Лёвы</div><div class="manage-hub-sub">Интенты и шаги тура</div></div>
+        <div class="manage-hub-arrow">›</div>
+      </div>
+      <div class="manage-hub-item" id="hub-item-users" onclick="switchTab('users')">
+        <div class="manage-hub-icon">👥</div>
+        <div class="manage-hub-info"><div class="manage-hub-title">Пользователи</div><div class="manage-hub-sub">Все пользователи основного приложения</div></div>
         <div class="manage-hub-arrow">›</div>
       </div>
     </div>
@@ -598,6 +645,74 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     </div>
   </div>
 
+  <!-- DEMO ACCESS SCREEN -->
+  <div class="app-screen" id="s-demo-access">
+    <div class="topbar"><div><div class="topbar-logo">🔑 Демо-доступ</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;">
+      <div class="promo-field"><label>Telegram username или ID</label><input id="demo-search-input" placeholder="@username или 123456789" oninput="handleDemoSearchInput()"></div>
+      <div id="demo-search-results" style="margin-top:10px;"></div>
+      <div id="demo-approve-block" style="display:none;margin-top:18px;">
+        <div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;">
+          <div style="font-size:13px;color:var(--text2);margin-bottom:4px;">Пользователь</div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);" id="demo-selected-name">—</div>
+          <div style="font-size:12px;color:var(--text3);" id="demo-selected-id">—</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:6px;" id="demo-selected-current"></div>
+        </div>
+        <div class="promo-field"><label>Срок демо-доступа</label>
+          <select id="demo-days-select" style="width:100%;padding:12px 14px;background:var(--bg2);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;">
+            <option value="7">7 дней</option>
+            <option value="14" selected>14 дней</option>
+            <option value="30">30 дней</option>
+            <option value="60">60 дней</option>
+          </select>
+        </div>
+        <button class="btn-accent" style="margin-top:14px;" onclick="grantDemoAccess()" id="demo-approve-btn">🔑 Выдать демо-доступ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LYOVA KNOWLEDGE SCREEN -->
+  <div class="app-screen" id="s-lyova">
+    <div class="topbar"><div><div class="topbar-logo">🦁 База знаний Лёвы</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="stats-tabs">
+      <div class="stats-tab active" id="ltab-knowledge" onclick="switchLyovaTab('knowledge')">Интенты</div>
+      <div class="stats-tab" id="ltab-tutorial" onclick="switchLyovaTab('tutorial')">Шаги тура</div>
+    </div>
+    <div id="lyova-knowledge-panel" style="padding:12px 14px 90px;">
+      <div id="knowledge-list"><div class="empty-state">Загрузка...</div></div>
+      <button class="promo-add-btn" onclick="openIntentModal(null)">+ Добавить интент</button>
+    </div>
+    <div id="lyova-tutorial-panel" style="display:none;padding:12px 14px 90px;">
+      <div id="tutorial-list"><div class="empty-state">Загрузка...</div></div>
+      <button class="promo-add-btn" onclick="openStepModal(null)">+ Добавить шаг</button>
+    </div>
+  </div>
+
+  <!-- USERS SCREEN -->
+  <div class="app-screen" id="s-users">
+    <div class="topbar"><div><div class="topbar-logo">👥 Пользователи</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;">
+      <input class="form-input" id="users-search" placeholder="Поиск по имени или @username..." oninput="filterUsers()" style="margin-bottom:12px;">
+      <div id="users-list-main"><div class="empty-state">Загрузка...</div></div>
+    </div>
+  </div>
+
+  <!-- TASKS SCREEN (working) -->
+  <div class="app-screen" id="s-tasks">
+    <div class="topbar"><div><div class="topbar-logo">🛠️ Задачи</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
+    <div class="content" style="padding-top:14px;">
+      <div class="stats-tabs" style="margin:0 -16px 14px;">
+        <div class="stats-tab active" id="ttab-todo" onclick="switchTasksTab('todo')">Надо</div>
+        <div class="stats-tab" id="ttab-doing" onclick="switchTasksTab('doing')">В работе</div>
+        <div class="stats-tab" id="ttab-done" onclick="switchTasksTab('done')">Готово</div>
+      </div>
+      <div id="tasks-todo-panel"><div class="empty-state">Нет задач</div></div>
+      <div id="tasks-doing-panel" style="display:none;"><div class="empty-state">Нет задач</div></div>
+      <div id="tasks-done-panel" style="display:none;"><div class="empty-state">Нет задач</div></div>
+    </div>
+    <div class="add-fab" onclick="openTaskModal(null)">＋</div>
+  </div>
+
   <nav class="bottomnav" id="bottomnav">
     <div class="nav-item active" id="nav-requests" onclick="switchTab('requests')"><div class="nav-icon">📋</div><div class="nav-label">Заявки</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
     <div class="nav-item" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div></div>
@@ -641,6 +756,95 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
       <button class="btn-cancel" onclick="closeChallengeModal()">Отмена</button>
       <button class="btn-delete" id="challenge-btn-delete" style="display:none" onclick="deleteChallenge()">🗑</button>
       <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="challenge-btn-save" onclick="saveChallenge()">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: intent edit -->
+<div class="promo-modal" id="intent-modal">
+  <div class="promo-modal-body" style="max-height:85vh;overflow-y:auto;">
+    <div class="promo-modal-title" id="intent-modal-title">Новый интент</div>
+    <div class="promo-field"><label>intentId (латиница, snake_case)</label><input id="im-id" placeholder="where_roulette" style="text-transform:lowercase"></div>
+    <div class="promo-field-row">
+      <div class="promo-field"><label>Категория</label>
+        <select id="im-cat" style="width:100%;padding:10px 12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;">
+          <option value="navigation">navigation</option>
+          <option value="mechanics">mechanics</option>
+          <option value="faq">faq</option>
+          <option value="support">support</option>
+        </select>
+      </div>
+      <div class="promo-field"><label>Приоритет</label><input id="im-priority" type="number" min="0" max="20" placeholder="10"></div>
+    </div>
+    <div class="promo-field"><label>Триггеры (каждый с новой строки)</label><textarea id="im-triggers" style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:12px;height:80px;resize:none;outline:none;" placeholder="где рулетка&#10;рулетка&#10;как крутить"></textarea></div>
+    <div class="promo-field"><label>Ответ Лёвы</label><textarea id="im-answer" style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:12px;height:80px;resize:none;outline:none;" placeholder="Текст ответа..."></textarea></div>
+    <div class="promo-field"><label>navAction (tab для перехода, или пусто)</label><input id="im-nav" placeholder="roulette | checkup | demo | gifts | lessons"></div>
+    <div class="promo-field" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="im-active" checked><label style="font-size:12px;color:var(--text2);">Активен</label></div>
+    <div class="promo-modal-btns">
+      <button class="btn-cancel" style="flex:1" onclick="closeIntentModal()">Отмена</button>
+      <button class="btn-delete" id="im-del-btn" style="display:none" onclick="deleteIntent()">🗑</button>
+      <button class="btn-accent" style="flex:1;width:auto;padding:12px" onclick="saveIntent()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: tutorial step edit -->
+<div class="promo-modal" id="step-modal">
+  <div class="promo-modal-body" style="max-height:85vh;overflow-y:auto;">
+    <div class="promo-modal-title" id="step-modal-title">Новый шаг</div>
+    <div class="promo-field-row">
+      <div class="promo-field"><label>stepId</label><input id="sm-id" placeholder="step_1"></div>
+      <div class="promo-field"><label>Порядок</label><input id="sm-order" type="number" min="1" placeholder="1"></div>
+    </div>
+    <div class="promo-field"><label>Заголовок</label><input id="sm-title" placeholder="Ежедневная рулетка"></div>
+    <div class="promo-field"><label>Текст подсказки</label><textarea id="sm-text" style="width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:12px;height:80px;resize:none;outline:none;" placeholder="Описание шага..."></textarea></div>
+    <div class="promo-field-row">
+      <div class="promo-field"><label>Экран (screen)</label>
+        <select id="sm-screen" style="width:100%;padding:10px 12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;">
+          <option value="roulette">roulette</option>
+          <option value="checkup">checkup</option>
+          <option value="lessons">lessons</option>
+          <option value="demo">demo</option>
+          <option value="gifts">gifts</option>
+          <option value="">— (финальный)</option>
+        </select>
+      </div>
+      <div class="promo-field"><label>Tab</label>
+        <select id="sm-tab" style="width:100%;padding:10px 12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;">
+          <option value="roulette">roulette</option>
+          <option value="checkup">checkup</option>
+          <option value="lessons">lessons</option>
+          <option value="demo">demo</option>
+          <option value="gifts">gifts</option>
+          <option value="">— (нет)</option>
+        </select>
+      </div>
+    </div>
+    <div class="promo-field"><label>targetSelector (CSS selector или пусто)</label><input id="sm-selector" placeholder=".wheel-stage"></div>
+    <div class="promo-modal-btns">
+      <button class="btn-cancel" style="flex:1" onclick="closeStepModal()">Отмена</button>
+      <button class="btn-delete" id="sm-del-btn" style="display:none" onclick="deleteStep()">🗑</button>
+      <button class="btn-accent" style="flex:1;width:auto;padding:12px" onclick="saveStep()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: task -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="task-modal-title">Новая задача</div>
+    <input class="modal-input" id="task-title-inp" placeholder="Название задачи">
+    <textarea class="modal-input modal-textarea" id="task-desc-inp" placeholder="Описание..." style="min-height:80px;"></textarea>
+    <input class="modal-input" id="task-assignee-inp" placeholder="Исполнитель (имя или @username)">
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <div id="tprio-high" class="type-chip" data-p="high" onclick="selectTaskPriority('high')">🔴 Высокий</div>
+      <div id="tprio-mid" class="type-chip selected" data-p="mid" onclick="selectTaskPriority('mid')">🟡 Средний</div>
+      <div id="tprio-low" class="type-chip" data-p="low" onclick="selectTaskPriority('low')">🟢 Низкий</div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeTaskModal()">Отмена</button>
+      <button class="btn-delete" id="task-del-btn" style="display:none" onclick="deleteTask()">🗑</button>
+      <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="task-save-btn" onclick="saveTask()">Создать</button>
     </div>
   </div>
 </div>
@@ -1990,6 +2194,471 @@ document.addEventListener('focusin',function(e){
     setTimeout(function(){e.target.scrollIntoView({block:'center',behavior:'smooth'});},300);
   }
 });
+
+// ===== DEMO ACCESS =====
+var demoSearchTimeout=null;
+var demoSelectedUid=null;
+
+function handleDemoSearchInput(){
+  clearTimeout(demoSearchTimeout);
+  var q=document.getElementById('demo-search-input').value.trim();
+  document.getElementById('demo-approve-block').style.display='none';
+  demoSelectedUid=null;
+  if(q.length<2){document.getElementById('demo-search-results').innerHTML='';return;}
+  demoSearchTimeout=setTimeout(function(){searchDemoUsers(q);},350);
+}
+
+function searchDemoUsers(q){
+  if(!fbDb){showToast('Нет подключения');return;}
+  var el=document.getElementById('demo-search-results');
+  el.innerHTML='<div class="empty-state" style="padding:16px;">Ищу...</div>';
+  var cleanQ=q.replace('@','').toLowerCase();
+  var isNum=/^\d+$/.test(q);
+  if(isNum){
+    fbDb.collection('users').doc(q).get().then(function(doc){
+      if(doc.exists){renderDemoResults([{id:doc.id,data:doc.data()}]);}
+      else el.innerHTML='<div class="empty-state" style="padding:16px;">Не найдено по ID</div>';
+    }).catch(function(){el.innerHTML='<div class="empty-state" style="padding:16px;">Ошибка</div>';});
+  }else{
+    fbDb.collection('users').get().then(function(snap){
+      var matches=[];
+      snap.forEach(function(doc){
+        var d=doc.data();
+        var uname=(d.tgUsername||d.username||'').toLowerCase().replace('@','');
+        var fn=(d.fullName||d.name||'').toLowerCase();
+        if(uname.indexOf(cleanQ)!==-1||fn.indexOf(cleanQ)!==-1)matches.push({id:doc.id,data:d});
+      });
+      if(!matches.length)el.innerHTML='<div class="empty-state" style="padding:16px;">Не найдено</div>';
+      else renderDemoResults(matches.slice(0,8));
+    }).catch(function(){el.innerHTML='<div class="empty-state" style="padding:16px;">Ошибка</div>';});
+  }
+}
+
+function renderDemoResults(list){
+  var el=document.getElementById('demo-search-results');
+  el.innerHTML=list.map(function(item){
+    var d=item.data;
+    var name=d.fullName||d.name||(d.first||'')+' '+(d.last||'');
+    var uname=d.tgUsername||d.username||'';
+    var safeId=item.id.replace(/'/g,"\\'");
+    return '<div class="manage-hub-item" style="cursor:pointer;" onclick="selectDemoUser(this.dataset.uid)" data-uid="'+item.id+'">'+
+      '<div class="manage-hub-icon">👤</div>'+
+      '<div class="manage-hub-info"><div class="manage-hub-title">'+(name.trim()||'Без имени')+'</div>'+
+      '<div class="manage-hub-sub">'+(uname?'@'+uname.replace('@',''):'ID: '+item.id)+'</div></div>'+
+      '<div class="manage-hub-arrow">›</div></div>';
+  }).join('');
+}
+
+function selectDemoUser(uid){
+  if(!fbDb)return;
+  demoSelectedUid=uid;
+  fbDb.collection('users').doc(uid).get().then(function(doc){
+    if(!doc.exists){showToast('Пользователь не найден');return;}
+    var d=doc.data();
+    var name=d.fullName||d.name||(d.first||'')+' '+(d.last||'');
+    var uname=d.tgUsername||d.username||'';
+    document.getElementById('demo-selected-name').textContent=name.trim()||'Без имени';
+    document.getElementById('demo-selected-id').textContent=(uname?'@'+uname.replace('@',''):'')+' · ID: '+uid;
+    // Проверяем активный демо-доступ из roulette_active_perks
+    fbDb.collection('roulette_active_perks').doc(uid).get().then(function(pdoc){
+      var cur=document.getElementById('demo-selected-current');
+      if(pdoc.exists&&pdoc.data().demoAccessUntil){
+        var until=new Date(pdoc.data().demoAccessUntil);
+        if(until>new Date())cur.textContent='🟢 Демо активно до '+until.toLocaleDateString('ru-RU');
+        else cur.textContent='⚫ Демо истекло '+until.toLocaleDateString('ru-RU');
+      }else{cur.textContent='Демо-доступа ещё не было';}
+    });
+    document.getElementById('demo-approve-block').style.display='block';
+    document.getElementById('demo-search-results').innerHTML='';
+    document.getElementById('demo-search-input').value='';
+  }).catch(function(){showToast('Ошибка загрузки пользователя');});
+}
+
+function grantDemoAccess(){
+  if(!demoSelectedUid){showToast('Сначала выбери пользователя');return;}
+  if(!fbDb){showToast('Нет подключения');return;}
+  var days=parseInt(document.getElementById('demo-days-select').value,10);
+  var btn=document.getElementById('demo-approve-btn');
+  btn.disabled=true;btn.textContent='⏳ Выдаём...';
+  var ref=fbDb.collection('roulette_active_perks').doc(demoSelectedUid);
+  ref.get().then(function(pdoc){
+    var current=(pdoc.exists&&pdoc.data().demoAccessUntil)||0;
+    var base=Math.max(typeof current==='number'?current:0,Date.now());
+    var until=base+days*24*60*60*1000;
+    return ref.set({demoAccessUntil:until,grantedBy:myTgId,grantedAt:Date.now()},{merge:true});
+  }).then(function(){
+    btn.disabled=false;btn.textContent='🔑 Выдать демо-доступ';
+    showToast('Демо-доступ выдан на '+days+' дней');
+    document.getElementById('demo-approve-block').style.display='none';
+    demoSelectedUid=null;
+  }).catch(function(err){
+    btn.disabled=false;btn.textContent='🔑 Выдать демо-доступ';
+    showToast('Ошибка: '+err.message);
+  });
+}
+// ===== END DEMO ACCESS =====
+
+// ===== LYOVA KNOWLEDGE BASE =====
+var knowledgeItems=[];
+var tutorialStepItems=[];
+var editingIntentId=null;
+var editingStepId=null;
+
+function switchLyovaTab(tab){
+  document.querySelectorAll('[id^="ltab-"]').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('ltab-'+tab).classList.add('active');
+  document.getElementById('lyova-knowledge-panel').style.display=tab==='knowledge'?'block':'none';
+  document.getElementById('lyova-tutorial-panel').style.display=tab==='tutorial'?'block':'none';
+  if(tab==='knowledge')loadKnowledge();
+  if(tab==='tutorial')loadTutorialSteps();
+}
+
+function loadKnowledge(){
+  if(!fbDb)return;
+  document.getElementById('knowledge-list').innerHTML='<div class="empty-state">Загрузка...</div>';
+  fbDb.collection('lyova_knowledge').get().then(function(snap){
+    knowledgeItems=[];
+    snap.forEach(function(doc){knowledgeItems.push(Object.assign({},doc.data(),{_id:doc.id}));});
+    knowledgeItems.sort(function(a,b){return (b.priority||0)-(a.priority||0);});
+    renderKnowledge();
+  }).catch(function(){document.getElementById('knowledge-list').innerHTML='<div class="empty-state">Ошибка загрузки</div>';});
+}
+
+function renderKnowledge(){
+  var wrap=document.getElementById('knowledge-list');
+  if(!knowledgeItems.length){wrap.innerHTML='<div class="empty-state">Нет интентов</div>';return;}
+  wrap.innerHTML=knowledgeItems.map(function(item){
+    var triggers=(item.triggers||[]).slice(0,3).join(', ')+(item.triggers&&item.triggers.length>3?'...':'');
+    return '<div class="kn-card" onclick="openIntentModal(this.dataset.iid)" data-iid="'+escHtml(item.intentId||'')+'">'+
+      '<div style="flex:1;min-width:0;">'+
+        '<div class="kn-id">'+escHtml(item.intentId||'')+'</div>'+
+        '<div class="kn-cat">'+escHtml(item.category||'')+'  · priority: '+(item.priority||0)+'</div>'+
+        '<div class="kn-triggers">'+escHtml(triggers)+'</div>'+
+      '</div>'+
+      '<div class="kn-toggle">'+(item.active!==false?'🟢':'⚫')+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+function openIntentModal(intentId){
+  editingIntentId=intentId||null;
+  var isEdit=!!editingIntentId;
+  document.getElementById('intent-modal-title').textContent=isEdit?'Редактировать интент':'Новый интент';
+  document.getElementById('im-del-btn').style.display=isEdit?'block':'none';
+  if(isEdit){
+    var item=knowledgeItems.find(function(x){return x.intentId===intentId;});
+    if(item){
+      document.getElementById('im-id').value=item.intentId||'';
+      document.getElementById('im-cat').value=item.category||'navigation';
+      document.getElementById('im-priority').value=item.priority||10;
+      document.getElementById('im-triggers').value=(item.triggers||[]).join('\n');
+      document.getElementById('im-answer').value=item.answer||'';
+      document.getElementById('im-nav').value=item.navAction||'';
+      document.getElementById('im-active').checked=item.active!==false;
+    }
+  }else{
+    document.getElementById('im-id').value='';
+    document.getElementById('im-cat').value='navigation';
+    document.getElementById('im-priority').value=10;
+    document.getElementById('im-triggers').value='';
+    document.getElementById('im-answer').value='';
+    document.getElementById('im-nav').value='';
+    document.getElementById('im-active').checked=true;
+  }
+  document.getElementById('intent-modal').classList.add('active');
+}
+
+function closeIntentModal(){document.getElementById('intent-modal').classList.remove('active');editingIntentId=null;}
+
+function saveIntent(){
+  if(!fbDb){showToast('Нет подключения');return;}
+  var intentId=document.getElementById('im-id').value.trim().toLowerCase().replace(/\s+/g,'_');
+  var category=document.getElementById('im-cat').value;
+  var priority=parseInt(document.getElementById('im-priority').value)||10;
+  var triggersRaw=document.getElementById('im-triggers').value;
+  var triggers=triggersRaw.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+  var answer=document.getElementById('im-answer').value.trim();
+  var navAction=document.getElementById('im-nav').value.trim()||null;
+  var active=document.getElementById('im-active').checked;
+  if(!intentId){showToast('Введи intentId');return;}
+  if(!answer){showToast('Введи ответ');return;}
+  var data={intentId:intentId,category:category,priority:priority,triggers:triggers,answer:answer,navAction:navAction,quickReplies:[],active:active};
+  fbDb.collection('lyova_knowledge').doc(intentId).set(data,{merge:true}).then(function(){
+    showToast(editingIntentId?'Сохранено':'Создано');closeIntentModal();loadKnowledge();
+  }).catch(function(e){showToast('Ошибка: '+e.message);});
+}
+
+function deleteIntent(){
+  if(!editingIntentId||!fbDb)return;
+  fbDb.collection('lyova_knowledge').doc(editingIntentId).delete().then(function(){
+    showToast('Удалено');closeIntentModal();loadKnowledge();
+  }).catch(function(){showToast('Ошибка');});
+}
+
+// Tutorial steps
+function loadTutorialSteps(){
+  if(!fbDb)return;
+  document.getElementById('tutorial-list').innerHTML='<div class="empty-state">Загрузка...</div>';
+  fbDb.collection('tutorial_steps').get().then(function(snap){
+    tutorialStepItems=[];
+    snap.forEach(function(doc){tutorialStepItems.push(Object.assign({},doc.data(),{_id:doc.id}));});
+    tutorialStepItems.sort(function(a,b){return (a.order||0)-(b.order||0);});
+    renderTutorialSteps();
+  }).catch(function(){document.getElementById('tutorial-list').innerHTML='<div class="empty-state">Ошибка загрузки</div>';});
+}
+
+function renderTutorialSteps(){
+  var wrap=document.getElementById('tutorial-list');
+  if(!tutorialStepItems.length){wrap.innerHTML='<div class="empty-state">Нет шагов</div>';return;}
+  wrap.innerHTML=tutorialStepItems.map(function(step){
+    return '<div class="step-card" onclick="openStepModal(this.dataset.sid)" data-sid="'+escHtml(step.stepId||'')+'">'+
+      '<div class="step-order">'+(step.order||'?')+'</div>'+
+      '<div class="step-info">'+
+        '<div class="step-title">'+escHtml(step.title||step.stepId)+'</div>'+
+        '<div class="step-meta">'+(step.screen||'финал')+'  ·  '+(step.targetSelector||'—')+'</div>'+
+      '</div></div>';
+  }).join('');
+}
+
+function openStepModal(stepId){
+  editingStepId=stepId||null;
+  var isEdit=!!editingStepId;
+  document.getElementById('step-modal-title').textContent=isEdit?'Редактировать шаг':'Новый шаг';
+  document.getElementById('sm-del-btn').style.display=isEdit?'block':'none';
+  if(isEdit){
+    var step=tutorialStepItems.find(function(x){return x.stepId===stepId;});
+    if(step){
+      document.getElementById('sm-id').value=step.stepId||'';
+      document.getElementById('sm-order').value=step.order||1;
+      document.getElementById('sm-title').value=step.title||'';
+      document.getElementById('sm-text').value=step.text||'';
+      document.getElementById('sm-screen').value=step.screen||'roulette';
+      document.getElementById('sm-tab').value=step.tab||'roulette';
+      document.getElementById('sm-selector').value=step.targetSelector||'';
+    }
+  }else{
+    ['sm-id','sm-title','sm-text','sm-selector'].forEach(function(id){document.getElementById(id).value='';});
+    document.getElementById('sm-order').value=tutorialStepItems.length+1;
+    document.getElementById('sm-screen').value='roulette';
+    document.getElementById('sm-tab').value='roulette';
+  }
+  document.getElementById('step-modal').classList.add('active');
+}
+
+function closeStepModal(){document.getElementById('step-modal').classList.remove('active');editingStepId=null;}
+
+function saveStep(){
+  if(!fbDb){showToast('Нет подключения');return;}
+  var stepId=document.getElementById('sm-id').value.trim();
+  var order=parseInt(document.getElementById('sm-order').value)||1;
+  var title=document.getElementById('sm-title').value.trim();
+  var text=document.getElementById('sm-text').value.trim();
+  var screen=document.getElementById('sm-screen').value||null;
+  var tab=document.getElementById('sm-tab').value||null;
+  var selector=document.getElementById('sm-selector').value.trim()||null;
+  if(!stepId||!title){showToast('Введи stepId и заголовок');return;}
+  var data={stepId:stepId,order:order,title:title,text:text,screen:screen,tab:tab,targetSelector:selector,type:selector?'highlight':'final'};
+  fbDb.collection('tutorial_steps').doc(stepId).set(data,{merge:true}).then(function(){
+    showToast(editingStepId?'Сохранено':'Создано');closeStepModal();loadTutorialSteps();
+  }).catch(function(e){showToast('Ошибка: '+e.message);});
+}
+
+function deleteStep(){
+  if(!editingStepId||!fbDb)return;
+  fbDb.collection('tutorial_steps').doc(editingStepId).delete().then(function(){
+    showToast('Удалено');closeStepModal();loadTutorialSteps();
+  }).catch(function(){showToast('Ошибка');});
+}
+// ===== END LYOVA =====
+
+// ===== USERS =====
+var allMainUsers=[];
+
+function loadMainUsers(){
+  if(!fbDb)return;
+  document.getElementById('users-list-main').innerHTML='<div class="empty-state">Загрузка...</div>';
+  fbDb.collection('users').orderBy('registeredAt','desc').get().then(function(snap){
+    allMainUsers=[];
+    snap.forEach(function(doc){allMainUsers.push(Object.assign({},doc.data(),{_uid:doc.id}));});
+    renderMainUsers(allMainUsers);
+  }).catch(function(){
+    // fallback без orderBy
+    fbDb.collection('users').get().then(function(snap){
+      allMainUsers=[];
+      snap.forEach(function(doc){allMainUsers.push(Object.assign({},doc.data(),{_uid:doc.id}));});
+      renderMainUsers(allMainUsers);
+    }).catch(function(){document.getElementById('users-list-main').innerHTML='<div class="empty-state">Ошибка загрузки</div>';});
+  });
+}
+
+function filterUsers(){
+  var q=document.getElementById('users-search').value.trim().toLowerCase().replace('@','');
+  if(!q){renderMainUsers(allMainUsers);return;}
+  var filtered=allMainUsers.filter(function(u){
+    var name=(u.fullName||u.name||'').toLowerCase();
+    var uname=(u.tgUsername||u.username||'').toLowerCase().replace('@','');
+    return name.indexOf(q)!==-1||uname.indexOf(q)!==-1||u._uid.indexOf(q)!==-1;
+  });
+  renderMainUsers(filtered);
+}
+
+function renderMainUsers(list){
+  var wrap=document.getElementById('users-list-main');
+  if(!list.length){wrap.innerHTML='<div class="empty-state">Не найдено</div>';return;}
+  var now=Date.now();
+  wrap.innerHTML=list.map(function(u){
+    var name=u.fullName||u.name||(u.first||'')+' '+(u.last||'');
+    var initials=(name.trim()||'?')[0].toUpperCase();
+    var uname=u.tgUsername||u.username||'';
+    var reg=u.registeredAt?new Date(u.registeredAt).toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'2-digit'}):'—';
+    var subHtml='';
+    if(u.subscriptionUntil){
+      var until=new Date(u.subscriptionUntil);
+      var active=until>new Date();
+      subHtml=' <span class="sub-badge '+(active?'sub-active':'sub-expired')+'">'+(active?'Pro':'Истёк')+'</span>';
+    }
+    return '<div class="main-user-row">'+
+      '<div class="main-user-ava">'+initials+'</div>'+
+      '<div class="main-user-info">'+
+        '<div class="main-user-name">'+(name.trim()||'Без имени')+subHtml+'</div>'+
+        '<div class="main-user-meta">'+(uname?'@'+uname.replace('@','')+' · ':'')+reg+'</div>'+
+      '</div></div>';
+  }).join('');
+}
+// ===== END USERS =====
+
+// ===== TASKS =====
+var taskItems=[];
+var editingTaskId=null;
+var currentTaskPriority='mid';
+var currentTasksTab='todo';
+
+function switchTasksTab(tab){
+  currentTasksTab=tab;
+  ['todo','doing','done'].forEach(function(t){
+    document.getElementById('ttab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('tasks-'+t+'-panel').style.display=t===tab?'block':'none';
+  });
+}
+
+function loadTasks(){
+  if(!fbDb)return;
+  fbDb.collection('admin_tasks').orderBy('createdAt','desc').get().then(function(snap){
+    taskItems=[];
+    snap.forEach(function(doc){taskItems.push(Object.assign({},doc.data(),{_id:doc.id}));});
+    renderTasks();
+  }).catch(function(){
+    // fallback without orderBy
+    fbDb.collection('admin_tasks').get().then(function(snap){
+      taskItems=[];
+      snap.forEach(function(doc){taskItems.push(Object.assign({},doc.data(),{_id:doc.id}));});
+      renderTasks();
+    }).catch(function(){});
+  });
+}
+
+function renderTasks(){
+  var byStatus={todo:[],doing:[],done:[]};
+  taskItems.forEach(function(t){byStatus[t.status||'todo'].push(t);});
+  var pLabels={high:'🔴 Высокий',mid:'🟡 Средний',low:'🟢 Низкий'};
+  ['todo','doing','done'].forEach(function(status){
+    var wrap=document.getElementById('tasks-'+status+'-panel');
+    var list=byStatus[status];
+    if(!list.length){wrap.innerHTML='<div class="empty-state" style="padding:20px 0;">Нет задач</div>';return;}
+    wrap.innerHTML=list.map(function(t){
+      var nextStatus=status==='todo'?'doing':status==='doing'?'done':null;
+      var prevStatus=status==='done'?'doing':status==='doing'?'todo':null;
+      var btns='';
+      if(prevStatus)btns+='<button class="task-status-btn" onclick="moveTask(this.dataset.tid,this.dataset.st)" data-tid="'+t._id+'" data-st="'+prevStatus+'">← Назад</button>';
+      if(nextStatus)btns+='<button class="task-status-btn active-st" onclick="moveTask(this.dataset.tid,this.dataset.st)" data-tid="'+t._id+'" data-st="'+nextStatus+'">→ '+(nextStatus==='doing'?'В работу':'Готово')+'</button>';
+      return '<div class="task-card">'+
+        '<div class="task-title"><span class="priority-pill p-'+(t.priority||'mid')+'">'+pLabels[t.priority||'mid']+'</span>'+escHtml(t.title||'')+'</div>'+
+        (t.description?'<div class="task-meta" style="margin-top:3px;">'+escHtml(t.description)+'</div>':'')+(t.assignee?'<div class="task-meta" style="margin-top:2px;">👤 '+escHtml(t.assignee)+'</div>':'')+
+        '<div class="task-actions">'+btns+
+          '<button class="task-status-btn" style="flex:0;padding:7px 10px;" onclick="openTaskModal(this.dataset.tid)" data-tid="'+t._id+'">✏️</button>'+
+        '</div></div>';
+    }).join('');
+  });
+}
+
+function moveTask(id,status){
+  if(!fbDb)return;
+  fbDb.collection('admin_tasks').doc(id).update({status:status,updatedAt:Date.now()}).then(function(){
+    var item=taskItems.find(function(x){return x._id===id;});
+    if(item)item.status=status;
+    renderTasks();
+  }).catch(function(){showToast('Ошибка');});
+}
+
+function selectTaskPriority(p){
+  currentTaskPriority=p;
+  ['high','mid','low'].forEach(function(x){
+    document.getElementById('tprio-'+x).classList.toggle('selected',x===p);
+  });
+}
+
+function openTaskModal(id){
+  editingTaskId=id||null;
+  var isEdit=!!editingTaskId;
+  document.getElementById('task-modal-title').textContent=isEdit?'Редактировать задачу':'Новая задача';
+  document.getElementById('task-save-btn').textContent=isEdit?'Сохранить':'Создать';
+  document.getElementById('task-del-btn').style.display=isEdit?'block':'none';
+  currentTaskPriority='mid';
+  if(isEdit){
+    var t=taskItems.find(function(x){return x._id===id;});
+    if(t){
+      document.getElementById('task-title-inp').value=t.title||'';
+      document.getElementById('task-desc-inp').value=t.description||'';
+      document.getElementById('task-assignee-inp').value=t.assignee||'';
+      currentTaskPriority=t.priority||'mid';
+    }
+  }else{
+    document.getElementById('task-title-inp').value='';
+    document.getElementById('task-desc-inp').value='';
+    document.getElementById('task-assignee-inp').value='';
+  }
+  selectTaskPriority(currentTaskPriority);
+  document.getElementById('task-modal').classList.add('active');
+}
+
+function closeTaskModal(){document.getElementById('task-modal').classList.remove('active');editingTaskId=null;}
+
+function saveTask(){
+  var title=document.getElementById('task-title-inp').value.trim();
+  var desc=document.getElementById('task-desc-inp').value.trim();
+  var assignee=document.getElementById('task-assignee-inp').value.trim();
+  if(!title){showToast('Введи название');return;}
+  if(!fbDb){showToast('Нет подключения');return;}
+  if(editingTaskId){
+    fbDb.collection('admin_tasks').doc(editingTaskId).update({title:title,description:desc,assignee:assignee,priority:currentTaskPriority,updatedAt:Date.now()}).then(function(){
+      showToast('Сохранено');closeTaskModal();loadTasks();
+    }).catch(function(){showToast('Ошибка');});
+  }else{
+    fbDb.collection('admin_tasks').add({title:title,description:desc,assignee:assignee,priority:currentTaskPriority,status:'todo',createdAt:Date.now(),createdBy:myTgId}).then(function(){
+      showToast('Создано');closeTaskModal();loadTasks();
+    }).catch(function(){showToast('Ошибка');});
+  }
+}
+
+function deleteTask(){
+  if(!editingTaskId||!fbDb)return;
+  fbDb.collection('admin_tasks').doc(editingTaskId).delete().then(function(){
+    showToast('Удалено');closeTaskModal();loadTasks();
+  }).catch(function(){showToast('Ошибка');});
+}
+// ===== END TASKS =====
+
+// ===== PATCH: switchTab to handle new tabs =====
+var _origSwitch=switchTab;
+switchTab=function(tab){
+  _origSwitch(tab);
+  if(tab==='demo-access'){document.getElementById('demo-search-input').value='';document.getElementById('demo-search-results').innerHTML='';document.getElementById('demo-approve-block').style.display='none';}
+  if(tab==='lyova'){loadKnowledge();}
+  if(tab==='users'){loadMainUsers();}
+  if(tab==='tasks'){loadTasks();}
+};
+// ===== END PATCH =====
+
 </script>
 </body>
 </html>
