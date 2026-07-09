@@ -281,6 +281,82 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 .sub-active{background:rgba(76,175,80,0.15);color:#81c784;}
 .sub-expired{background:rgba(106,100,96,0.2);color:var(--text3);}
 .sub-none{display:none;}
+
+
+/* ===== KNOWLEDGE DASHBOARD / PERSONAL PINS / ACCESS CARDS ===== */
+.manage-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin:18px 0 10px;display:flex;align-items:center;justify-content:space-between;}
+.manage-section-title small{font-size:10px;color:var(--accent2);font-weight:700;text-transform:none;letter-spacing:0;cursor:pointer;}
+.pin-btn{width:30px;height:30px;border-radius:9px;background:rgba(0,0,0,0.16);border:0.5px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:16px;cursor:pointer;flex-shrink:0;}
+.manage-hub-item.pinned{border-color:rgba(201,168,76,0.38);background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(45,212,191,0.035));}
+.manage-hub-item.pinned .manage-hub-title{color:#f0d37a;}
+.manage-hub-item.pinned .manage-hub-icon{background:rgba(201,168,76,0.13);border:0.5px solid rgba(201,168,76,0.24);}
+.manage-hub-item.pinned .pin-btn{color:#f0d37a;border-color:rgba(201,168,76,0.26);}
+.inline-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:999px;background:var(--red);color:white;font-size:10px;font-weight:800;padding:0 5px;margin-left:5px;vertical-align:1px;}
+.request-tabs{display:flex;background:#101416;border-bottom:0.5px solid rgba(45,212,191,0.10);position:sticky;top:53px;z-index:9;}
+.request-tab{flex:1;padding:10px 2px;text-align:center;font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.03em;border-bottom:2px solid transparent;cursor:pointer;}
+.request-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.req-card.clickable{cursor:pointer;transition:transform .16s,border-color .16s;}
+.req-card.clickable:active{transform:scale(0.99);border-color:rgba(45,212,191,0.45);}
+.req-head-row{display:flex;align-items:flex-start;gap:10px;}
+.req-avatar{width:38px;height:38px;border-radius:50%;background:rgba(45,212,191,0.12);border:1px solid rgba(45,212,191,0.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent2);flex-shrink:0;}
+.req-main{flex:1;min-width:0;}
+.person-status{font-size:9px;font-weight:800;border-radius:999px;padding:4px 7px;text-transform:uppercase;white-space:nowrap;}
+.person-status.pending{background:rgba(224,168,58,0.14);color:var(--amber);}
+.person-status.approved{background:rgba(45,212,191,0.12);color:var(--accent2);}
+.person-status.rejected{background:rgba(224,85,85,0.12);color:var(--red);}
+.person-comment{font-size:11px;color:var(--text2);background:rgba(0,0,0,0.16);border-radius:10px;padding:9px 10px;margin-top:10px;line-height:1.45;}
+.person-card-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.person-card-title{font-size:16px;font-weight:800;color:var(--text);}
+.person-card-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+.form-textarea{width:100%;background:var(--bg3);border:0.5px solid var(--border);border-radius:11px;padding:12px 14px;font-size:14px;color:var(--text);outline:none;margin-bottom:10px;min-height:82px;resize:none;font-family:inherit;line-height:1.45;}
+.access-block{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
+.access-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.045);gap:12px;}
+.access-row:last-child{border-bottom:0;}
+.access-info{min-width:0;}
+.access-title{font-size:13px;font-weight:700;color:var(--text);}
+.access-sub{font-size:10px;color:var(--text3);margin-top:2px;line-height:1.35;}
+.access-toggle{width:44px;height:25px;border-radius:999px;background:rgba(255,255,255,0.10);border:0.5px solid rgba(255,255,255,0.06);position:relative;cursor:pointer;flex-shrink:0;}
+.access-toggle:before{content:'';position:absolute;width:19px;height:19px;border-radius:50%;background:var(--text3);left:3px;top:2px;transition:.18s;}
+.access-toggle.on{background:rgba(45,212,191,0.17);border-color:rgba(45,212,191,0.34);}
+.access-toggle.on:before{left:20px;background:var(--accent);}
+.knowledge-hero{background:linear-gradient(135deg,rgba(45,212,191,0.14),rgba(201,168,76,0.10));border:1px solid rgba(45,212,191,0.18);border-radius:18px;padding:16px;margin:14px 0 12px;}
+.knowledge-hero-row{display:flex;align-items:center;gap:12px;}
+.knowledge-hero-icon{width:46px;height:46px;border-radius:14px;background:rgba(201,168,76,0.14);display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid rgba(201,168,76,0.22);}
+.knowledge-hero-title{font-size:17px;font-weight:800;color:var(--text);}
+.knowledge-hero-sub{font-size:12px;color:var(--text2);line-height:1.45;margin-top:3px;}
+.knowledge-focus{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:10px 12px;border-radius:12px;background:rgba(22,24,26,0.48);border:1px solid rgba(45,212,191,0.10);}
+.knowledge-focus span:first-child{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
+.knowledge-focus span:last-child{font-size:12px;color:var(--accent2);font-weight:700;text-align:right;}
+.knowledge-search{position:relative;margin:12px 0;}
+.knowledge-search:before{content:'🔎';position:absolute;left:14px;top:11px;font-size:15px;z-index:1;opacity:.72;}
+.knowledge-search .form-input{padding-left:42px;margin-bottom:0;}
+.knowledge-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.knowledge-stat{background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:12px;text-align:center;}
+.knowledge-stat-val{font-size:20px;font-weight:900;color:var(--accent);}
+.knowledge-stat-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;margin-top:3px;line-height:1.2;}
+.knowledge-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+.knowledge-chip{background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:12px;cursor:pointer;min-height:70px;}
+.knowledge-chip:active{border-color:rgba(45,212,191,0.45);background:rgba(45,212,191,0.06);}
+.knowledge-chip-ico{font-size:20px;margin-bottom:7px;}
+.knowledge-chip-title{font-size:13px;font-weight:800;color:var(--text);}
+.knowledge-chip-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.knowledge-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer;}
+.knowledge-card-head{display:flex;align-items:flex-start;gap:10px;}
+.knowledge-card-icon{font-size:22px;width:38px;height:38px;border-radius:11px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.knowledge-card-title{font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.knowledge-card-file{font-size:10px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.knowledge-card-desc{font-size:12px;color:var(--text2);line-height:1.45;margin-top:9px;}
+.knowledge-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.knowledge-tag{font-size:9px;font-weight:800;padding:4px 7px;border-radius:999px;background:rgba(45,212,191,0.08);color:var(--accent2);border:1px solid rgba(45,212,191,0.18);text-transform:uppercase;letter-spacing:.04em;}
+.knowledge-tag.gold{background:rgba(201,168,76,0.10);border-color:rgba(201,168,76,0.25);color:#f0d37a;}
+.knowledge-tag.red{background:rgba(224,85,85,0.10);border-color:rgba(224,85,85,0.22);color:#e68686;}
+.ai-box{background:linear-gradient(135deg,rgba(45,212,191,0.10),rgba(94,234,212,0.04));border:1px solid rgba(45,212,191,0.25);border-radius:15px;padding:14px;margin-bottom:12px;}
+.ai-title{font-size:14px;font-weight:800;color:var(--accent2);display:flex;align-items:center;gap:8px;}
+.ai-text{font-size:12px;color:var(--text2);line-height:1.5;margin:8px 0 12px;}
+.ai-prompt{background:rgba(0,0,0,0.14);border:1px solid rgba(45,212,191,0.12);border-radius:10px;padding:10px;font-size:11px;color:var(--text2);cursor:pointer;margin-bottom:7px;}
+.ai-prompt:active{color:var(--accent2);border-color:rgba(45,212,191,0.35);}
+/* ===== END KNOWLEDGE DASHBOARD PATCH ===== */
+
 </style>
 </head>
 <body>
@@ -306,65 +382,23 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 <!-- MAIN APP -->
 <div class="app-wrap" id="main-app">
 
-  <!-- REQUESTS (admin only) -->
-  <div class="app-screen active" id="s-requests">
-    <div class="topbar"><div><div class="topbar-logo">Заявки</div><div class="topbar-sub">Ожидают рассмотрения</div></div><span class="role-pill" id="my-role-pill">Админ</span></div>
+  <!-- REQUESTS / ACCESS (admin only; opened from Manage) -->
+  <div class="app-screen" id="s-requests">
+    <div class="topbar"><div><div class="topbar-logo">Заявки / доступы</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div><span class="role-pill" id="my-role-pill">Админ</span></div>
+    <div class="request-tabs" id="request-tabs"></div>
     <div class="content" style="padding-top:14px;">
       <div id="requests-list"></div>
-      <div class="section-title">Команда</div>
-      <div id="users-list"></div>
     </div>
   </div>
 
-  <!-- MANAGE HUB (admin only) -->
-  <div class="app-screen" id="s-manage">
+  <!-- MANAGE HUB -->
+  <div class="app-screen active" id="s-manage">
     <div class="topbar"><div><div class="topbar-logo">Управление</div><div class="topbar-sub">Основное приложение ManProduction</div></div></div>
     <div class="content" style="padding-top:14px;">
-      <div class="manage-hub-item" id="hub-item-news" onclick="switchTab('news')">
-        <div class="manage-hub-icon">📰</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">Новости</div><div class="manage-hub-sub">Лента ManProduction</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
-      <div class="manage-hub-item" id="hub-item-challenges" onclick="switchTab('challenges')">
-        <div class="manage-hub-icon">🏆</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">Челленджи</div><div class="manage-hub-sub">Соревнования участников</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
-      <div class="manage-hub-item" id="hub-item-tasks" onclick="switchTab('tasks')">
-        <div class="manage-hub-icon">🛠️</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">Задачи</div><div class="manage-hub-sub">Для команды</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
-      <div class="manage-hub-item" id="hub-item-quests" onclick="switchTab('quests')">
-        <div class="manage-hub-icon">🎯</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">Квесты дня</div><div class="manage-hub-sub">Ежедневные задания</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
-      <div class="manage-hub-item hub-promo" id="hub-item-promo" onclick="switchTab('promo')">
-        <div class="manage-hub-icon">🎟</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">Промокоды</div><div class="manage-hub-sub">Скидки и коды доступа</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
-      <div class="manage-hub-item" id="hub-item-subscriptions" onclick="switchTab('subscriptions')">
-        <div class="manage-hub-icon">👑</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">Подписки</div><div class="manage-hub-sub">Одобрить оплату вручную</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
-      <div class="manage-hub-item" id="hub-item-demo-access" onclick="switchTab('demo-access')">
-        <div class="manage-hub-icon">🔑</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">Демо-доступ</div><div class="manage-hub-sub">Выдать демо конкретному пользователю</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
-      <div class="manage-hub-item hub-promo" id="hub-item-lyova" onclick="switchTab('lyova')">
-        <div class="manage-hub-icon">🦁</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">База знаний Лёвы</div><div class="manage-hub-sub">Интенты и шаги тура</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
-      <div class="manage-hub-item" id="hub-item-users" onclick="switchTab('users')">
-        <div class="manage-hub-icon">👥</div>
-        <div class="manage-hub-info"><div class="manage-hub-title">Пользователи</div><div class="manage-hub-sub">Все пользователи основного приложения</div></div>
-        <div class="manage-hub-arrow">›</div>
-      </div>
+      <div class="manage-section-title">Закреплённые <small onclick="showToast('Закрепления личные: каждый сотрудник настраивает плашки только под себя')">личные</small></div>
+      <div id="manage-pinned-list"></div>
+      <div class="manage-section-title">Все разделы</div>
+      <div id="manage-all-list"></div>
     </div>
   </div>
 
@@ -386,12 +420,6 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     <div class="add-fab" onclick="openChallengeModal()">＋</div>
   </div>
 
-  <!-- TASKS -->
-  <div class="app-screen" id="s-tasks">
-    <div class="topbar"><div><div class="topbar-logo">Задачи</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
-    <div class="task-stub"><div class="task-stub-icon">🛠️</div><div class="task-stub-text">Раздел задач в разработке.<br>Скоро здесь можно будет раздавать задачи команде.</div></div>
-  </div>
-
   <!-- QUESTS -->
   <div class="app-screen" id="s-quests">
     <div class="topbar"><div><div class="topbar-logo">Квесты дня</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div></div>
@@ -401,6 +429,36 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     <div class="add-fab" onclick="openQuestModal()">＋</div>
   </div>
 
+
+  <!-- KNOWLEDGE DASHBOARD -->
+  <div class="app-screen" id="s-knowledge">
+    <div class="topbar"><div><div class="topbar-logo">📚 База знаний</div><div class="topbar-sub">Project memory dashboard</div></div><span class="role-pill">v2.3</span></div>
+    <div class="content" style="padding-top:14px;">
+      <div class="knowledge-hero">
+        <div class="knowledge-hero-row"><div class="knowledge-hero-icon">🧠</div><div><div class="knowledge-hero-title">Knowledge Dashboard</div><div class="knowledge-hero-sub">Рабочее окно в память проекта: документы, решения, roadmap, ресурсы и AI-навигация.</div></div></div>
+        <div class="knowledge-focus"><span>Активный фокус</span><span>Первый MVP в admin Mini App</span></div>
+      </div>
+      <div class="knowledge-search"><input class="form-input" id="knowledge-search" oninput="filterKnowledgeDocs()" placeholder="Что найти? Например: Лёва, доступ, roadmap"></div>
+      <div class="ai-box">
+        <div class="ai-title">🤖 AI-помощник</div>
+        <div class="ai-text" id="knowledge-ai-answer">В MVP это read-only помощник: показывает заготовленные ответы и направление. Реальный AI-поиск подключим следующим слоем.</div>
+        <div class="ai-prompt" onclick="askKnowledgeAI('focus')">Что сейчас в фокусе?</div>
+        <div class="ai-prompt" onclick="askKnowledgeAI('access')">Что решено по доступу?</div>
+        <div class="ai-prompt" onclick="askKnowledgeAI('docs')">Какие документы требуют разложения?</div>
+      </div>
+      <div class="knowledge-stats">
+        <div class="knowledge-stat"><div class="knowledge-stat-val">24</div><div class="knowledge-stat-lbl">готово</div></div>
+        <div class="knowledge-stat"><div class="knowledge-stat-val">3</div><div class="knowledge-stat-lbl">разложить</div></div>
+        <div class="knowledge-stat"><div class="knowledge-stat-val">5</div><div class="knowledge-stat-lbl">спроектировать</div></div>
+      </div>
+      <div class="section-title">Быстрые разделы</div>
+      <div class="knowledge-grid" id="knowledge-sections"></div>
+      <div class="section-title">Документы</div>
+      <div id="knowledge-docs"></div>
+      <button class="btn-accent" onclick="openBrowserDashboardInfo()">Открыть полную версию →</button>
+      <div style="height:18px"></div>
+    </div>
+  </div>
 
   <!-- TRAINING HUB -->
   <div class="app-screen" id="s-training">
@@ -714,10 +772,10 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
   </div>
 
   <nav class="bottomnav" id="bottomnav">
-    <div class="nav-item active" id="nav-requests" onclick="switchTab('requests')"><div class="nav-icon">📋</div><div class="nav-label">Заявки</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
-    <div class="nav-item" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div></div>
+    <div class="nav-item active" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
     <div class="nav-item" id="nav-stats" onclick="switchTab('stats')"><div class="nav-icon">📊</div><div class="nav-label">Статистика</div></div>
-    <div class="nav-item" id="nav-training" onclick="switchTab('training')"><div class="nav-icon">📚</div><div class="nav-label">Обучения</div></div>
+    <div class="nav-item" id="nav-knowledge" onclick="switchTab('knowledge')"><div class="nav-icon">📚</div><div class="nav-label">База</div></div>
+    <div class="nav-item" id="nav-training" onclick="switchTab('training')"><div class="nav-icon">🎓</div><div class="nav-label">Обучения</div></div>
     <div class="nav-item" id="nav-instructions" onclick="switchTab('instructions')"><div class="nav-icon">📄</div><div class="nav-label">Инструкции</div></div>
   </nav>
 </div>
@@ -733,6 +791,15 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
       <button class="btn-delete" id="news-btn-delete" style="display:none" onclick="deleteNews()">🗑</button>
       <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="news-btn-save" onclick="saveNews()">Опубликовать</button>
     </div>
+  </div>
+</div>
+
+
+<!-- MODAL: admin person access card -->
+<div class="modal-overlay" id="person-modal">
+  <div class="modal-box">
+    <div class="modal-title">Карточка человека</div>
+    <div id="person-modal-content"></div>
   </div>
 </div>
 
@@ -897,7 +964,7 @@ function initFirestoreAfterAuth(){
 }
 
 var SUPER_ADMIN_ID='1410479822'; // Always Admin, no approval needed
-var ROLES=[{id:'admin',label:'Админ'},{id:'news_editor',label:'Ред. новостей'},{id:'staff',label:'Сотрудник'}];
+var ROLES=[{id:'admin',label:'Админ'},{id:'news_editor',label:'Ред. новостей'},{id:'staff',label:'Сотрудник'},{id:'knowledge_editor',label:'Ред. базы'},{id:'content_editor',label:'Контент'},{id:'work_team_member',label:'Work Team'},{id:'partner_viewer',label:'Партнёр'},{id:'viewer',label:'Просмотр'}];
 
 var myTgId=null;
 var myTgName='';
@@ -1027,6 +1094,8 @@ function launchApp(){
   loadNews();
   loadChallenges();
   loadQuests();
+  renderManageHub();
+  renderKnowledgeDashboard();
 }
 
 function setupNavForRole(){
@@ -2665,6 +2734,56 @@ switchTab=function(tab){
 };
 // ===== END PATCH =====
 
+
+
+// ===== KNOWLEDGE DASHBOARD / PERSONAL PINS / ACCESS CARDS PATCH =====
+var adminPeople=[];
+var currentRequestFilter='all';
+var editingPersonId=null;
+var editingPersonData=null;
+var ADMIN_ACCESS_KEYS=[{key:'news',label:'Новости',sub:'Создание и редактирование новостей'},{key:'challenges',label:'Челленджи',sub:'Создание и редактирование челленджей'},{key:'tasks',label:'Задачи',sub:'Раздел задач команды'},{key:'quests',label:'Квесты дня',sub:'Ежедневные задания'},{key:'promo',label:'Промокоды',sub:'Скидки и коды доступа'},{key:'subscriptions',label:'Подписки',sub:'Одобрение оплат вручную'},{key:'demoAccess',label:'Демо-доступ',sub:'Выдача демо пользователям'},{key:'lyovaKnowledge',label:'База Лёвы',sub:'Интенты и шаги тура'},{key:'users',label:'Пользователи',sub:'Список пользователей приложения'},{key:'stats',label:'Статистика',sub:'Аналитика проекта'},{key:'training',label:'Обучения',sub:'Обучающие модули'},{key:'instructions',label:'Инструкции',sub:'Командные инструкции'}];
+var KNOWLEDGE_ACCESS_KEYS=[{key:'view',label:'Видеть базу знаний',sub:'Открывать вкладку База'},{key:'search',label:'Поиск по базе',sub:'Искать по документам'},{key:'aiReadOnly',label:'AI read-only',sub:'Задавать вопросы AI без записи'},{key:'coreDocs',label:'Core docs',sub:'Главные документы 01-06'},{key:'roadmap',label:'Roadmap',sub:'Дорожная карта и задачи'},{key:'marketing',label:'Marketing OS',sub:'Маркетинг и контент'},{key:'workTeam',label:'Work Team',sub:'Найм и команда'},{key:'lyova',label:'Лёва',sub:'Канон и Foundation'},{key:'resources',label:'Resources',sub:'Реестр ресурсов проекта'},{key:'security',label:'Security',sub:'Безопасность и приватные разделы'},{key:'draftChanges',label:'Draft changes',sub:'Черновики правок'},{key:'approveChanges',label:'Approve changes',sub:'Подтверждать изменения'}];
+var MANAGE_ITEMS=[{id:'requests',icon:'📋',title:'Заявки / доступы',sub:'Одобрение людей, комментарии и права',adminOnly:true,tab:'requests'},{id:'news',icon:'📰',title:'Новости',sub:'Лента ManProduction',tab:'news'},{id:'challenges',icon:'🏆',title:'Челленджи',sub:'Соревнования участников',tab:'challenges'},{id:'tasks',icon:'🛠️',title:'Задачи',sub:'Для команды',tab:'tasks'},{id:'quests',icon:'🎯',title:'Квесты дня',sub:'Ежедневные задания',tab:'quests'},{id:'promo',icon:'🎟',title:'Промокоды',sub:'Скидки и коды доступа',tab:'promo'},{id:'subscriptions',icon:'👑',title:'Подписки',sub:'Одобрить оплату вручную',tab:'subscriptions'},{id:'demo-access',icon:'🔑',title:'Демо-доступ',sub:'Выдать демо конкретному пользователю',tab:'demo-access'},{id:'lyova',icon:'🦁',title:'База знаний Лёвы',sub:'Интенты и шаги тура',tab:'lyova'},{id:'users',icon:'👥',title:'Пользователи',sub:'Все пользователи основного приложения',tab:'users'}];
+var KNOWLEDGE_DOCS=[{icon:'📍',title:'Roadmap',file:'03_РОАДМАП.md',group:'roadmap',status:'ready',desc:'Активный фокус, закрытые задачи, следующий кодовый MVP.',tags:['ready','focus']},{icon:'🧩',title:'Dashboard MVP Code Plan',file:'DASHBOARD_MVP_CODE_PLAN.md',group:'dashboard',status:'ready',desc:'План реализации: Mini App MVP → browser session routes → browser dashboard.',tags:['code plan','ready']},{icon:'🔐',title:'Dashboard Access / RBAC',file:'DASHBOARD_ACCESS_RBAC_SPEC.md',group:'access',status:'ready',desc:'Telegram ID, роли, permissions, documentAccess, audit log.',tags:['rbac','security']},{icon:'🧠',title:'Knowledge Completeness Map',file:'KNOWLEDGE_COMPLETENESS_MAP.md',group:'dashboard',status:'ready',desc:'Что готово, что требует разложения, что нужно проектировать.',tags:['ready','map']},{icon:'🦁',title:'Lyova Character Bible',file:'12_LYOVA_CHARACTER_BIBLE.md',group:'lyova',status:'synced',desc:'Короткий канон Лёвы после Foundation sync.',tags:['synced','lyova']},{icon:'🟡',title:'Lyova Foundation',file:'LYOVA_FOUNDATION_V94_SYNC.md',group:'lyova',status:'needs_decomposition',desc:'Большой master-файл нужно разложить на speech/motion/QA/docs.',tags:['needs decomposition']},{icon:'📣',title:'Marketing OS',file:'MARKETING_OS_MANCLUB.md',group:'marketing',status:'synced',desc:'Маркетинговая система, Telegram, контент, партнёры.',tags:['synced','marketing']},{icon:'👥',title:'Work Team',file:'WORK_TEAM_MENCLUB.md',group:'work_team',status:'ready',desc:'Система найма Work Team MenClub.',tags:['ready','team']},{icon:'🗂',title:'Resources Registry',file:'PROJECT_RESOURCES_REGISTRY.md',group:'resources',status:'ready',desc:'Реестр ботов, Mini Apps, GitHub, Firebase, Timeweb и сервисов.',tags:['ready','resources']},{icon:'🤖',title:'AI Assistant Spec',file:'DASHBOARD_AI_ASSISTANT_SPEC.md',group:'ai',status:'ready',desc:'AI-поиск, read-only, draft changes, approve → commit/PR.',tags:['ai','future']}];
+var KNOWLEDGE_SECTIONS=[['📍','Roadmap','фокус и задачи','roadmap'],['✅','Решения','принятые решения','decisions'],['📄','Документы','вся база','docs'],['🗂','Ресурсы','сервисы и ссылки','resources'],['🦁','Лёва','канон и Foundation','lyova'],['📣','Marketing OS','контент и рост','marketing'],['🔬','Human Lab','исследования','human_lab'],['👥','Work Team','найм и команда','work_team']];
+function getPinnedManageItems(){var prefs=(myUser&&myUser.uiPreferences)||{};var list=prefs.pinnedManageItems||[];return Array.isArray(list)?list:[];}
+function setPinnedManageItems(list){if(!myUser)return;if(!myUser.uiPreferences)myUser.uiPreferences={};myUser.uiPreferences.pinnedManageItems=list;renderManageHub();if(fbDb&&myTgId){fbDb.collection('admin_users').doc(myTgId).set({uiPreferences:{pinnedManageItems:list},updatedAt:Date.now()},{merge:true}).catch(function(err){console.warn('pin save failed',err);});}}
+function toggleManagePin(id,event){if(event){event.stopPropagation();event.preventDefault();}var list=getPinnedManageItems().slice();if(list.indexOf(id)===-1)list.push(id);else list=list.filter(function(x){return x!==id;});setPinnedManageItems(list);}
+function roleDefaultPermissions(role){var a={},k={};ADMIN_ACCESS_KEYS.forEach(function(x){a[x.key]=false;});KNOWLEDGE_ACCESS_KEYS.forEach(function(x){k[x.key]=false;});if(role==='admin'){ADMIN_ACCESS_KEYS.forEach(function(x){a[x.key]=true;});KNOWLEDGE_ACCESS_KEYS.forEach(function(x){k[x.key]=true;});}else if(role==='news_editor'||role==='content_editor'){['news','tasks','training','instructions','stats'].forEach(function(x){a[x]=true;});['view','search','aiReadOnly','marketing','roadmap','draftChanges'].forEach(function(x){k[x]=true;});}else if(role==='staff'||role==='work_team_member'){['tasks','training','instructions'].forEach(function(x){a[x]=true;});['view','search','aiReadOnly','workTeam','roadmap'].forEach(function(x){k[x]=true;});}else if(role==='partner_viewer'){['instructions'].forEach(function(x){a[x]=true;});['view','search','aiReadOnly'].forEach(function(x){k[x]=true;});}else if(role==='knowledge_editor'){['tasks','training','instructions'].forEach(function(x){a[x]=true;});['view','search','aiReadOnly','coreDocs','roadmap','marketing','workTeam','lyova','resources','draftChanges'].forEach(function(x){k[x]=true;});}else{['instructions'].forEach(function(x){a[x]=true;});['view'].forEach(function(x){k[x]=true;});}return {admin:a,knowledge:k};}
+function mergedPermissions(user){var def=roleDefaultPermissions(user.role||'viewer');var p=user.permissions||{};var da=user.documentAccess||{};ADMIN_ACCESS_KEYS.forEach(function(x){if(p.admin&&typeof p.admin[x.key]==='boolean')def.admin[x.key]=p.admin[x.key];});KNOWLEDGE_ACCESS_KEYS.forEach(function(x){if(da&&typeof da[x.key]==='boolean')def.knowledge[x.key]=da[x.key];});return def;}
+function currentPerms(){return myUser?mergedPermissions(myUser):{admin:{},knowledge:{}};}
+function canOpenBottomTab(tab){if(!myUser)return false;if(myUser.role==='admin'||String(myTgId)===SUPER_ADMIN_ID)return true;var p=currentPerms();if(tab==='manage')return true;if(tab==='knowledge')return !!(p.knowledge&&p.knowledge.view);if(tab==='stats')return !!(p.admin&&p.admin.stats);if(tab==='training')return !!(p.admin&&p.admin.training);if(tab==='instructions')return !!(p.admin&&p.admin.instructions);return true;}
+function canSeeManageItem(item){if(!myUser)return false;if(myUser.role==='admin'||String(myTgId)===SUPER_ADMIN_ID)return true;if(item.adminOnly)return false;var keyMap={'demo-access':'demoAccess','lyova':'lyovaKnowledge'};var accessKey=keyMap[item.id]||item.id;if(myUser.permissions&&myUser.permissions.admin&&myUser.permissions.admin[accessKey]===true)return true;if(myUser.role==='news_editor')return ['news','promo'].indexOf(item.id)!==-1;if(myUser.role==='staff')return ['tasks'].indexOf(item.id)!==-1;return false;}
+function manageItemHtml(item,pinned){var pendingCount=adminPeople.filter(function(p){return p.status==='pending';}).length;var badge=(item.id==='requests'&&pendingCount)?'<span class="inline-count">'+pendingCount+'</span>':'';return '<div class="manage-hub-item '+(pinned?'pinned':'')+'" onclick="switchTab(\''+item.tab+'\')"><button class="pin-btn" onclick="toggleManagePin(\''+item.id+'\',event)">'+(pinned?'★':'☆')+'</button><div class="manage-hub-icon">'+item.icon+'</div><div class="manage-hub-info"><div class="manage-hub-title">'+item.title+badge+'</div><div class="manage-hub-sub">'+item.sub+'</div></div><div class="manage-hub-arrow">›</div></div>';}
+function renderManageHub(){var pinnedEl=document.getElementById('manage-pinned-list');var allEl=document.getElementById('manage-all-list');if(!pinnedEl||!allEl)return;var pinned=getPinnedManageItems();var visible=MANAGE_ITEMS.filter(canSeeManageItem);var pinnedItems=visible.filter(function(x){return pinned.indexOf(x.id)!==-1;});var allItems=visible.filter(function(x){return pinned.indexOf(x.id)===-1;});pinnedEl.innerHTML=pinnedItems.length?pinnedItems.map(function(x){return manageItemHtml(x,true);}).join(''):'<div class="empty-state" style="padding:14px 10px;">Закреплений пока нет. Нажми ☆ у любой плашки.</div>';allEl.innerHTML=allItems.map(function(x){return manageItemHtml(x,false);}).join('')||'<div class="empty-state">Нет доступных разделов</div>';}
+function statusLabel(st){return st==='approved'?'Одобрен':st==='rejected'?'Отклонён':'Новая';}
+function personInitials(name){return (name||'?').split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();}
+function renderRequestTabs(){var el=document.getElementById('request-tabs');if(!el)return;var counts={all:adminPeople.length,pending:0,approved:0,rejected:0};adminPeople.forEach(function(p){counts[p.status||'pending']=(counts[p.status||'pending']||0)+1;});var names={all:'Все',pending:'Новые',approved:'Одобр.',rejected:'Откл.'};el.innerHTML=['all','pending','approved','rejected'].map(function(k){return '<div class="request-tab '+(currentRequestFilter===k?'active':'')+'" onclick="currentRequestFilter=\''+k+'\';renderRequests()">'+names[k]+' '+(counts[k]||0)+'</div>';}).join('');}
+loadRequestsAndUsers=function(){if(!fbDb)return;fbDb.collection('admin_users').get().then(function(snap){adminPeople=[];pendingRequests=[];approvedUsers=[];snap.forEach(function(doc){var d=doc.data();if(!d.id)d.id=doc.id;adminPeople.push(d);if(d.status==='pending')pendingRequests.push(d);if(d.status==='approved')approvedUsers.push(d);});adminPeople.sort(function(a,b){var order={pending:0,approved:1,rejected:2};return (order[a.status]||9)-(order[b.status]||9)||((b.requestedAt||0)-(a.requestedAt||0));});renderRequests();renderManageHub();}).catch(function(err){console.warn(err);});};
+renderRequests=function(){renderRequestTabs();var wrap=document.getElementById('requests-list');if(!wrap)return;wrap.innerHTML='';var badge=document.getElementById('req-badge');var pendingCount=adminPeople.filter(function(p){return p.status==='pending';}).length;if(badge)badge.style.display=pendingCount?'block':'none';var list=adminPeople.filter(function(p){return currentRequestFilter==='all'||(p.status||'pending')===currentRequestFilter;});if(!list.length){wrap.innerHTML='<div class="empty-state">Людей в этом статусе нет</div>';return;}wrap.innerHTML=list.map(function(req){var st=req.status||'pending';var comment=req.adminComment||req.accessComment||req.decisionComment||'';return '<div class="req-card clickable" onclick="openPersonCard(\''+req.id+'\')"><div class="req-head-row"><div class="req-avatar">'+personInitials(req.name)+'</div><div class="req-main"><div class="req-name">'+escHtml(req.name||'Без имени')+'</div><div class="req-meta">ID '+escHtml(req.id||'')+' · '+roleLabel(req.role||'viewer')+'</div></div><span class="person-status '+st+'">'+statusLabel(st)+'</span></div>'+(comment?'<div class="person-comment">'+escHtml(comment)+'</div>':'')+'</div>';}).join('');};
+function renderUsers(){renderRequests();}
+function approveRequest(id,role){var p=adminPeople.find(function(x){return x.id===id;})||{};savePersonAccess(id,{status:'approved',role:role||p.role||'staff',approvedAt:Date.now(),approvedBy:myTgId,adminComment:p.adminComment||'Одобрен без комментария'});}
+function rejectRequest(id){var p=adminPeople.find(function(x){return x.id===id;})||{};savePersonAccess(id,{status:'rejected',adminComment:p.adminComment||'Отклонён без комментария',rejectedAt:Date.now(),rejectedBy:myTgId});}
+function removeUser(id){savePersonAccess(id,{status:'rejected',adminComment:'Доступ отозван администратором',revokedAt:Date.now(),revokedBy:myTgId});}
+function renderAccessRows(keys,values,scope){return keys.map(function(x){var on=values&&values[x.key]===true;return '<div class="access-row"><div class="access-info"><div class="access-title">'+x.label+'</div><div class="access-sub">'+x.sub+'</div></div><div class="access-toggle '+(on?'on':'')+'" data-scope="'+scope+'" data-key="'+x.key+'" onclick="this.classList.toggle(\'on\')"></div></div>';}).join('');}
+function openPersonCard(id){var p=adminPeople.find(function(x){return String(x.id)===String(id);});if(!p)return;editingPersonId=id;editingPersonData=JSON.parse(JSON.stringify(p));var perms=mergedPermissions(p);var modal=document.getElementById('person-modal');var el=document.getElementById('person-modal-content');var roleOptions=ROLES.map(function(r){return '<option value="'+r.id+'" '+((p.role||'viewer')===r.id?'selected':'')+'>'+r.label+'</option>';}).join('');el.innerHTML='<div class="person-card-head"><div class="req-avatar" style="width:46px;height:46px;font-size:14px;">'+personInitials(p.name)+'</div><div style="flex:1"><div class="person-card-title">'+escHtml(p.name||'Без имени')+'</div><div class="person-card-meta">ID '+escHtml(p.id||'')+' · '+escHtml(p.username||'')+'</div></div><span class="person-status '+(p.status||'pending')+'" id="person-status-pill">'+statusLabel(p.status||'pending')+'</span></div><div class="promo-field"><label>Роль</label><select id="person-role" onchange="applyRoleTemplateToPerson()" style="width:100%;padding:12px 14px;background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;">'+roleOptions+'</select></div><textarea class="form-textarea" id="person-comment" placeholder="Комментарий: почему одобрен / почему отклонён / что проверить позже">'+escHtml(p.adminComment||p.accessComment||p.decisionComment||'')+'</textarea><div class="modal-btns" style="margin-bottom:14px;"><button class="req-btn approve" onclick="setPersonDraftStatus(\'approved\')">✓ Одобрить</button><button class="req-btn reject" onclick="setPersonDraftStatus(\'rejected\')">✕ Отклонить</button><button class="req-btn" onclick="setPersonDraftStatus(\'pending\')">⏳ Новая</button></div><div class="section-title">Доступ к функциям админки</div><div class="access-block" id="admin-access-block">'+renderAccessRows(ADMIN_ACCESS_KEYS,perms.admin,'admin')+'</div><div class="section-title">Доступ внутри базы знаний</div><div class="access-block" id="knowledge-access-block">'+renderAccessRows(KNOWLEDGE_ACCESS_KEYS,perms.knowledge,'knowledge')+'</div><div class="section-title">Audit log</div><div class="person-comment">В production здесь будет история: кто изменил права, когда и что поменял.</div><div class="modal-btns"><button class="btn-cancel" onclick="closePersonCard()">Отмена</button><button class="btn-accent" style="flex:1;width:auto;padding:12px" onclick="savePersonCard()">Сохранить</button></div>';modal.classList.add('active');}
+function setPersonDraftStatus(st){if(!editingPersonData)return;editingPersonData.status=st;var pill=document.getElementById('person-status-pill');if(pill){pill.className='person-status '+st;pill.textContent=statusLabel(st);}}
+function applyRoleTemplateToPerson(){var role=document.getElementById('person-role').value;var def=roleDefaultPermissions(role);document.getElementById('admin-access-block').innerHTML=renderAccessRows(ADMIN_ACCESS_KEYS,def.admin,'admin');document.getElementById('knowledge-access-block').innerHTML=renderAccessRows(KNOWLEDGE_ACCESS_KEYS,def.knowledge,'knowledge');showToast('Применён шаблон роли');}
+function collectAccess(scope){var obj={};document.querySelectorAll('.access-toggle[data-scope="'+scope+'"]').forEach(function(t){obj[t.dataset.key]=t.classList.contains('on');});return obj;}
+function savePersonCard(){if(!editingPersonId)return;var role=document.getElementById('person-role').value;var comment=document.getElementById('person-comment').value.trim();var st=(editingPersonData&&editingPersonData.status)||'pending';var payload={role:role,status:st,adminComment:comment,updatedAt:Date.now(),updatedBy:myTgId,permissions:{admin:collectAccess('admin')},documentAccess:collectAccess('knowledge')};if(st==='approved'){payload.approvedAt=Date.now();payload.approvedBy=myTgId;}if(st==='rejected'){payload.rejectedAt=Date.now();payload.rejectedBy=myTgId;}savePersonAccess(editingPersonId,payload,function(){closePersonCard();});}
+function savePersonAccess(id,payload,cb){if(!fbDb){showToast('Нет подключения к базе');return;}fbDb.collection('admin_users').doc(String(id)).set(payload,{merge:true}).then(function(){showToast('Карточка сохранена');loadRequestsAndUsers();if(cb)cb();}).catch(function(err){console.warn(err);showToast('Ошибка сохранения');});}
+function closePersonCard(){document.getElementById('person-modal').classList.remove('active');editingPersonId=null;editingPersonData=null;}
+document.getElementById('person-modal').addEventListener('click',function(e){if(e.target.id==='person-modal')closePersonCard();});
+function renderKnowledgeDashboard(list){list=list||KNOWLEDGE_DOCS;var sec=document.getElementById('knowledge-sections');if(sec){sec.innerHTML=KNOWLEDGE_SECTIONS.map(function(s){return '<div class="knowledge-chip" onclick="filterKnowledgeBy(\''+s[3]+'\')"><div class="knowledge-chip-ico">'+s[0]+'</div><div class="knowledge-chip-title">'+s[1]+'</div><div class="knowledge-chip-sub">'+s[2]+'</div></div>';}).join('');}var wrap=document.getElementById('knowledge-docs');if(wrap){wrap.innerHTML=list.map(function(d){return '<div class="knowledge-card" onclick="openKnowledgeDoc(\''+d.file+'\')"><div class="knowledge-card-head"><div class="knowledge-card-icon">'+d.icon+'</div><div style="flex:1;min-width:0;"><div class="knowledge-card-title">'+d.title+'</div><div class="knowledge-card-file">'+d.file+'</div></div></div><div class="knowledge-card-desc">'+d.desc+'</div><div class="knowledge-tags">'+d.tags.map(function(t){return '<span class="knowledge-tag '+(t.indexOf('needs')!==-1?'red':t.indexOf('synced')!==-1?'gold':'')+'">'+t+'</span>';}).join('')+'</div></div>';}).join('')||'<div class="empty-state">Ничего не найдено</div>';}}
+function filterKnowledgeDocs(){var q=(document.getElementById('knowledge-search').value||'').toLowerCase().trim();var list=KNOWLEDGE_DOCS.filter(function(d){return (d.title+d.file+d.group+d.status+d.desc+d.tags.join(' ')).toLowerCase().indexOf(q)!==-1;});renderKnowledgeDashboard(list);}
+function filterKnowledgeBy(group){document.getElementById('knowledge-search').value=group;filterKnowledgeDocs();}
+function askKnowledgeAI(mode){var text={focus:'Фокус: первый кодовый MVP Базы знаний внутри manproduction-admin. Следом — browser session routes и полноценная browser-версия.',access:'Доступ: Telegram ID остаётся identity. Права меняются в карточке человека: функции админки + доступы внутри базы знаний.',docs:'Требуют разложения: Lyova Foundation, Work Team deep docs, Marketing decomposition, security audit и отдельные Lyova working docs.'}[mode]||'AI ответ.';var el=document.getElementById('knowledge-ai-answer');if(el)el.textContent=text;}
+function openKnowledgeDoc(file){showToast('Документ: '+file+' · просмотр подключим следующим слоем');}
+function openBrowserDashboardInfo(){showToast('Browser-версия: Mini App → одноразовая session-ссылка → Firebase token');}
+setupNavForRole=function(){['nav-manage','nav-stats','nav-knowledge','nav-training','nav-instructions'].forEach(function(id){var el=document.getElementById(id);if(!el)return;var tab=id.replace('nav-','');el.style.display=canOpenBottomTab(tab)?'':'none';});if(myUser&&myUser.role==='admin')loadRequestsAndUsers();renderManageHub();switchTab('manage');};
+switchTab=function(tab){if(['stats','knowledge','training','instructions'].indexOf(tab)!==-1&&!canOpenBottomTab(tab)){showToast('Нет доступа к разделу');return;}document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});var screen=document.getElementById('s-'+tab);if(screen)screen.classList.add('active');var navEl=document.getElementById('nav-'+tab);if(navEl)navEl.classList.add('active');if(tab==='manage')renderManageHub();if(tab==='requests')loadRequestsAndUsers();if(tab==='stats')loadStatsRoulette();if(tab==='promo')loadPromos();if(tab==='training')loadTrainingProgress();if(tab==='knowledge')renderKnowledgeDashboard();if(tab==='demo-access'){document.getElementById('demo-search-input').value='';document.getElementById('demo-search-results').innerHTML='';document.getElementById('demo-approve-block').style.display='none';}if(tab==='lyova')loadKnowledge();if(tab==='users')loadMainUsers();if(tab==='tasks')loadTasks();};
+setTimeout(function(){renderManageHub();renderKnowledgeDashboard();},300);
+// ===== END KNOWLEDGE DASHBOARD / PERSONAL PINS / ACCESS CARDS PATCH =====
 </script>
 </body>
 </html>
