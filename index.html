@@ -2792,6 +2792,105 @@ setTimeout(function(){setupKnowledgeFocus();renderKnowledgeDashboard();renderIns
 // ===== END KNOWLEDGE V2 + INSTRUCTIONS HUB PATCH =====
 
 // ===== END KNOWLEDGE DASHBOARD / PERSONAL PINS / ACCESS CARDS PATCH =====
+
+/* ===== HOTFIX 2026-07-09: stable nav + safe browser dashboard opening ===== */
+function safeEl(id){return document.getElementById(id);}
+
+setupNavForRole=function(){
+  var role=(myUser&&myUser.role)||'viewer';
+
+  ['manage','stats','knowledge','training','instructions'].forEach(function(tab){
+    var nav=safeEl('nav-'+tab);
+    if(!nav)return;
+    nav.style.display=canOpenBottomTab(tab)?'':'none';
+  });
+
+  var pill=safeEl('my-role-pill');
+  if(pill&&myUser)pill.textContent=roleLabel(role);
+
+  switchTab('manage');
+};
+
+function showBrowserDashboardLink(url){
+  var old=safeEl('browser-dashboard-link-modal');
+  if(old)old.remove();
+
+  var overlay=document.createElement('div');
+  overlay.className='modal-overlay active';
+  overlay.id='browser-dashboard-link-modal';
+  overlay.innerHTML=
+    '<div class="modal-box">'+
+      '<div class="modal-title">Полная версия готова</div>'+
+      '<div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;">'+
+        'Ссылка создана. Чтобы браузер или Telegram не заблокировали переход, открой её отдельным нажатием.'+
+      '</div>'+
+      '<a class="btn-accent" id="browser-dashboard-direct-link" href="'+escHtml(url)+'" target="_blank" rel="noopener" style="text-decoration:none;margin-bottom:10px;">Открыть Dashboard →</a>'+
+      '<button class="btn-ghost" id="browser-dashboard-copy-btn" style="margin-bottom:10px;">Скопировать ссылку</button>'+
+      '<button class="btn-cancel" id="browser-dashboard-close-btn" style="width:100%;">Закрыть</button>'+
+    '</div>';
+  document.body.appendChild(overlay);
+
+  var closeBtn=safeEl('browser-dashboard-close-btn');
+  if(closeBtn)closeBtn.onclick=function(){var m=safeEl('browser-dashboard-link-modal');if(m)m.remove();};
+  var copyBtn=safeEl('browser-dashboard-copy-btn');
+  if(copyBtn)copyBtn.onclick=copyBrowserDashboardLink;
+}
+
+function copyBrowserDashboardLink(){
+  var a=safeEl('browser-dashboard-direct-link');
+  if(!a)return;
+  var url=a.href;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){showToast('Ссылка скопирована');}).catch(function(){showToast('Не удалось скопировать');});
+  }else{
+    showToast('Скопируй ссылку вручную');
+  }
+}
+
+openBrowserDashboardInfo=function(){
+  var tg=getTg();
+  var initData=(tg&&tg.initData)||'';
+  if(!initData){
+    showToast('Открой админку через Telegram Mini App');
+    return;
+  }
+
+  showToast('Создаю защищённый вход...');
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST',AUTH_SERVER+'/dashboard-session/create',true);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.onload=function(){
+    var data={};
+    try{data=JSON.parse(xhr.responseText||'{}');}catch(e){}
+    if(xhr.status===200&&data&&data.url){
+      showBrowserDashboardLink(data.url);
+      return;
+    }
+    showToast((data&&data.error)?('Ошибка: '+data.error):'Не удалось создать browser-сессию');
+  };
+  xhr.onerror=function(){showToast('Сервер не ответил');};
+  xhr.send(JSON.stringify({initData:initData,source:'admin_mini_app',target:'knowledge_dashboard'}));
+};
+
+launchApp=function(){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var main=safeEl('main-app');
+  if(main)main.classList.add('active');
+
+  setupNavForRole();
+
+  if(myUser&&myUser.role==='admin'){loadRequestsAndUsers();}
+  loadNews();
+  loadChallenges();
+  loadQuests();
+
+  try{renderManageHub();}catch(e){console.warn('renderManageHub hotfix error',e);}
+  try{renderKnowledgeDashboard();}catch(e){console.warn('renderKnowledgeDashboard hotfix error',e);}
+  try{renderInstructionsHub();}catch(e){console.warn('renderInstructionsHub hotfix error',e);}
+  try{loadTrainingProgress();}catch(e){console.warn('loadTrainingProgress hotfix error',e);}
+};
+/* ===== END HOTFIX 2026-07-09 ===== */
+
 </script>
 </body>
 </html>
