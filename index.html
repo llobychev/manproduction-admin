@@ -386,6 +386,54 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 
 /* ===== END KNOWLEDGE DASHBOARD PATCH ===== */
 
+
+
+/* ===== TEAM FUND V2 ===== */
+.fund-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
+.fund-card.gold{border-color:rgba(201,168,76,0.38);background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(45,212,191,0.035));}
+.fund-card-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.fund-card.gold .fund-card-title{color:#f0d37a;}
+.fund-card-sub{font-size:12px;color:var(--text2);line-height:1.45;}
+.fund-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.fund-stat{background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:12px;}
+.fund-stat-val{font-size:20px;font-weight:900;color:var(--accent);line-height:1.05;}
+.fund-stat.gold .fund-stat-val{color:#f0d37a;}
+.fund-stat.red .fund-stat-val{color:var(--red);}
+.fund-stat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.04em;margin-top:4px;}
+.fund-tabs{display:flex;background:#101416;border-bottom:0.5px solid rgba(45,212,191,0.10);position:sticky;top:53px;z-index:9;}
+.fund-tab{flex:1;padding:10px 2px;text-align:center;font-size:8px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:0.03em;border-bottom:2px solid transparent;cursor:pointer;}
+.fund-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.fund-panel{display:none;padding:12px 14px 90px;}
+.fund-panel.active{display:block;}
+.fund-row{display:grid;grid-template-columns:1.05fr .8fr .8fr;gap:8px;align-items:center;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.045);}
+.fund-row:last-child{border-bottom:0;}
+.fund-head{font-size:9px;color:var(--text3);font-weight:800;text-transform:uppercase;letter-spacing:0.04em;}
+.fund-cell{font-size:12px;color:var(--text2);line-height:1.35;min-width:0;}
+.fund-cell b{color:var(--text);font-weight:800;}
+.fund-cell .mini{font-size:10px;color:var(--text3);margin-top:2px;}
+.fund-pill{display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;padding:4px 7px;border-radius:999px;text-transform:uppercase;white-space:nowrap;}
+.fund-pill.planned{background:rgba(224,168,58,0.12);color:var(--amber);}
+.fund-pill.reserved{background:rgba(201,168,76,0.12);color:#f0d37a;}
+.fund-pill.paid{background:rgba(45,212,191,0.12);color:var(--accent2);}
+.fund-pill.cancelled{background:rgba(224,85,85,0.12);color:var(--red);}
+.fund-pill.waiting_result{background:rgba(255,255,255,0.07);color:var(--text2);}
+.fund-actions{display:flex;gap:6px;margin-top:10px;}
+.fund-mini-btn{padding:7px 9px;border-radius:8px;background:var(--bg2);border:0.5px solid var(--border);color:var(--text2);font-size:10px;font-weight:800;cursor:pointer;text-align:center;}
+.fund-mini-btn.pay{background:rgba(45,212,191,0.10);border-color:rgba(45,212,191,0.28);color:var(--accent2);}
+.fund-mini-btn.red{background:rgba(224,85,85,0.10);border-color:rgba(224,85,85,0.25);color:var(--red);}
+.person-finance-block{background:rgba(0,0,0,0.12);border:0.5px solid rgba(45,212,191,0.12);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
+.person-finance-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.person-pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.person-pay-chip{padding:10px 7px;border-radius:10px;border:0.5px solid var(--border);background:var(--bg2);text-align:center;cursor:pointer;font-size:11px;color:var(--text2);}
+.person-pay-chip.selected{border-color:var(--accent);background:rgba(45,212,191,0.1);color:var(--accent2);font-weight:900;}
+.person-pay-chip.gold.selected{border-color:rgba(201,168,76,0.42);background:rgba(201,168,76,0.12);color:#f0d37a;}
+.fund-toggle{width:44px;height:25px;border-radius:999px;background:rgba(255,255,255,0.10);border:0.5px solid rgba(255,255,255,0.06);position:relative;cursor:pointer;flex-shrink:0;}
+.fund-toggle:before{content:'';position:absolute;width:19px;height:19px;border-radius:50%;background:var(--text3);left:3px;top:2px;transition:.18s;}
+.fund-toggle.on{background:rgba(45,212,191,0.17);border-color:rgba(45,212,191,0.34);}
+.fund-toggle.on:before{left:20px;background:var(--accent);}
+.fund-warning{background:rgba(224,168,58,0.08);border:0.5px solid rgba(224,168,58,0.25);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--amber);line-height:1.5;margin-bottom:10px;}
+/* ===== END TEAM FUND V2 ===== */
+
 </style>
 </head>
 <body>
@@ -736,6 +784,55 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     <div class="add-fab" onclick="openTaskModal(null)">＋</div>
   </div>
 
+
+
+  <!-- TEAM FUND SCREEN -->
+  <div class="app-screen" id="s-fund">
+    <div class="topbar"><div><div class="topbar-logo">💰 Фонд команды</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div><span class="role-pill">v2</span></div>
+    <div class="fund-tabs">
+      <div class="fund-tab active" id="ftab-overview" onclick="switchFundTab('overview')">Обзор</div>
+      <div class="fund-tab" id="ftab-schedule" onclick="switchFundTab('schedule')">График</div>
+      <div class="fund-tab" id="ftab-people" onclick="switchFundTab('people')">Люди</div>
+      <div class="fund-tab" id="ftab-tx" onclick="switchFundTab('tx')">Операции</div>
+      <div class="fund-tab" id="ftab-barter" onclick="switchFundTab('barter')">Бартер</div>
+    </div>
+    <div class="fund-panel active" id="fpanel-overview">
+      <div class="fund-grid">
+        <div class="fund-stat gold"><div class="fund-stat-val" id="fund-available">—</div><div class="fund-stat-label">Доступно</div></div>
+        <div class="fund-stat"><div class="fund-stat-val" id="fund-reserved">—</div><div class="fund-stat-label">Зарезервировано</div></div>
+        <div class="fund-stat"><div class="fund-stat-val" id="fund-paid">—</div><div class="fund-stat-label">Выплачено</div></div>
+        <div class="fund-stat"><div class="fund-stat-val" id="fund-people-count">—</div><div class="fund-stat-label">Людей в фонде</div></div>
+      </div>
+      <div class="fund-card gold"><div class="fund-card-title">Фонд → люди → обязательства → выплаты</div><div class="fund-card-sub">Условия работы фиксируются в карточке человека. Плановые выплаты попадают в общий график фонда. Когда выплата отмечается как оплаченная, создаётся операция фонда.</div></div>
+      <div class="section-title">Ближайшие выплаты</div>
+      <div class="fund-grid">
+        <div class="fund-stat"><div class="fund-stat-val" id="fund-due-today">—</div><div class="fund-stat-label">Сегодня</div></div>
+        <div class="fund-stat"><div class="fund-stat-val" id="fund-due-7">—</div><div class="fund-stat-label">7 дней</div></div>
+      </div>
+      <div id="fund-upcoming-list"></div>
+      <div class="section-title">Источники фонда</div>
+      <div id="fund-sources-list"></div>
+    </div>
+    <div class="fund-panel" id="fpanel-schedule">
+      <button class="btn-accent" onclick="openPaymentModal(null,null)">+ Добавить выплату</button>
+      <div class="section-title">Общий график</div>
+      <div id="fund-schedule-list"></div>
+    </div>
+    <div class="fund-panel" id="fpanel-people">
+      <div class="fund-warning">Список подтягивается из карточек команды. В фонд попадают люди, у которых включена связь с фондом или выбран формат оплаты/бартера.</div>
+      <div id="fund-people-list"></div>
+    </div>
+    <div class="fund-panel" id="fpanel-tx">
+      <button class="btn-accent" onclick="openFundTxModal()">+ Добавить операцию фонда</button>
+      <div class="section-title">Операции</div>
+      <div id="fund-tx-list"></div>
+    </div>
+    <div class="fund-panel" id="fpanel-barter">
+      <div class="fund-card gold"><div class="fund-card-title">Бартер фиксируется как обязательство</div><div class="fund-card-sub">Даже если денег нет, в карточке человека должны быть условия: что человек делает, что получает взамен, есть ли бонус или процент.</div></div>
+      <div id="fund-barter-list"></div>
+    </div>
+  </div>
+
   <nav class="bottomnav" id="bottomnav">
     <div class="nav-item active" id="nav-manage" onclick="switchTab('manage')"><div class="nav-icon">⚙️</div><div class="nav-label">Управление</div><div class="nav-badge" id="req-badge" style="display:none"></div></div>
     <div class="nav-item" id="nav-stats" onclick="switchTab('stats')"><div class="nav-icon">📊</div><div class="nav-label">Статистика</div></div>
@@ -878,6 +975,45 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
       <button class="btn-delete" id="task-del-btn" style="display:none" onclick="deleteTask()">🗑</button>
       <button class="btn-accent" style="flex:1;width:auto;padding:12px" id="task-save-btn" onclick="saveTask()">Создать</button>
     </div>
+  </div>
+</div>
+
+
+
+<!-- MODAL: team payment schedule -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="payment-modal-title">Плановая выплата</div>
+    <input type="hidden" id="pay-id">
+    <div class="promo-field"><label>Человек</label><select id="pay-person" style="width:100%;padding:12px 14px;background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;"></select></div>
+    <div class="promo-field-row">
+      <div class="promo-field"><label>Дата выплаты</label><input id="pay-date" type="date"></div>
+      <div class="promo-field"><label>Сумма, ₽</label><input id="pay-amount" type="number" min="0" placeholder="3000"></div>
+    </div>
+    <div class="promo-field-row">
+      <div class="promo-field"><label>Процент / бонус</label><input id="pay-percent" placeholder="10% или пусто"></div>
+      <div class="promo-field"><label>Статус</label><select id="pay-status" style="width:100%;padding:10px 12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;"><option value="planned">Запланировано</option><option value="reserved">Резерв</option><option value="waiting_result">Ждёт результата</option><option value="paid">Оплачено</option><option value="cancelled">Отменено</option></select></div>
+    </div>
+    <div class="promo-field"><label>За что</label><input id="pay-title" placeholder="Тестовая миссия 3 дня"></div>
+    <div class="promo-field"><label>Тип</label><select id="pay-type" style="width:100%;padding:10px 12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;"><option value="fixed">Фикс</option><option value="bonus">Бонус</option><option value="percent">Процент</option><option value="barter">Бартер</option><option value="barter_bonus">Бартер + бонус</option><option value="compensation">Компенсация</option><option value="test_task">Тестовая задача</option></select></div>
+    <textarea class="form-textarea" id="pay-comment" placeholder="Комментарий"></textarea>
+    <div class="access-block"><div class="access-row"><div class="access-info"><div class="access-title">Связать с фондом</div><div class="access-sub">Показывать выплату в общем графике фонда</div></div><div class="fund-toggle on" id="pay-linked" onclick="this.classList.toggle('on')"></div></div></div>
+    <div class="modal-btns"><button class="btn-cancel" onclick="closePaymentModal()">Отмена</button><button class="btn-delete" id="pay-delete-btn" style="display:none" onclick="deletePaymentFromModal()">🗑</button><button class="btn-accent" style="flex:1;width:auto;padding:12px" onclick="savePaymentSchedule()">Сохранить</button></div>
+  </div>
+</div>
+
+<!-- MODAL: team fund transaction -->
+<div class="modal-overlay" id="fund-tx-modal">
+  <div class="modal-box">
+    <div class="modal-title">Операция фонда</div>
+    <div class="promo-field-row">
+      <div class="promo-field"><label>Тип</label><select id="tx-type" style="width:100%;padding:10px 12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;"><option value="income">Доход</option><option value="expense">Расход</option><option value="reserve">Резерв</option><option value="obligation">Обязательство</option></select></div>
+      <div class="promo-field"><label>Сумма, ₽</label><input id="tx-amount" type="number" min="0" placeholder="12000"></div>
+    </div>
+    <div class="promo-field"><label>Название</label><input id="tx-title" placeholder="Предпродажа клуба / выплата ассистенту"></div>
+    <div class="promo-field"><label>Человек, если относится к выплате</label><select id="tx-person" style="width:100%;padding:10px 12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;"></select></div>
+    <textarea class="form-textarea" id="tx-comment" placeholder="Комментарий"></textarea>
+    <div class="modal-btns"><button class="btn-cancel" onclick="closeFundTxModal()">Отмена</button><button class="btn-accent" style="flex:1;width:auto;padding:12px" onclick="saveFundTransaction()">Сохранить</button></div>
   </div>
 </div>
 
@@ -2793,6 +2929,186 @@ setTimeout(function(){setupKnowledgeFocus();renderKnowledgeDashboard();renderIns
 
 // ===== END KNOWLEDGE DASHBOARD / PERSONAL PINS / ACCESS CARDS PATCH =====
 
+
+
+/* ===== TEAM FUND V2 CODE PATCH ===== */
+var teamFundSources=[];
+var teamFundTransactions=[];
+var teamPaymentSchedule=[];
+var currentFundTab='overview';
+var editingPaymentId=null;
+
+function moneyFmt(n){n=Number(n)||0;return n.toLocaleString('ru-RU')+' ₽';}
+function todayISO(){return new Date().toISOString().slice(0,10);}
+function addDaysISO(days){var d=new Date();d.setDate(d.getDate()+days);return d.toISOString().slice(0,10);}
+function dateLabelISO(iso){if(!iso)return '—';try{return new Date(iso+'T00:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short'});}catch(e){return iso;}}
+function paymentStatusLabel(st){return {planned:'Запланировано',reserved:'Резерв',paid:'Оплачено',cancelled:'Отменено',waiting_result:'Ждёт результата'}[st]||st||'—';}
+function paymentTypeLabel(t){return {fixed:'Фикс',bonus:'Бонус',percent:'Процент',barter:'Бартер',barter_bonus:'Бартер + бонус',compensation:'Компенсация',test_task:'Тестовая задача'}[t]||t||'—';}
+function paymentFormatLabel(t){return {fixed:'Фикс',fixed_bonus:'Фикс + %',percent:'Только %',barter_bonus:'Бартер + бонус',barter:'Чистый бартер',none:'Не выбрано'}[t]||'Не выбрано';}
+function fundPersonName(id){var p=adminPeople.find(function(x){return String(x.id)===String(id);});return p?(p.name||'Без имени'):'—';}
+function fundPersonRole(id){var p=adminPeople.find(function(x){return String(x.id)===String(id);});return p?(p.workRole||roleLabel(p.role||'viewer')):'';}
+function fundPeople(){return adminPeople.filter(function(p){return p.status==='approved'&&(p.fundLinked===true||p.paymentFormat||p.fixedRate||p.barterTerms);});}
+
+function ensureFundManageItem(){
+  if(typeof ADMIN_ACCESS_KEYS!=='undefined'&&!ADMIN_ACCESS_KEYS.some(function(x){return x.key==='fund';})){
+    ADMIN_ACCESS_KEYS.push({key:'fund',label:'Фонд команды',sub:'Деньги команды, выплаты, график и бартер'});
+  }
+  if(typeof MANAGE_ITEMS!=='undefined'&&!MANAGE_ITEMS.some(function(x){return x.id==='fund';})){
+    var idx=MANAGE_ITEMS.findIndex(function(x){return x.id==='tasks';});
+    var item={id:'fund',icon:'💰',title:'Фонд команды',sub:'Доходы, выплаты, резервы, обязательства, бартер',tab:'fund'};
+    if(idx>=0)MANAGE_ITEMS.splice(idx+1,0,item);else MANAGE_ITEMS.push(item);
+  }
+}
+ensureFundManageItem();
+
+var __oldCanSeeManageItem=typeof canSeeManageItem==='function'?canSeeManageItem:null;
+canSeeManageItem=function(item){
+  if(!myUser)return false;
+  if(item&&item.id==='fund'){
+    if(myUser.role==='admin'||String(myTgId)===SUPER_ADMIN_ID)return true;
+    return !!(myUser.permissions&&myUser.permissions.admin&&myUser.permissions.admin.fund===true);
+  }
+  return __oldCanSeeManageItem?__oldCanSeeManageItem(item):true;
+};
+
+function switchFundTab(tab){
+  currentFundTab=tab;
+  ['overview','schedule','people','tx','barter'].forEach(function(t){
+    var bt=document.getElementById('ftab-'+t);if(bt)bt.classList.toggle('active',t===tab);
+    var panel=document.getElementById('fpanel-'+t);if(panel)panel.classList.toggle('active',t===tab);
+  });
+  if(myTgId&&fbDb){fbDb.collection('admin_users').doc(String(myTgId)).set({uiPreferences:{lastFundTab:tab},updatedAt:Date.now()},{merge:true}).catch(function(){});}
+  renderFundAll();
+}
+
+function loadTeamFundData(cb){
+  if(!fbDb){renderFundAll();if(cb)cb();return;}
+  var p1=fbDb.collection('team_fund_sources').get().then(function(snap){teamFundSources=[];snap.forEach(function(doc){teamFundSources.push(Object.assign({},doc.data(),{_id:doc.id}));});}).catch(function(err){console.warn('fund sources load',err);teamFundSources=[];});
+  var p2=fbDb.collection('team_fund_transactions').get().then(function(snap){teamFundTransactions=[];snap.forEach(function(doc){teamFundTransactions.push(Object.assign({},doc.data(),{_id:doc.id}));});}).catch(function(err){console.warn('fund tx load',err);teamFundTransactions=[];});
+  var p3=fbDb.collection('team_payment_schedule').get().then(function(snap){teamPaymentSchedule=[];snap.forEach(function(doc){teamPaymentSchedule.push(Object.assign({},doc.data(),{_id:doc.id}));});}).catch(function(err){console.warn('payment schedule load',err);teamPaymentSchedule=[];});
+  Promise.all([p1,p2,p3]).then(function(){renderFundAll();if(cb)cb();});
+}
+
+function fundSummary(){
+  var sourceActual=teamFundSources.reduce(function(sum,s){return sum+(Number(s.actualAmount)||0);},0);
+  var txIncome=0, txExpense=0;
+  teamFundTransactions.forEach(function(t){var a=Number(t.amount)||0;if(t.type==='income')txIncome+=a;if(t.type==='expense')txExpense+=a;});
+  var paid=teamPaymentSchedule.reduce(function(sum,p){return sum+(p.status==='paid'?(Number(p.amount)||0):0);},0)+txExpense;
+  var reserved=teamPaymentSchedule.reduce(function(sum,p){return sum+(['planned','reserved','waiting_result'].indexOf(p.status)!==-1?(Number(p.amount)||0):0);},0);
+  var income=sourceActual+txIncome;
+  return {income:income,paid:paid,reserved:reserved,available:income-paid-reserved,people:fundPeople().length};
+}
+
+function renderFundAll(){
+  renderFundOverview();renderFundSchedule();renderFundPeople();renderFundTransactions();renderFundBarter();
+}
+
+function renderFundOverview(){
+  if(!document.getElementById('fund-available'))return;
+  var s=fundSummary();
+  document.getElementById('fund-available').textContent=moneyFmt(s.available);
+  document.getElementById('fund-reserved').textContent=moneyFmt(s.reserved);
+  document.getElementById('fund-paid').textContent=moneyFmt(s.paid);
+  document.getElementById('fund-people-count').textContent=s.people;
+  var today=todayISO(), week=addDaysISO(7), month=addDaysISO(30);
+  var active=teamPaymentSchedule.filter(function(p){return p.linkedToFund!==false&&p.status!=='paid'&&p.status!=='cancelled';});
+  var dueToday=active.filter(function(p){return (p.dueDate||'')<=today;}).reduce(function(a,p){return a+(Number(p.amount)||0);},0);
+  var due7=active.filter(function(p){return (p.dueDate||'')<=week;}).reduce(function(a,p){return a+(Number(p.amount)||0);},0);
+  document.getElementById('fund-due-today').textContent=moneyFmt(dueToday);
+  document.getElementById('fund-due-7').textContent=moneyFmt(due7);
+  var upcoming=active.slice().sort(function(a,b){return String(a.dueDate||'').localeCompare(String(b.dueDate||''));}).slice(0,5);
+  var up=document.getElementById('fund-upcoming-list');
+  if(up){up.innerHTML=upcoming.length?'<div class="fund-card"><div class="fund-row fund-head"><div>Кому / за что</div><div>Дата</div><div>Сумма</div></div>'+upcoming.map(paymentRowHtmlCompact).join('')+'</div>':'<div class="empty-state" style="padding:18px 10px;">Ближайших выплат нет</div>';}
+  var sources=document.getElementById('fund-sources-list');
+  var defaults=[{title:'Предпродажа клуба',plannedAmount:60000,actualAmount:0},{title:'Карта персонажа',plannedAmount:20000,actualAmount:0},{title:'Банковские рефералки',plannedAmount:15000,actualAmount:0},{title:'Мини-ивенты',plannedAmount:10000,actualAmount:0},{title:'Донаты / support fund',plannedAmount:0,actualAmount:0}];
+  var sourceList=teamFundSources.length?teamFundSources:defaults;
+  if(sources){sources.innerHTML='<div class="fund-card"><div class="fund-row fund-head"><div>Источник</div><div>План</div><div>Факт</div></div>'+sourceList.map(function(x){return '<div class="fund-row"><div class="fund-cell"><b>'+escHtml(x.title||'Источник')+'</b><div class="mini">'+escHtml(x.type||'')+'</div></div><div class="fund-cell">'+moneyFmt(x.plannedAmount||0)+'</div><div class="fund-cell accent">'+moneyFmt(x.actualAmount||0)+'</div></div>';}).join('')+'</div>';}
+}
+
+function paymentRowHtmlCompact(p){return '<div class="fund-row" onclick="openPaymentModal(\''+p._id+'\',null)"><div class="fund-cell"><b>'+escHtml(p.personName||fundPersonName(p.personId))+'</b><div class="mini">'+escHtml(p.title||'Выплата')+'</div></div><div class="fund-cell">'+dateLabelISO(p.dueDate)+'</div><div class="fund-cell">'+(p.amount?moneyFmt(p.amount):escHtml(p.percent||'—'))+'</div></div>';}
+function paymentRowHtml(p,showPerson){
+  var value=p.amount?moneyFmt(p.amount):escHtml(p.percent||'—');
+  return '<div class="fund-card">'+
+    '<div class="row" style="align-items:flex-start;"><div style="min-width:0;"><div class="fund-card-title">'+(showPerson?escHtml(p.personName||fundPersonName(p.personId))+' · ':'')+escHtml(p.title||'Выплата')+'</div><div class="fund-card-sub">'+dateLabelISO(p.dueDate)+' · '+paymentTypeLabel(p.paymentType)+' · '+value+'</div></div><span class="fund-pill '+(p.status||'planned')+'">'+paymentStatusLabel(p.status)+'</span></div>'+
+    (p.comment?'<div class="person-comment">'+escHtml(p.comment)+'</div>':'')+
+    '<div class="fund-actions"><button class="fund-mini-btn" onclick="openPaymentModal(\''+p._id+'\',event)">Изменить</button>'+((p.status!=='paid'&&p.status!=='cancelled')?'<button class="fund-mini-btn pay" onclick="markPaymentPaid(\''+p._id+'\',event)">Оплачено</button>':'')+'<button class="fund-mini-btn red" onclick="cancelPayment(\''+p._id+'\',event)">Отменить</button></div></div>';
+}
+
+function renderFundSchedule(){var el=document.getElementById('fund-schedule-list');if(!el)return;var list=teamPaymentSchedule.filter(function(p){return p.linkedToFund!==false;}).sort(function(a,b){return String(a.dueDate||'').localeCompare(String(b.dueDate||''));});el.innerHTML=list.length?list.map(function(p){return paymentRowHtml(p,true);}).join(''):'<div class="empty-state">График выплат пока пуст.<br>Добавь выплату из карточки человека или здесь.</div>';}
+function renderFundPeople(){var el=document.getElementById('fund-people-list');if(!el)return;var list=fundPeople();el.innerHTML=list.length?list.map(function(p){var sched=teamPaymentSchedule.filter(function(x){return String(x.personId)===String(p.id)&&x.status!=='cancelled';});var next=sched.sort(function(a,b){return String(a.dueDate||'').localeCompare(String(b.dueDate||''));})[0];return '<div class="user-row" onclick="openPersonCard(\''+p.id+'\')"><div class="user-ava">'+personInitials(p.name)+'</div><div class="user-info"><div class="user-name">'+escHtml(p.name||'Без имени')+'</div><div class="user-role-label">'+escHtml(p.workRole||roleLabel(p.role||'viewer'))+' · '+paymentFormatLabel(p.paymentFormat)+' · '+(next?('след. '+dateLabelISO(next.dueDate)):'нет выплат')+'</div></div><div class="manage-hub-arrow">›</div></div>';}).join(''):'<div class="empty-state">Людей, связанных с фондом, пока нет</div>';}
+function renderFundTransactions(){var el=document.getElementById('fund-tx-list');if(!el)return;var list=teamFundTransactions.slice().sort(function(a,b){return (b.createdAt||0)-(a.createdAt||0);});el.innerHTML=list.length?list.map(function(t){var sign=t.type==='income'?'+':'−';var cls=t.type==='income'?'accent':'amber';return '<div class="fund-card"><div class="row"><div><div class="fund-card-title">'+escHtml(t.title||'Операция')+'</div><div class="fund-card-sub">'+escHtml(t.personName||'')+' · '+escHtml(t.type||'')+'</div></div><div class="'+cls+'" style="font-weight:900;">'+sign+moneyFmt(t.amount||0)+'</div></div>'+(t.comment?'<div class="person-comment">'+escHtml(t.comment)+'</div>':'')+'</div>';}).join(''):'<div class="empty-state">Операций фонда пока нет</div>';}
+function renderFundBarter(){var el=document.getElementById('fund-barter-list');if(!el)return;var list=adminPeople.filter(function(p){return p.status==='approved'&&(p.paymentFormat==='barter'||p.paymentFormat==='barter_bonus'||p.barterTerms);});el.innerHTML=list.length?list.map(function(p){return '<div class="fund-card gold" onclick="openPersonCard(\''+p.id+'\')"><div class="fund-card-title">'+escHtml(p.name||'Без имени')+' · '+paymentFormatLabel(p.paymentFormat)+'</div><div class="fund-card-sub">'+escHtml(p.barterTerms||'Условия бартера не заполнены')+'</div></div>';}).join(''):'<div class="empty-state">Бартерных договорённостей пока нет</div>';}
+
+function fillPersonSelect(selectId,selectedId,includeEmpty){var sel=document.getElementById(selectId);if(!sel)return;var people=adminPeople.filter(function(p){return p.status==='approved'||String(p.id)===String(selectedId);});sel.innerHTML=(includeEmpty?'<option value="">— не привязано —</option>':'')+people.map(function(p){return '<option value="'+escHtml(String(p.id))+'" '+(String(p.id)===String(selectedId)?'selected':'')+'>'+escHtml(p.name||p.id)+'</option>';}).join('');}
+
+function openPaymentModal(paymentId,event,personId){if(event){event.stopPropagation();event.preventDefault();}editingPaymentId=paymentId||null;var item=paymentId?teamPaymentSchedule.find(function(x){return x._id===paymentId;}):null;var pid=personId||(item&&item.personId)||(editingPersonId)||'';fillPersonSelect('pay-person',pid,false);document.getElementById('pay-id').value=paymentId||'';document.getElementById('payment-modal-title').textContent=paymentId?'Редактировать выплату':'Плановая выплата';document.getElementById('pay-delete-btn').style.display=paymentId?'block':'none';document.getElementById('pay-date').value=(item&&item.dueDate)||todayISO();document.getElementById('pay-amount').value=(item&&item.amount)||'';document.getElementById('pay-percent').value=(item&&item.percent)||'';document.getElementById('pay-title').value=(item&&item.title)||'';document.getElementById('pay-type').value=(item&&item.paymentType)||'fixed';document.getElementById('pay-status').value=(item&&item.status)||'planned';document.getElementById('pay-comment').value=(item&&item.comment)||'';document.getElementById('pay-linked').classList.toggle('on',!item||item.linkedToFund!==false);document.getElementById('payment-modal').classList.add('active');}
+function closePaymentModal(){document.getElementById('payment-modal').classList.remove('active');editingPaymentId=null;}
+function savePaymentSchedule(){if(!fbDb){showToast('Нет подключения');return;}var pid=document.getElementById('pay-person').value;if(!pid){showToast('Выбери человека');return;}var person=adminPeople.find(function(p){return String(p.id)===String(pid);})||{};var amount=Number(document.getElementById('pay-amount').value)||0;var payload={personId:String(pid),personName:person.name||fundPersonName(pid),role:person.workRole||roleLabel(person.role||'viewer'),dueDate:document.getElementById('pay-date').value||todayISO(),title:document.getElementById('pay-title').value.trim()||'Выплата',amount:amount,percent:document.getElementById('pay-percent').value.trim(),paymentType:document.getElementById('pay-type').value,status:document.getElementById('pay-status').value,linkedToFund:document.getElementById('pay-linked').classList.contains('on'),comment:document.getElementById('pay-comment').value.trim(),updatedAt:Date.now(),updatedBy:myTgId};var ref=editingPaymentId?fbDb.collection('team_payment_schedule').doc(editingPaymentId):fbDb.collection('team_payment_schedule').doc();if(!editingPaymentId){payload.createdAt=Date.now();payload.createdBy=myTgId;}ref.set(payload,{merge:true}).then(function(){if(payload.status==='paid'){return createTransactionForPayment(ref.id,payload);}return null;}).then(function(){showToast('Выплата сохранена');closePaymentModal();loadTeamFundData();}).catch(function(err){console.warn(err);showToast('Ошибка сохранения выплаты');});}
+function deletePaymentFromModal(){if(!editingPaymentId||!fbDb)return;fbDb.collection('team_payment_schedule').doc(editingPaymentId).delete().then(function(){showToast('Выплата удалена');closePaymentModal();loadTeamFundData();}).catch(function(){showToast('Ошибка удаления');});}
+function createTransactionForPayment(id,p){if(!fbDb||p.fundTransactionId)return Promise.resolve();var txRef=fbDb.collection('team_fund_transactions').doc();var tx={type:'expense',amount:Number(p.amount)||0,title:'Выплата: '+(p.title||'команда'),personId:p.personId,personName:p.personName,status:'paid',comment:p.comment||'',paymentId:id,createdAt:Date.now(),createdBy:myTgId};return txRef.set(tx).then(function(){return fbDb.collection('team_payment_schedule').doc(id).set({fundTransactionId:txRef.id,paidAt:Date.now(),paidBy:myTgId},{merge:true});});}
+function markPaymentPaid(id,event){if(event){event.stopPropagation();event.preventDefault();}var p=teamPaymentSchedule.find(function(x){return x._id===id;});if(!p||!fbDb)return;p.status='paid';createTransactionForPayment(id,p).then(function(){return fbDb.collection('team_payment_schedule').doc(id).set({status:'paid',paidAt:Date.now(),paidBy:myTgId},{merge:true});}).then(function(){showToast('Выплата отмечена оплаченной');loadTeamFundData();}).catch(function(){showToast('Ошибка оплаты');});}
+function cancelPayment(id,event){if(event){event.stopPropagation();event.preventDefault();}if(!fbDb)return;fbDb.collection('team_payment_schedule').doc(id).set({status:'cancelled',updatedAt:Date.now(),updatedBy:myTgId},{merge:true}).then(function(){showToast('Выплата отменена');loadTeamFundData();}).catch(function(){showToast('Ошибка');});}
+
+function openFundTxModal(){fillPersonSelect('tx-person','',true);document.getElementById('tx-type').value='income';document.getElementById('tx-amount').value='';document.getElementById('tx-title').value='';document.getElementById('tx-comment').value='';document.getElementById('fund-tx-modal').classList.add('active');}
+function closeFundTxModal(){document.getElementById('fund-tx-modal').classList.remove('active');}
+function saveFundTransaction(){if(!fbDb){showToast('Нет подключения');return;}var pid=document.getElementById('tx-person').value;var person=adminPeople.find(function(p){return String(p.id)===String(pid);})||{};var payload={type:document.getElementById('tx-type').value,amount:Number(document.getElementById('tx-amount').value)||0,title:document.getElementById('tx-title').value.trim()||'Операция фонда',personId:pid||null,personName:person.name||'',comment:document.getElementById('tx-comment').value.trim(),createdAt:Date.now(),createdBy:myTgId};fbDb.collection('team_fund_transactions').add(payload).then(function(){showToast('Операция сохранена');closeFundTxModal();loadTeamFundData();}).catch(function(){showToast('Ошибка сохранения');});}
+
+var __oldRenderRequests=typeof renderRequests==='function'?renderRequests:null;
+renderRequests=function(){if(__oldRenderRequests)__oldRenderRequests();try{renderManageHub();}catch(e){}};
+
+var __oldOpenPersonCard=typeof openPersonCard==='function'?openPersonCard:null;
+openPersonCard=function(id){
+  var p=adminPeople.find(function(x){return String(x.id)===String(id);});if(!p){if(__oldOpenPersonCard)return __oldOpenPersonCard(id);return;}
+  editingPersonId=id;editingPersonData=JSON.parse(JSON.stringify(p));var perms=mergedPermissions(p);var modal=document.getElementById('person-modal');var el=document.getElementById('person-modal-content');var roleOptions=ROLES.map(function(r){return '<option value="'+r.id+'" '+((p.role||'viewer')===r.id?'selected':'')+'>'+r.label+'</option>';}).join('');
+  var pay=p.paymentFormat||'none';
+  var personSchedule=teamPaymentSchedule.filter(function(x){return String(x.personId)===String(id);}).sort(function(a,b){return String(a.dueDate||'').localeCompare(String(b.dueDate||''));});
+  var scheduleHtml=personSchedule.length?personSchedule.map(function(x){return paymentRowHtml(x,false);}).join(''):'<div class="empty-state" style="padding:14px 8px;">Выплат пока нет</div>';
+  el.innerHTML='<div class="person-card-head"><div class="req-avatar" style="width:46px;height:46px;font-size:14px;">'+personInitials(p.name)+'</div><div style="flex:1"><div class="person-card-title">'+escHtml(p.name||'Без имени')+'</div><div class="person-card-meta">ID '+escHtml(p.id||'')+' · '+escHtml(p.username||p.tgUsername||'')+'</div></div><span class="person-status '+(p.status||'pending')+'" id="person-status-pill">'+statusLabel(p.status||'pending')+'</span></div>'+ 
+    '<div class="promo-field"><label>Роль доступа</label><select id="person-role" onchange="applyRoleTemplateToPerson()" style="width:100%;padding:12px 14px;background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;">'+roleOptions+'</select></div>'+ 
+    '<div class="person-finance-row"><div class="promo-field"><label>Телефон</label><input id="person-phone" value="'+escHtml(p.phone||'')+'" placeholder="+7..."></div><div class="promo-field"><label>Рабочая роль</label><input id="person-work-role" value="'+escHtml(p.workRole||roleLabel(p.role||'viewer'))+'" placeholder="Ассистент запуска"></div></div>'+ 
+    '<div class="section-title">Формат работы и оплаты</div><div class="person-pay-grid" id="person-pay-grid">'+['fixed','fixed_bonus','percent','barter_bonus','barter','none'].map(function(x){return '<div class="person-pay-chip '+((x==='barter'||x==='barter_bonus')?'gold ':'')+(pay===x?'selected':'')+'" data-pay="'+x+'">'+paymentFormatLabel(x)+'</div>';}).join('')+'</div>'+ 
+    '<div class="person-finance-row"><div class="promo-field"><label>Ставка / фикс</label><input id="person-fixed-rate" value="'+escHtml(p.fixedRate||'')+'" placeholder="15000"></div><div class="promo-field"><label>Процент / бонус</label><input id="person-bonus-percent" value="'+escHtml(p.bonusPercent||'')+'" placeholder="10%"></div></div>'+ 
+    '<textarea class="form-textarea" id="person-barter-terms" placeholder="Условия бартера">'+escHtml(p.barterTerms||'')+'</textarea>'+ 
+    '<div class="access-block"><div class="access-row"><div class="access-info"><div class="access-title">Связать с фондом</div><div class="access-sub">Показывать человека в «Фонде команды» и учитывать график выплат</div></div><div class="fund-toggle '+(p.fundLinked!==false?'on':'')+'" id="person-fund-linked" onclick="this.classList.toggle(\'on\')"></div></div></div>'+ 
+    '<textarea class="form-textarea" id="person-comment" placeholder="Комментарий: почему одобрен / что проверить / обязательство">'+escHtml(p.adminComment||p.accessComment||p.decisionComment||'')+'</textarea>'+ 
+    '<div class="modal-btns" style="margin-bottom:14px;"><button class="req-btn approve" onclick="setPersonDraftStatus(\'approved\')">✓ Одобрить</button><button class="req-btn reject" onclick="setPersonDraftStatus(\'rejected\')">✕ Отклонить</button><button class="req-btn" onclick="setPersonDraftStatus(\'pending\')">⏳ Новая</button></div>'+ 
+    '<div class="section-title">График выплат <small onclick="openPaymentModal(null,event,\''+id+'\')">+ Добавить</small></div><div id="person-payment-list">'+scheduleHtml+'</div>'+ 
+    '<div class="section-title">Доступ к функциям админки</div><div class="access-block" id="admin-access-block">'+renderAccessRows(ADMIN_ACCESS_KEYS,perms.admin,'admin')+'</div><div class="section-title">Доступ внутри базы знаний</div><div class="access-block" id="knowledge-access-block">'+renderAccessRows(KNOWLEDGE_ACCESS_KEYS,perms.knowledge,'knowledge')+'</div><div class="section-title">Audit log</div><div class="person-comment">В production здесь будет история: кто изменил права, когда и что поменял.</div><div class="modal-btns"><button class="btn-cancel" onclick="closePersonCard()">Отмена</button><button class="btn-accent" style="flex:1;width:auto;padding:12px" onclick="savePersonCard()">Сохранить</button></div>';
+  document.querySelectorAll('#person-pay-grid .person-pay-chip').forEach(function(chip){chip.onclick=function(){document.querySelectorAll('#person-pay-grid .person-pay-chip').forEach(function(c){c.classList.remove('selected');});chip.classList.add('selected');};});
+  modal.classList.add('active');
+};
+
+savePersonCard=function(){if(!editingPersonId)return;var role=document.getElementById('person-role').value;var comment=document.getElementById('person-comment').value.trim();var st=(editingPersonData&&editingPersonData.status)||'pending';var payChip=document.querySelector('#person-pay-grid .person-pay-chip.selected');var payload={role:role,status:st,adminComment:comment,phone:(document.getElementById('person-phone')||{}).value||'',workRole:(document.getElementById('person-work-role')||{}).value||'',paymentFormat:payChip?payChip.dataset.pay:'none',fixedRate:(document.getElementById('person-fixed-rate')||{}).value||'',bonusPercent:(document.getElementById('person-bonus-percent')||{}).value||'',barterTerms:(document.getElementById('person-barter-terms')||{}).value||'',fundLinked:document.getElementById('person-fund-linked')?document.getElementById('person-fund-linked').classList.contains('on'):true,updatedAt:Date.now(),updatedBy:myTgId,permissions:{admin:collectAccess('admin')},documentAccess:collectAccess('knowledge')};if(st==='approved'){payload.approvedAt=Date.now();payload.approvedBy=myTgId;}if(st==='rejected'){payload.rejectedAt=Date.now();payload.rejectedBy=myTgId;}savePersonAccess(editingPersonId,payload,function(){closePersonCard();loadTeamFundData();});};
+
+var __oldLoadRequestsAndUsers=typeof loadRequestsAndUsers==='function'?loadRequestsAndUsers:null;
+loadRequestsAndUsers=function(){if(!fbDb)return;if(__oldLoadRequestsAndUsers){__oldLoadRequestsAndUsers();}fbDb.collection('admin_users').get().then(function(snap){adminPeople=[];pendingRequests=[];approvedUsers=[];snap.forEach(function(doc){var d=doc.data();if(!d.id)d.id=doc.id;adminPeople.push(d);if(d.status==='pending')pendingRequests.push(d);if(d.status==='approved')approvedUsers.push(d);});adminPeople.sort(function(a,b){var order={pending:0,approved:1,rejected:2};return (order[a.status]||9)-(order[b.status]||9)||((b.requestedAt||0)-(a.requestedAt||0));});renderRequests();renderManageHub();loadTeamFundData();}).catch(function(err){console.warn(err);});};
+
+/* Safe default instructions, fixes empty Instructions tab */
+if(typeof window.INSTRUCTION_ITEMS==='undefined'&&typeof INSTRUCTION_ITEMS==='undefined'){
+  var INSTRUCTION_ITEMS=[
+    {id:'launch_assistant',icon:'🚀',title:'Ассистент запуска',desc:'Первые действия, заявки, ежедневный ритм и фиксация задач.'},
+    {id:'partner_outreach',icon:'🤝',title:'Партнёрский аутрич',desc:'Как писать тренерам, экспертам, каналам и экспертам по бартеру.'},
+    {id:'team_fund',icon:'💰',title:'Фонд команды',desc:'Как фиксировать выплаты, график, бартер и обязательства.'}
+  ];
+}
+if(typeof window.INSTRUCTION_DETAILS==='undefined'&&typeof INSTRUCTION_DETAILS==='undefined'){
+  var INSTRUCTION_DETAILS={
+    launch_assistant:{title:'Ассистент запуска',html:'<div class="instr-card"><div class="instr-card-title">🚀 База</div><div class="instr-card-desc">Каждую заявку фиксируем, назначаем статус, роль, следующий шаг и комментарий. Ничего не держим только в голове.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Проверь новые заявки в разделе «Заявки / доступы».</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Открой карточку человека, заполни роль, телефон, комментарий и доступы.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Если человек работает в команде, заполни формат оплаты и связь с фондом.</div></div></div>'},
+    partner_outreach:{title:'Партнёрский аутрич',html:'<div class="instr-card"><div class="instr-card-title">🤝 Партнёры</div><div class="instr-card-desc">Пишем спокойно: кто мы, зачем контакт, что предлагаем, какая польза партнёру, какой следующий шаг.</div><div class="instr-warn">Бартерные обещания обязательно фиксировать в карточке человека или партнёра, чтобы не потерять договорённость.</div></div>'},
+    team_fund:{title:'Фонд команды',html:'<div class="instr-card"><div class="instr-card-title">💰 Фонд команды</div><div class="instr-card-desc">Фонд показывает деньги команды, плановые выплаты и бартерные обязательства.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">В карточке человека выбери формат оплаты: фикс, фикс + %, процент, бартер + бонус или чистый бартер.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Добавь выплату в график: кому, когда, сколько и за что.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Когда выплатил, отметь «Оплачено». Система создаст операцию фонда.</div></div></div>'}
+  };
+}
+renderInstructionsHub=function(){var list=document.getElementById('instructions-hub-list');if(!list)return;var items=(typeof INSTRUCTION_ITEMS!=='undefined'&&Array.isArray(INSTRUCTION_ITEMS))?INSTRUCTION_ITEMS:[];if(!items.length){list.innerHTML='<div class="empty-state">Инструкции пока не добавлены</div>';return;}list.innerHTML=items.map(function(x){return '<div class="instr-hub-card" onclick="openInstructionDetail(\''+x.id+'\')"><div class="instr-hub-icon">'+x.icon+'</div><div class="instr-hub-info"><div class="instr-hub-title">'+escHtml(x.title)+'</div><div class="instr-hub-desc">'+escHtml(x.desc)+'</div></div><div class="instr-hub-arrow">›</div></div>';}).join('');};
+openInstructionDetail=function(id){var item=(typeof INSTRUCTION_DETAILS!=='undefined')?INSTRUCTION_DETAILS[id]:null;if(!item){showToast('Инструкция не найдена');return;}document.getElementById('instruction-detail-title').textContent=item.title;document.getElementById('instruction-detail-content').innerHTML=item.html;switchTab('instruction-detail');};
+
+var __switchTabFundBase=switchTab;
+switchTab=function(tab){__switchTabFundBase(tab);if(tab==='fund'){loadTeamFundData(function(){var last=myUser&&myUser.uiPreferences&&myUser.uiPreferences.lastFundTab;if(last)switchFundTab(last);});}if(tab==='instructions'){renderInstructionsHub();}};
+
+var __launchAppFundBase=launchApp;
+launchApp=function(){__launchAppFundBase();ensureFundManageItem();try{renderManageHub();}catch(e){}try{loadTeamFundData();}catch(e){console.warn('fund load launch',e);}try{renderInstructionsHub();}catch(e){console.warn('instructions render launch',e);}};
+/* ===== END TEAM FUND V2 CODE PATCH ===== */
+
+
 /* ===== HOTFIX 2026-07-09: stable nav + safe browser dashboard opening ===== */
 function safeEl(id){return document.getElementById(id);}
 
@@ -2890,6 +3206,57 @@ launchApp=function(){
   try{loadTrainingProgress();}catch(e){console.warn('loadTrainingProgress hotfix error',e);}
 };
 /* ===== END HOTFIX 2026-07-09 ===== */
+
+
+
+/* ===== TEAM FUND V2 FINAL OVERRIDES AFTER HOTFIX ===== */
+ensureFundManageItem();
+var __hotfixLaunchBeforeFund=launchApp;
+launchApp=function(){__hotfixLaunchBeforeFund();ensureFundManageItem();try{renderManageHub();}catch(e){}try{loadTeamFundData();}catch(e){console.warn('fund load final',e);}try{renderInstructionsHub();}catch(e){console.warn('instructions final',e);}};
+var __hotfixSwitchBeforeFund=switchTab;
+switchTab=function(tab){__hotfixSwitchBeforeFund(tab);if(tab==='fund'){loadTeamFundData(function(){var last=myUser&&myUser.uiPreferences&&myUser.uiPreferences.lastFundTab;if(last&&last!==currentFundTab)switchFundTab(last);});}if(tab==='instructions'){renderInstructionsHub();}};
+/* ===== END TEAM FUND V2 FINAL OVERRIDES ===== */
+
+
+/* ===== INSTRUCTIONS RESTORE FINAL 2026-07-09 ===== */
+INSTRUCTION_ITEMS=[
+  {id:'start_admin',icon:'🚀',title:'Старт в админке',desc:'Что открыть первым: заявки, задачи, фонд, инструкции и база.'},
+  {id:'requests_access',icon:'📋',title:'Заявки и доступы',desc:'Как принимать людей, назначать роли, права и рабочий статус.'},
+  {id:'team_cards',icon:'👥',title:'Карточка человека',desc:'Телефон, роль, формат оплаты, бартер, комментарии и график выплат.'},
+  {id:'team_fund',icon:'💰',title:'Фонд команды',desc:'Доходы, резервы, плановые выплаты, бартер и операции фонда.'},
+  {id:'tasks_workflow',icon:'🛠️',title:'Задачи команды',desc:'Как вести задачи: надо, в работе, готово, приоритеты и исполнитель.'},
+  {id:'content_news',icon:'📰',title:'Новости и контент',desc:'Как публиковать новости и не ломать общий стиль MenClub.'},
+  {id:'access_demo_subs',icon:'🔑',title:'Демо и подписки',desc:'Как выдавать демо-доступ и подтверждать оплату вручную.'},
+  {id:'partner_outreach',icon:'🤝',title:'Партнёрский аутрич',desc:'Как фиксировать партнёров, бартер и следующий шаг.'}
+];
+INSTRUCTION_DETAILS={
+  start_admin:{title:'Старт в админке',html:'<div class="instr-card"><div class="instr-card-title">🚀 Первый вход</div><div class="instr-card-desc">Админка нужна не просто для кнопок. Это рабочий штаб: заявки, люди, задачи, фонд, контент и доступы.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Открой «Управление» и проверь блок «Операционка команды».</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Сначала смотри новые заявки и задачи, потом фонд и выплаты.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Все важные договорённости фиксируй в карточках людей или в задачах. Не держи в голове.</div></div></div>'},
+  requests_access:{title:'Заявки и доступы',html:'<div class="instr-card"><div class="instr-card-title">📋 Обработка заявки</div><div class="instr-card-desc">Каждый человек в команде проходит через карточку. Там фиксируется статус, роль, доступы и комментарий.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Открой «Заявки / доступы».</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Открой карточку человека и проверь имя, Telegram, статус и роль.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Назначь роль доступа: админ, редактор новостей, сотрудник, Work Team, партнёр или просмотр.</div></div><div class="instr-step"><div class="instr-num">4</div><div class="instr-text">Проверь права: админ-разделы и доступ к базе знаний. Лишнего доступа не даём.</div></div><div class="instr-step"><div class="instr-num">5</div><div class="instr-text">Добавь комментарий: почему одобрен, что обещали, какой следующий шаг.</div></div></div><div class="instr-warn">Если человек не принят, лучше поставить понятный статус и комментарий, чем удалять без следа.</div>'},
+  team_cards:{title:'Карточка человека',html:'<div class="instr-card"><div class="instr-card-title">👥 Полная карточка</div><div class="instr-card-desc">Карточка человека связывает доступы, роль, рабочие договорённости и фонд команды.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Заполни телефон. Это нужно для рабочей связи и будущих выплат.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Укажи рабочую роль: ассистент запуска, партнёрский ассистент, контент, SMM/монтаж, CRM/admin.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Выбери формат оплаты: фикс, фикс + %, только %, бартер + бонус, чистый бартер или не выбрано.</div></div><div class="instr-step"><div class="instr-num">4</div><div class="instr-text">Заполни ставку, процент, условия бартера и комментарий.</div></div><div class="instr-step"><div class="instr-num">5</div><div class="instr-text">Если человеку нужно платить, добавь строки в «График выплат» прямо в карточке.</div></div></div>'},
+  team_fund:{title:'Фонд команды',html:'<div class="instr-card"><div class="instr-card-title">💰 Логика фонда</div><div class="instr-card-desc">Фонд команды показывает, откуда пришли деньги, кому надо платить, что уже выплачено и какие обязательства висят.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Смотри «Обзор»: доступно, зарезервировано, выплачено, ближайшие выплаты.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Во вкладке «График» проверяй, кому, когда, сколько и за что платить.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Во вкладке «Операции» фиксируй доходы, расходы, резервы и обязательства.</div></div><div class="instr-step"><div class="instr-num">4</div><div class="instr-text">Если выплату отметили как «Оплачено», создаётся операция фонда.</div></div></div><div class="instr-warn">Бартер тоже фиксируется. У него должно быть понятное обещание: реклама, доступ, бонус, процент или другой эквивалент.</div>'},
+  tasks_workflow:{title:'Задачи команды',html:'<div class="instr-card"><div class="instr-card-title">🛠️ Доска задач</div><div class="instr-card-desc">Задачи нужны, чтобы команда работала по понятным действиям, а не по памяти.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Создай задачу с коротким названием и конкретным результатом.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Укажи исполнителя и приоритет: высокий, средний или низкий.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Двигай задачу по статусам: «Надо» → «В работе» → «Готово».</div></div><div class="instr-step"><div class="instr-num">4</div><div class="instr-text">Если задача зависла, добавь комментарий в описание или создай новую уточняющую задачу.</div></div></div>'},
+  content_news:{title:'Новости и контент',html:'<div class="instr-card"><div class="instr-card-title">📰 Новости</div><div class="instr-card-desc">Новости в админке идут в основное приложение. Публикуй только то, что должно увидеть сообщество.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Заголовок короткий, понятный, без кликбейта.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Текст прямой, спокойный, без AI-шаблонов и лишней воды.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Перед публикацией перечитай, нет ли ошибки, лишнего обещания или внутренней информации.</div></div></div>'},
+  access_demo_subs:{title:'Демо и подписки',html:'<div class="instr-card"><div class="instr-card-title">🔑 Доступы</div><div class="instr-card-desc">Демо и подписки выдаются вручную через админку, чтобы не ломать запуск и не зависеть от Stars.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Найди пользователя по Telegram username или ID.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Для демо выбери срок: 7, 14, 30 или 60 дней.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Для подписки выбери срок: 1, 3, 6 или 12 месяцев.</div></div><div class="instr-step"><div class="instr-num">4</div><div class="instr-text">После ручной оплаты проверь, что подписка реально появилась в карточке пользователя.</div></div></div>'},
+  partner_outreach:{title:'Партнёрский аутрич',html:'<div class="instr-card"><div class="instr-card-title">🤝 Партнёры</div><div class="instr-card-desc">Партнёрский контакт должен иметь конкретику: кто, что предлагает, что обещали, какой следующий шаг.</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Фиксируй имя, Telegram, направление и статус контакта.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Если договорились о бартере, запиши условия в карточку и фонд.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Следующий шаг формулируй как действие: созвон, видео, материал, пост, встреча.</div></div></div><div class="instr-warn">Никаких размытых “потом договоримся”. У каждого партнёра должен быть следующий шаг.</div>'}
+};
+renderInstructionsHub=function(){
+  var list=document.getElementById('instructions-hub-list');
+  if(!list)return;
+  var items=(typeof INSTRUCTION_ITEMS!=='undefined'&&Array.isArray(INSTRUCTION_ITEMS))?INSTRUCTION_ITEMS:[];
+  if(!items.length){list.innerHTML='<div class="empty-state">Инструкции пока не добавлены</div>';return;}
+  list.innerHTML=items.map(function(x){return '<div class="instr-hub-card" onclick="openInstructionDetail(\''+x.id+'\')"><div class="instr-hub-icon">'+x.icon+'</div><div class="instr-hub-info"><div class="instr-hub-title">'+escHtml(x.title)+'</div><div class="instr-hub-desc">'+escHtml(x.desc)+'</div></div><div class="instr-hub-arrow">›</div></div>';}).join('');
+};
+openInstructionDetail=function(id){
+  var item=(typeof INSTRUCTION_DETAILS!=='undefined')?INSTRUCTION_DETAILS[id]:null;
+  if(!item){showToast('Инструкция не найдена');return;}
+  var title=document.getElementById('instruction-detail-title');
+  var content=document.getElementById('instruction-detail-content');
+  if(title)title.textContent=item.title;
+  if(content)content.innerHTML=item.html;
+  switchTab('instruction-detail');
+};
+try{renderInstructionsHub();}catch(e){console.warn('instructions restore final',e);}
+/* ===== END INSTRUCTIONS RESTORE FINAL ===== */
 
 </script>
 </body>
