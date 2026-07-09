@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ManProduction Admin</title>
+<title>ManClub Team</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -391,12 +391,12 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 <body>
 <div class="app" id="root">
 
-<div id="splash"><div class="s-logo">ManProduction Admin</div><div class="s-spin"></div></div>
+<div id="splash"><div class="s-logo">ManClub Team</div><div class="s-spin"></div></div>
 
 <!-- REGISTER / PENDING / REJECTED SCREEN -->
 <div class="screen" id="s-register">
   <div class="reg-wrap">
-    <div class="reg-logo">ManProduction Admin</div>
+    <div class="reg-logo">ManClub Team</div>
     <div class="reg-icon" id="reg-icon">🔐</div>
     <div class="reg-title" id="reg-title">Регистрация в системе</div>
     <div class="reg-sub" id="reg-sub">Заполни имя — заявка попадёт админу на рассмотрение</div>
@@ -2744,31 +2744,34 @@ function filterKnowledgeDocs(){var q=(document.getElementById('knowledge-search'
 function filterKnowledgeBy(group){document.getElementById('knowledge-search').value=group;filterKnowledgeDocs();}
 function askKnowledgeAI(mode){var text={focus:'Фокус: первый кодовый MVP Базы знаний внутри manproduction-admin. Следом — browser session routes и полноценная browser-версия.',access:'Доступ: Telegram ID остаётся identity. Права меняются в карточке человека: функции админки + доступы внутри базы знаний.',docs:'Требуют разложения: Lyova Foundation, Work Team deep docs, Marketing decomposition, security audit и отдельные Lyova working docs.'}[mode]||'AI ответ.';var el=document.getElementById('knowledge-ai-answer');if(el)el.textContent=text;}
 function openKnowledgeDoc(file){showToast('Документ: '+file+' · просмотр подключим следующим слоем');}
-function openBrowserDashboardInfo(){showToast('Browser-версия: Mini App → одноразовая session-ссылка → Firebase token');}
-setupNavForRole=function(){['nav-manage','nav-stats','nav-knowledge','nav-training','nav-instructions'].forEach(function(id){var el=document.getElementById(id);if(!el)return;var tab=id.replace('nav-','');el.style.display=canOpenBottomTab(tab)?'':'none';});if(myUser&&myUser.role==='admin')loadRequestsAndUsers();renderManageHub();switchTab('manage');};
-switchTab=function(tab){if(['stats','knowledge','training','instructions'].indexOf(tab)!==-1&&!canOpenBottomTab(tab)){showToast('Нет доступа к разделу');return;}document.querySelectorAll('.app-screen').forEach(function(s){s.classList.remove('active');});document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});var screen=document.getElementById('s-'+tab);if(screen)screen.classList.add('active');var navEl=document.getElementById('nav-'+tab);if(navEl)navEl.classList.add('active');if(tab==='manage')renderManageHub();if(tab==='requests')loadRequestsAndUsers();if(tab==='stats')loadStatsRoulette();if(tab==='promo')loadPromos();if(tab==='training')loadTrainingProgress();if(tab==='knowledge')renderKnowledgeDashboard();if(tab==='demo-access'){document.getElementById('demo-search-input').value='';document.getElementById('demo-search-results').innerHTML='';document.getElementById('demo-approve-block').style.display='none';}if(tab==='lyova')loadKnowledge();if(tab==='users')loadMainUsers();if(tab==='tasks')loadTasks();};
-setTimeout(function(){renderManageHub();renderKnowledgeDashboard();},300);
+function openBrowserDashboardInfo(){
+  var tg=getTg();
+  var initData=(tg&&tg.initData)||'';
+  if(!initData){
+    showToast('Открой админку через Telegram Mini App, чтобы создать browser-сессию');
+    return;
+  }
+  showToast('Создаю защищённый вход...');
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST',AUTH_SERVER+'/dashboard-session/create',true);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.onload=function(){
+    var data={};
+    try{data=JSON.parse(xhr.responseText||'{}');}catch(e){}
+    if(xhr.status===200&&data&&data.ok&&data.url){
+      if(tg&&tg.openLink){tg.openLink(data.url);}else{window.open(data.url,'_blank');}
+      return;
+    }
+    if(xhr.status===200&&data&&data.url){
+      if(tg&&tg.openLink){tg.openLink(data.url);}else{window.open(data.url,'_blank');}
+      return;
+    }
+    showToast((data&&data.error)||'Browser-сессия пока не создана: нужен server route');
+  };
+  xhr.onerror=function(){showToast('Не удалось связаться с сервером');};
+  xhr.send(JSON.stringify({initData:initData,source:'admin-miniapp',target:'knowledge-dashboard'}));
+}
 
-// ===== KNOWLEDGE V2 + INSTRUCTIONS HUB PATCH =====
-var KNOWLEDGE_BROWSER_URL='https://llobychev.github.io/manclub-knowledge-ui/';
-var KNOWLEDGE_CONFIG={
-  activeFocusTitle:'Первый MVP Базы знаний в admin Mini App',
-  activeFocusFile:'DASHBOARD_MVP_CODE_PLAN.md',
-  activeFocusSource:'Источник: DASHBOARD_MVP_CODE_PLAN.md · затем server browser-session routes'
-};
-var KNOWLEDGE_AI_HISTORY_READY=false;
-var INSTRUCTION_ITEMS=[
-  {id:'poster_bot',icon:'📤',title:'Бот отложенной отправки',desc:'Планирование постов, опросов, кнопок, очереди и команды.',badge:'бот'},
-  {id:'admin_panel',icon:'⚙️',title:'Админ-панель',desc:'Как управлять новостями, челленджами, квестами, обучением и доступами.',badge:'admin'},
-  {id:'main_app',icon:'📱',title:'Основное приложение',desc:'Клубное Mini App для участников ManClub in Siberia.',badge:'mini app'},
-  {id:'roulette',icon:'🎰',title:'Рулетка',desc:'Маркетинговый вход, призы, демо-доступ и аналитика.',badge:'marketing'}
-];
-var INSTRUCTION_DETAILS={
-  poster_bot:{title:'📤 Бот отложенной отправки',html:'<div class="instr-card"><div class="instr-card-title">📤 Бот отложенной отправки</div><div class="instr-card-desc">Планируй посты в каналы по расписанию. Текст, фото, видео, опросы, кнопки — всё через бота.</div><a class="instr-link" href="https://t.me/ManClubadminPoster_bot" target="_blank">🤖 Открыть @ManClubadminPoster_bot</a><div class="instr-section">Быстрый старт</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Открой <b>@ManClubadminPoster_bot</b> и напиши <b>/start</b></div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Отправь текст, фото или видео — это станет постом</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Выбери канал для публикации</div></div><div class="instr-step"><div class="instr-num">4</div><div class="instr-text">Выбери время: сейчас, через час, завтра или свою дату</div></div><div class="instr-step"><div class="instr-num">5</div><div class="instr-text">Проверь предпросмотр и подтверди</div></div><div class="instr-section">Команды бота</div><div class="instr-code">/newpost — создать новый пост\n/poll — создать опрос\n/queue — очередь постов\n/drafts — черновики\n/channels — список каналов\n/addchannel @ch — добавить канал\n/stats — статистика отправок\n/team — управление командой\n/help — справка</div><div class="instr-section">Кнопки к постам</div><div class="instr-card-desc">Формат кнопок:</div><div class="instr-code">Текст кнопки | https://ссылка\n\nСайт | https://example.com, Связь | https://t.me/user</div><div class="instr-warn">⚠️ Часовой пояс: Иркутск (UTC+8). Все времена указываются по Иркутску.</div></div>'},
-  admin_panel:{title:'⚙️ Админ-панель',html:'<div class="instr-card"><div class="instr-card-title">⚙️ Админ-панель</div><div class="instr-card-desc">Это приложение управляет новостями, челленджами, квестами, обучением и доступами для клуба ManClub in Siberia.</div><div class="instr-section">Главные вкладки</div><div class="instr-step"><div class="instr-num">⚙️</div><div class="instr-text"><b>Управление</b> — разделы админки, личные закрепления, заявки/доступы, подписки, промокоды, Лёва, пользователи.</div></div><div class="instr-step"><div class="instr-num">📊</div><div class="instr-text"><b>Статистика</b> — рулетка, демо, подписки, воронки и активность.</div></div><div class="instr-step"><div class="instr-num">📚</div><div class="instr-text"><b>База</b> — память проекта, документы, roadmap, AI-поиск, browser-версия.</div></div><div class="instr-step"><div class="instr-num">🎓</div><div class="instr-text"><b>Обучения</b> — курсы команды, квизы, баллы и ачивки.</div></div><div class="instr-step"><div class="instr-num">📄</div><div class="instr-text"><b>Инструкции</b> — отдельные обучающие экраны по инструментам.</div></div><div class="instr-section">Права</div><div class="instr-card-desc">Права меняются через карточку человека в разделе <b>Управление → Заявки / доступы</b>. Там же комментарии: почему одобрен или отклонён.</div></div>'},
-  main_app:{title:'📱 Основное приложение',html:'<div class="instr-card"><div class="instr-card-title">📱 Основное приложение</div><div class="instr-card-desc">Клубное мини-приложение для участников ManClub in Siberia.</div><a class="instr-link" href="https://t.me/games_lis_bot" target="_blank">📱 Открыть @games_lis_bot</a><div class="instr-section">Назначение</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Участник попадает в клубное пространство через Telegram Mini App.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Внутри: путь, уроки, мероприятия, демо-доступ, контент, Лёва и будущие механики.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Админка управляет частью данных основного приложения: новости, челленджи, квесты, демо и подписки.</div></div></div>'},
-  roulette:{title:'🎰 Рулетка',html:'<div class="instr-card"><div class="instr-card-title">🎰 Рулетка</div><div class="instr-card-desc">Маркетинговое мини-приложение с призами для привлечения новых участников.</div><div class="instr-section">Роль в воронке</div><div class="instr-step"><div class="instr-num">1</div><div class="instr-text">Человек заходит через лёгкую механику.</div></div><div class="instr-step"><div class="instr-num">2</div><div class="instr-text">Получает приз/интерес/демо-вход.</div></div><div class="instr-step"><div class="instr-num">3</div><div class="instr-text">Переходит в основной Mini App или на экран оплаты.</div></div><div class="instr-warn">Юридически рулетка должна оставаться бесплатной промо-механикой без gambling/lottery framing.</div></div>'}
-};
 function setupKnowledgeFocus(){var t=document.getElementById('knowledge-active-focus-title');var s=document.getElementById('knowledge-active-focus-source');if(t)t.textContent=KNOWLEDGE_CONFIG.activeFocusTitle;if(s)s.textContent=KNOWLEDGE_CONFIG.activeFocusSource;}
 function knowledgeSearchList(query){query=(query||'').toLowerCase().trim();if(!query)return KNOWLEDGE_DOCS.slice();var aliases={docs:'',documents:'',decisions:'решения decision',human_lab:'human intelligence hidden patterns behavior',resources:'resources реестр ресурсы',lyova:'lyova лёва foundation character',marketing:'marketing content контент продвижение',work_team:'work team найм команда',roadmap:'roadmap роадмап фокус'};var q=(aliases[query]||query).toLowerCase();return KNOWLEDGE_DOCS.filter(function(d){var hay=(d.title+' '+d.file+' '+d.group+' '+d.status+' '+d.desc+' '+d.tags.join(' ')).toLowerCase();return q.split(/\s+/).filter(Boolean).some(function(part){return hay.indexOf(part)!==-1;});});}
 renderKnowledgeDashboard=function(list){setupKnowledgeFocus();list=list||KNOWLEDGE_DOCS;var sec=document.getElementById('knowledge-sections');if(sec){sec.innerHTML=KNOWLEDGE_SECTIONS.map(function(s){return '<div class="knowledge-chip" onclick="filterKnowledgeBy(\''+s[3]+'\')"><div class="knowledge-chip-ico">'+s[0]+'</div><div class="knowledge-chip-title">'+s[1]+'</div><div class="knowledge-chip-sub">'+s[2]+'</div></div>';}).join('');}var title=document.getElementById('knowledge-result-title');if(title)title.textContent='Материалы базы · '+list.length;var wrap=document.getElementById('knowledge-docs');if(wrap){wrap.innerHTML=list.map(function(d){return '<div class="knowledge-card" onclick="openKnowledgeDoc(\''+d.file+'\')"><div class="knowledge-card-head"><div class="knowledge-card-icon">'+d.icon+'</div><div style="flex:1;min-width:0;"><div class="knowledge-card-title">'+d.title+'</div><div class="knowledge-card-file">'+d.file+'</div></div></div><div class="knowledge-card-desc">'+d.desc+'</div><div class="knowledge-tags">'+d.tags.map(function(t){return '<span class="knowledge-tag '+(t.indexOf('needs')!==-1?'red':t.indexOf('synced')!==-1?'gold':'')+'">'+t+'</span>';}).join('')+'</div></div>';}).join('')||'<div class="empty-state">Ничего не найдено. Попробуй спросить AI-помощника выше.</div>';}initKnowledgeAI();};
