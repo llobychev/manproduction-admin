@@ -474,6 +474,14 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
 .fund-warning{background:rgba(224,168,58,0.08);border:0.5px solid rgba(224,168,58,0.25);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--amber);line-height:1.5;margin-bottom:10px;}
 /* ===== END TEAM FUND V2 ===== */
 
+/* ===== REQUEST PARSER ADMIN MODULE ===== */
+.rp-tabs{display:flex;background:#101416;border-bottom:.5px solid rgba(45,212,191,.10);position:sticky;top:53px;z-index:9;overflow-x:auto;scrollbar-width:none;}
+.rp-tabs::-webkit-scrollbar{display:none}.rp-tab{min-width:76px;flex:1;padding:10px 5px;text-align:center;font-size:8px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}.rp-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.rp-panel{display:none;padding:12px 14px 90px}.rp-panel.active{display:block}.rp-hero{background:linear-gradient(135deg,rgba(45,212,191,.14),rgba(201,168,76,.08));border:1px solid rgba(45,212,191,.20);border-radius:16px;padding:14px;margin-bottom:12px}.rp-hero-title{font-size:16px;font-weight:900;color:var(--text)}.rp-hero-sub{font-size:11px;color:var(--text2);line-height:1.5;margin-top:5px}.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.rp-kpi{background:var(--bg3);border:.5px solid var(--border);border-radius:12px;padding:11px}.rp-kpi-val{font-size:20px;font-weight:900;color:var(--accent)}.rp-kpi-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:4px}.rp-card{background:var(--bg3);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;margin-bottom:10px}.rp-card-title{font-size:13px;font-weight:800;color:var(--text)}.rp-card-sub{font-size:10px;color:var(--text3);line-height:1.45;margin-top:3px}.rp-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.rp-pill{display:inline-flex;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:900;background:rgba(45,212,191,.10);color:var(--accent2);border:.5px solid rgba(45,212,191,.20)}.rp-pill.yellow{background:rgba(224,168,58,.12);color:var(--amber);border-color:rgba(224,168,58,.24)}.rp-pill.red{background:rgba(224,85,85,.12);color:var(--red);border-color:rgba(224,85,85,.24)}.rp-pill.gold{background:rgba(201,168,76,.12);color:#f0d37a;border-color:rgba(201,168,76,.24)}
+.rp-result{background:var(--bg3);border:.5px solid var(--border);border-radius:14px;padding:13px;margin-bottom:10px}.rp-result-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.rp-result-name{font-size:13px;font-weight:900;color:var(--text)}.rp-result-meta{font-size:9px;color:var(--text3);margin-top:3px}.rp-quote{margin:10px 0;padding:10px 11px;border-left:3px solid var(--accent);background:rgba(0,0,0,.15);border-radius:8px;font-size:11px;color:var(--text2);line-height:1.5}.rp-ai{font-size:10px;color:var(--text2);line-height:1.45}.rp-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.rp-mini-btn{padding:7px 9px;border-radius:8px;border:.5px solid var(--border);background:var(--bg2);color:var(--text2);font-size:9px;font-weight:800;cursor:pointer}.rp-mini-btn.active{border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.11);color:var(--accent2)}
+.rp-filter-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.rp-filter-row .form-input{margin-bottom:0;font-size:12px;padding:10px 11px}.rp-full{grid-column:1/-1}.rp-empty{padding:28px 14px;text-align:center;color:var(--text3);font-size:12px;line-height:1.5}.rp-source-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:.5px solid rgba(255,255,255,.045)}.rp-source-row:last-child{border-bottom:0}.rp-source-icon{width:34px;height:34px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center}.rp-source-info{flex:1;min-width:0}.rp-source-title{font-size:12px;font-weight:800;color:var(--text)}.rp-source-sub{font-size:9px;color:var(--text3);margin-top:2px}.rp-note{background:rgba(224,168,58,.08);border:.5px solid rgba(224,168,58,.24);border-radius:10px;padding:10px 12px;font-size:10px;color:var(--amber);line-height:1.45;margin-bottom:10px}
+/* ===== END REQUEST PARSER ADMIN MODULE ===== */
+
 </style>
 </head>
 <body>
@@ -887,6 +895,43 @@ html,body{height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Dis
     <div class="fund-panel" id="fpanel-barter">
       <div class="fund-card gold"><div class="fund-card-title">Бартер фиксируется как обязательство</div><div class="fund-card-sub">Даже если денег нет, в карточке человека должны быть условия: что человек делает, что получает взамен, есть ли бонус или процент.</div></div>
       <div id="fund-barter-list"></div>
+    </div>
+  </div>
+
+
+  <!-- REQUEST PARSER SCREEN -->
+  <div class="app-screen" id="s-request-parser">
+    <div class="topbar"><div><div class="topbar-logo">🔎 Парсер запросов</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab('manage')">← Управление</div></div><span class="role-pill">v0.1</span></div>
+    <div class="rp-tabs">
+      <div class="rp-tab active" id="rptab-overview" onclick="switchRequestParserTab('overview')">Обзор</div>
+      <div class="rp-tab" id="rptab-new" onclick="switchRequestParserTab('new')">Новый поиск</div>
+      <div class="rp-tab" id="rptab-results" onclick="switchRequestParserTab('results')">Результаты</div>
+      <div class="rp-tab" id="rptab-profiles" onclick="switchRequestParserTab('profiles')">Профили</div>
+      <div class="rp-tab" id="rptab-sources" onclick="switchRequestParserTab('sources')">Источники</div>
+    </div>
+    <div class="rp-panel active" id="rppanel-overview">
+      <div class="rp-hero"><div class="rp-hero-title">Поиск полезных сигналов</div><div class="rp-hero-sub">Внутренний инструмент команды: кандидаты, партнёры, эксперты, мероприятия, боли аудитории и контент-сигналы. Автоматических сообщений людям нет.</div></div>
+      <div class="rp-grid"><div class="rp-kpi"><div class="rp-kpi-val" id="rp-kpi-searches">3</div><div class="rp-kpi-lbl">Поисков</div></div><div class="rp-kpi"><div class="rp-kpi-val" id="rp-kpi-signals">12</div><div class="rp-kpi-lbl">Сигналов</div></div><div class="rp-kpi"><div class="rp-kpi-val" id="rp-kpi-fit">4</div><div class="rp-kpi-lbl">Подходят</div></div><div class="rp-kpi"><div class="rp-kpi-val" id="rp-kpi-review">3</div><div class="rp-kpi-lbl">На проверке</div></div></div>
+      <button class="btn-accent" onclick="switchRequestParserTab('new')">+ Новый поиск</button>
+      <div class="section-title">Последние результаты</div><div id="rp-overview-results"></div>
+      <div class="section-title">Последние профили</div><div id="rp-overview-profiles"></div>
+    </div>
+    <div class="rp-panel" id="rppanel-new">
+      <div class="rp-note">Сейчас экран работает как внутренний интерфейс и сохраняет тестовые профили локально. Telegram-сбор подключим к серверу позже.</div>
+      <div class="promo-field"><label>Название поиска</label><input id="rp-new-title" placeholder="Ассистент запуска"></div>
+      <div class="promo-field"><label>Тип</label><select id="rp-new-type" class="form-input" style="margin-bottom:0"><option value="candidate">Поиск сотрудника</option><option value="universal">Универсальный поиск</option><option value="partner">Партнёр / эксперт</option><option value="research">Исследование аудитории</option></select></div>
+      <div class="promo-field"><label>Что нужно найти</label><textarea id="rp-new-query" class="form-textarea" placeholder="Опиши нужного человека, запрос или сигнал..."></textarea></div>
+      <div class="promo-field"><label>Что исключить</label><textarea id="rp-new-exclude" class="form-textarea" placeholder="Спам, агентства, реклама курсов..."></textarea></div>
+      <div class="rp-filter-row"><div class="promo-field"><label>Период</label><select id="rp-new-period" class="form-input" style="margin-bottom:0"><option>7 дней</option><option>14 дней</option><option>30 дней</option></select></div><div class="promo-field"><label>Мин. релевантность</label><select id="rp-new-score" class="form-input" style="margin-bottom:0"><option>60</option><option selected>70</option><option>80</option></select></div></div>
+      <button class="btn-accent" onclick="createRequestParserProfile()">Сохранить и запустить тест →</button>
+    </div>
+    <div class="rp-panel" id="rppanel-results">
+      <div class="rp-filter-row"><input class="form-input rp-full" id="rp-result-search" placeholder="Поиск по имени, тексту или источнику" oninput="renderRequestParserResults()"><select class="form-input" id="rp-result-type" onchange="renderRequestParserResults()"><option value="all">Все типы</option><option value="Кандидат">Кандидаты</option><option value="Партнёр">Партнёры</option><option value="Запрос">Запросы</option></select><select class="form-input" id="rp-result-status" onchange="renderRequestParserResults()"><option value="all">Все статусы</option><option value="Новый">Новые</option><option value="Подходит">Подходят</option><option value="Проверить">Проверить</option><option value="Не подходит">Не подходят</option></select></div>
+      <div id="rp-results-list"></div>
+    </div>
+    <div class="rp-panel" id="rppanel-profiles"><div id="rp-profiles-list"></div><button class="promo-add-btn" onclick="switchRequestParserTab('new')">+ Создать профиль</button></div>
+    <div class="rp-panel" id="rppanel-sources">
+      <div class="rp-note">Telegram API пока не подключён. Источники ниже — тестовая структура будущего рабочего аккаунта.</div><div class="rp-card" id="rp-sources-list"></div>
     </div>
   </div>
 
@@ -3364,6 +3409,45 @@ var __channelOldSwitchTab=switchTab;
 switchTab=function(tab){__channelOldSwitchTab(tab);if(tab==='stats'){var active=safeEl('stab-channels');if(active&&active.classList.contains('active'))loadStatsChannels();}};
 setPinnedManageItems=function(list){if(!myUser)return;list=Array.isArray(list)?list.filter(Boolean):[];if(!myUser.uiPreferences)myUser.uiPreferences={};myUser.uiPreferences.pinnedManageItems=list;try{renderManageHub();}catch(e){console.warn('render after pin failed',e);}if(fbDb&&myTgId){fbDb.collection('admin_users').doc(String(myTgId)).set({id:String(myTgId),name:(myUser&&myUser.name)||myTgName||'',role:(String(myTgId)===SUPER_ADMIN_ID?'admin':((myUser&&myUser.role)||'viewer')),status:(String(myTgId)===SUPER_ADMIN_ID?'approved':((myUser&&myUser.status)||'approved')),uiPreferences:{pinnedManageItems:list},updatedAt:Date.now()},{merge:true}).then(function(){showToast('Закрепления сохранены');}).catch(function(err){console.warn('pin save failed',err);showToast('Не удалось сохранить закрепления');});}};
 /* ===== END CHANNEL STATS V2 + PIN PERSISTENCE PATCH ===== */
+
+
+/* ===== REQUEST PARSER ADMIN MODULE ===== */
+(function(){
+  if(typeof ADMIN_ACCESS_KEYS!=='undefined'&&!ADMIN_ACCESS_KEYS.some(function(x){return x.key==='requestParser';})){
+    var ai=ADMIN_ACCESS_KEYS.findIndex(function(x){return x.key==='tasks';});
+    var ak={key:'requestParser',label:'Парсер запросов',sub:'Поиск сотрудников, партнёров и полезных сигналов'};
+    if(ai>=0)ADMIN_ACCESS_KEYS.splice(ai+1,0,ak);else ADMIN_ACCESS_KEYS.push(ak);
+  }
+  if(typeof MANAGE_ITEMS!=='undefined'&&!MANAGE_ITEMS.some(function(x){return x.id==='requestParser';})){
+    var mi=MANAGE_ITEMS.findIndex(function(x){return x.id==='tasks';});
+    var item={id:'requestParser',icon:'🔎',title:'Парсер запросов',sub:'Поиск сотрудников, партнёров и полезных сигналов',tab:'request-parser'};
+    if(mi>=0)MANAGE_ITEMS.splice(mi+1,0,item);else MANAGE_ITEMS.push(item);
+  }
+})();
+var REQUEST_PARSER_PROFILES=[
+  {id:'assistant_launch',title:'Ассистент запуска',type:'Поиск сотрудника',period:'7 дней',sources:3,status:'Активен'},
+  {id:'event_partners',title:'Тренеры и организаторы',type:'Партнёр / эксперт',period:'14 дней',sources:2,status:'Активен'},
+  {id:'men_pains',title:'Боли: окружение и дисциплина',type:'Исследование',period:'30 дней',sources:4,status:'Черновик'}
+];
+var REQUEST_PARSER_RESULTS=[
+  {id:'r1',name:'Алексей К.',username:'@alex_work',source:'Иркутск Работа',date:'сегодня, 11:42',type:'Кандидат',score:91,risk:'low',status:'Подходит',quote:'Ищу проект на удалёнке. Работал с Telegram, таблицами, контентом, могу вести организационные задачи.',why:'Сильное совпадение с профилем «Ассистент запуска»: личный запрос, конкретные навыки и готовность к проектной работе.'},
+  {id:'r2',name:'Мария С.',username:'@maria_helper',source:'Удалёнка и проекты',date:'вчера, 19:10',type:'Кандидат',score:73,risk:'medium',status:'Проверить',quote:'Рассматриваю проекты, умею вести переписки и помогать с контентом.',why:'Релевантные навыки есть, но мало деталей об опыте и доступной загрузке.'},
+  {id:'r3',name:'Илья П.',username:'@baikal_event',source:'Активный Иркутск',date:'2 дня назад',type:'Партнёр',score:87,risk:'low',status:'Новый',quote:'Организую выезды на Байкал и спортивные активности, открыт к коллаборациям.',why:'Подходит как потенциальный партнёр по мероприятиям; есть локальность и явная открытость к сотрудничеству.'},
+  {id:'r4',name:'Контент-чат',username:'@content_owner',source:'SMM Иркутск',date:'3 дня назад',type:'Запрос',score:79,risk:'low',status:'Новый',quote:'Кто знает хорошего монтажёра для коротких видео?',why:'Прямой рыночный запрос, полезен для поиска специалистов и исследования спроса.'}
+];
+var REQUEST_PARSER_SOURCES=[{title:'Иркутск Работа',sub:'Тестовый источник · 1 284 сообщения',state:'Доступен'},{title:'Удалёнка и проекты',sub:'Тестовый источник · 2 010 сообщений',state:'Доступен'},{title:'Telegram-специалисты',sub:'Ожидает будущего API-подключения',state:'Проверить'}];
+function switchRequestParserTab(tab){document.querySelectorAll('.rp-tab').forEach(function(x){x.classList.remove('active');});document.querySelectorAll('.rp-panel').forEach(function(x){x.classList.remove('active');});var t=document.getElementById('rptab-'+tab),p=document.getElementById('rppanel-'+tab);if(t)t.classList.add('active');if(p)p.classList.add('active');if(tab==='overview')renderRequestParserOverview();if(tab==='results')renderRequestParserResults();if(tab==='profiles')renderRequestParserProfiles();if(tab==='sources')renderRequestParserSources();}
+function rpRiskPill(r){return r==='low'?'<span class="rp-pill">🟢 низкий</span>':r==='medium'?'<span class="rp-pill yellow">🟡 проверить</span>':'<span class="rp-pill red">🔴 высокий</span>';}
+function rpStatusClass(s){return s==='Подходит'?'':s==='Проверить'?'yellow':s==='Не подходит'?'red':'gold';}
+function requestParserResultHtml(r,compact){return '<div class="rp-result"><div class="rp-result-head"><div><div class="rp-result-name">'+escHtml(r.name)+' · '+escHtml(r.username)+'</div><div class="rp-result-meta">'+escHtml(r.source)+' · '+escHtml(r.date)+'</div></div><div class="rp-badges" style="margin-top:0"><span class="rp-pill">'+r.score+'/100</span>'+rpRiskPill(r.risk)+'</div></div><div class="rp-quote">«'+escHtml(r.quote)+'»</div>'+(compact?'':'<div class="rp-ai">ИИ: '+escHtml(r.why)+'</div><div class="rp-badges"><span class="rp-pill gold">'+escHtml(r.type)+'</span><span class="rp-pill '+rpStatusClass(r.status)+'">'+escHtml(r.status)+'</span></div><div class="rp-actions">'+['Подходит','Проверить','Не подходит','Связались'].map(function(st){return '<button class="rp-mini-btn '+(r.status===st?'active':'')+'" onclick="setRequestParserStatus(\''+r.id+'\',\''+st+'\')">'+st+'</button>';}).join('')+'</div>')+'</div>';}
+function renderRequestParserOverview(){var a=document.getElementById('rp-overview-results'),b=document.getElementById('rp-overview-profiles');if(a)a.innerHTML=REQUEST_PARSER_RESULTS.slice(0,2).map(function(r){return requestParserResultHtml(r,true);}).join('');if(b)b.innerHTML=REQUEST_PARSER_PROFILES.slice(0,3).map(function(p){return '<div class="rp-card" onclick="switchRequestParserTab(\'results\')"><div class="rp-card-title">'+escHtml(p.title)+'</div><div class="rp-card-sub">'+escHtml(p.type)+' · '+p.sources+' источника · '+escHtml(p.period)+'</div><div class="rp-badges"><span class="rp-pill '+(p.status==='Черновик'?'yellow':'')+'">'+escHtml(p.status)+'</span></div></div>';}).join('');}
+function renderRequestParserResults(){var el=document.getElementById('rp-results-list');if(!el)return;var q=((document.getElementById('rp-result-search')||{}).value||'').toLowerCase();var type=((document.getElementById('rp-result-type')||{}).value||'all');var status=((document.getElementById('rp-result-status')||{}).value||'all');var list=REQUEST_PARSER_RESULTS.filter(function(r){var hay=(r.name+' '+r.username+' '+r.source+' '+r.quote).toLowerCase();return (!q||hay.indexOf(q)!==-1)&&(type==='all'||r.type===type)&&(status==='all'||r.status===status);});el.innerHTML=list.length?list.map(function(r){return requestParserResultHtml(r,false);}).join(''):'<div class="rp-empty">По выбранным фильтрам результатов нет</div>';}
+function setRequestParserStatus(id,status){var r=REQUEST_PARSER_RESULTS.find(function(x){return x.id===id;});if(!r)return;r.status=status;showToast('Статус: '+status);renderRequestParserResults();renderRequestParserOverview();}
+function renderRequestParserProfiles(){var el=document.getElementById('rp-profiles-list');if(!el)return;el.innerHTML=REQUEST_PARSER_PROFILES.map(function(p){return '<div class="rp-card"><div class="rp-card-title">'+escHtml(p.title)+'</div><div class="rp-card-sub">'+escHtml(p.type)+' · '+p.sources+' источника · '+escHtml(p.period)+'</div><div class="rp-badges"><span class="rp-pill '+(p.status==='Черновик'?'yellow':'')+'">'+escHtml(p.status)+'</span></div></div>';}).join('');}
+function renderRequestParserSources(){var el=document.getElementById('rp-sources-list');if(!el)return;el.innerHTML=REQUEST_PARSER_SOURCES.map(function(s){return '<div class="rp-source-row"><div class="rp-source-icon">📡</div><div class="rp-source-info"><div class="rp-source-title">'+escHtml(s.title)+'</div><div class="rp-source-sub">'+escHtml(s.sub)+'</div></div><span class="rp-pill '+(s.state==='Проверить'?'yellow':'')+'">'+escHtml(s.state)+'</span></div>';}).join('');}
+function createRequestParserProfile(){var title=(document.getElementById('rp-new-title').value||'').trim();var query=(document.getElementById('rp-new-query').value||'').trim();if(!title||!query){showToast('Заполни название и описание поиска');return;}var typeEl=document.getElementById('rp-new-type');var type=typeEl.options[typeEl.selectedIndex].text;REQUEST_PARSER_PROFILES.unshift({id:'rp_'+Date.now(),title:title,type:type,period:document.getElementById('rp-new-period').value,sources:0,status:'Черновик'});document.getElementById('rp-new-title').value='';document.getElementById('rp-new-query').value='';document.getElementById('rp-new-exclude').value='';showToast('Профиль создан. Тестовый запуск готов.');switchRequestParserTab('profiles');}
+var __rpOldSwitchTab=switchTab;switchTab=function(tab){if(tab==='request-parser'){var p=currentPerms();if(!(myUser&&myUser.role==='admin')&&String(myTgId)!==SUPER_ADMIN_ID&&!(p.admin&&p.admin.requestParser)){showToast('Нет доступа к разделу');return;}}__rpOldSwitchTab(tab);if(tab==='request-parser'){switchRequestParserTab('overview');}};
+/* ===== END REQUEST PARSER ADMIN MODULE ===== */
 
 </script>
 </body>
