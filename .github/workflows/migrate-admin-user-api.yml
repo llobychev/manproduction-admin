@@ -1,4 +1,4 @@
-name: Migrate Admin user mutations
+name: Migrate Admin user mutations to backend API
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
       - security/use-admin-user-api-v1
     paths:
       - .github/workflows/migrate-admin-user-api.yml
+      - index.html
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,13 +16,13 @@ jobs:
   migrate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout branch
+      - name: Checkout migration branch
         uses: actions/checkout@v4
         with:
           ref: security/use-admin-user-api-v1
           fetch-depth: 0
 
-      - name: Replace direct Firestore admin mutations
+      - name: Patch index.html
         shell: bash
         run: |
           set -euo pipefail
@@ -31,83 +33,89 @@ jobs:
           path = Path('index.html')
           text = path.read_text(encoding='utf-8')
 
-          anchor = "function approveRequest(id,role){"
-          if text.count(anchor) != 1:
-              raise SystemExit(f'Expected one approveRequest, found {text.count(anchor)}')
+          if "function adminUserApiRequest(method,path,body){" in text:
+              print('Migration already applied')
+              raise SystemExit(0)
 
-          helper = r'''function adminUserApiRequest(method,path,body){
-  var user=firebase.auth().currentUser;
-  if(!user)return Promise.reject(new Error('Нет подтверждённой Admin-сессии'));
-  return user.getIdToken().then(function(token){
-    return fetch(AUTH_SERVER+path,{
-      method:method,
-      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-      body:body?JSON.stringify(body):undefined
-    });
-  }).then(function(res){
-    return res.json().catch(function(){return {};}).then(function(data){
-      if(!res.ok)throw new Error((data&&data.error)||('HTTP '+res.status));
-      return data;
-    });
-  });
-}
-
-'''
-
-          text = text.replace(anchor, helper + anchor, 1)
-
-          patterns = {
-            r"function approveRequest\(id,role\)\{.*?\n\}": r'''function approveRequest(id,role){
-  adminUserApiRequest('POST','/admin/v1/users/'+encodeURIComponent(id)+'/approve',{role:role}).then(function(){
-    showToast('Одобрено');loadRequestsAndUsers();
-  }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
-}''',
-            r"function rejectRequest\(id\)\{.*?\n\}": r'''function rejectRequest(id){
-  adminUserApiRequest('POST','/admin/v1/users/'+encodeURIComponent(id)+'/reject').then(function(){
-    showToast('Отклонено');loadRequestsAndUsers();
-  }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
-}''',
-            r"function removeUser\(id\)\{.*?\n\}": r'''function removeUser(id){
-  adminUserApiRequest('DELETE','/admin/v1/users/'+encodeURIComponent(id)).then(function(){
-    showToast('Удалено');loadRequestsAndUsers();
-  }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
-}'''
+          helper = """function adminUserApiRequest(method,path,body){
+            var user=firebase.auth().currentUser;
+            if(!user)return Promise.reject(new Error('Нет подтверждённой Admin-сессии'));
+            return user.getIdToken().then(function(token){
+              return fetch(AUTH_SERVER+path,{
+                method:method,
+                headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+                body:body?JSON.stringify(body):undefined
+              });
+            }).then(function(res){
+              return res.json().catch(function(){return {};}).then(function(data){
+                if(!res.ok)throw new Error((data&&data.error)||('HTTP '+res.status));
+                return data;
+              });
+            });
           }
 
-          for pattern, replacement in patterns.items():
+          """
+
+          marker = "function approveRequest(id,role){"
+          if text.count(marker) != 1:
+              raise SystemExit(f'approveRequest marker count: {text.count(marker)}')
+          text = text.replace(marker, helper + marker, 1)
+
+          replacements = [
+              (r"function approveRequest\(id,role\)\{.*?\n\}", """function approveRequest(id,role){
+            adminUserApiRequest('POST','/admin/v1/users/'+encodeURIComponent(id)+'/approve',{role:role}).then(function(){
+              showToast('Одобрено');loadRequestsAndUsers();
+            }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
+          }"""),
+              (r"function rejectRequest\(id\)\{.*?\n\}", """function rejectRequest(id){
+            adminUserApiRequest('POST','/admin/v1/users/'+encodeURIComponent(id)+'/reject').then(function(){
+              showToast('Отклонено');loadRequestsAndUsers();
+            }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
+          }"""),
+              (r"function removeUser\(id\)\{.*?\n\}", """function removeUser(id){
+            adminUserApiRequest('DELETE','/admin/v1/users/'+encodeURIComponent(id)).then(function(){
+              showToast('Удалено');loadRequestsAndUsers();
+            }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
+          }""")
+          ]
+
+          for pattern, replacement in replacements:
               text, count = re.subn(pattern, replacement, text, count=1, flags=re.S)
               if count != 1:
-                  raise SystemExit(f'Expected one replacement for {pattern}, got {count}')
+                  raise SystemExit(f'Replacement count {count}: {pattern}')
 
           forbidden = [
-            "fbDb.collection('admin_users').doc(id).update({status:'approved'",
-            "fbDb.collection('admin_users').doc(id).update({status:'rejected'",
-            "fbDb.collection('admin_users').doc(id).delete()"
+              "fbDb.collection('admin_users').doc(id).update({status:'approved'",
+              "fbDb.collection('admin_users').doc(id).update({status:'rejected'",
+              "fbDb.collection('admin_users').doc(id).delete()"
           ]
-          for value in forbidden:
-              if value in text:
-                  raise SystemExit('Legacy direct mutation remains: '+value)
+          for item in forbidden:
+              if item in text:
+                  raise SystemExit(f'Legacy mutation remains: {item}')
 
           required = [
-            "'/admin/v1/users/'+encodeURIComponent(id)+'/approve'",
-            "'/admin/v1/users/'+encodeURIComponent(id)+'/reject'",
-            "'/admin/v1/users/'+encodeURIComponent(id)",
-            "getIdToken()",
-            "'Authorization':'Bearer '+token"
+              "getIdToken()",
+              "'Authorization':'Bearer '+token",
+              "'/admin/v1/users/'+encodeURIComponent(id)+'/approve'",
+              "'/admin/v1/users/'+encodeURIComponent(id)+'/reject'"
           ]
-          for value in required:
-              if value not in text:
-                  raise SystemExit('Required migration marker missing: '+value)
+          for item in required:
+              if item not in text:
+                  raise SystemExit(f'Required migration fragment missing: {item}')
 
           path.write_text(text, encoding='utf-8')
           PY
 
-      - name: Commit migration
+      - name: Commit migration when changed
         shell: bash
         run: |
           set -euo pipefail
+          if git diff --quiet -- index.html; then
+            echo 'No index.html changes to commit'
+            exit 0
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'security: route admin user mutations through backend API'
+          git commit -m 'security: use backend API for admin user mutations'
           git push origin HEAD:security/use-admin-user-api-v1
