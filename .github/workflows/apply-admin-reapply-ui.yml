@@ -1,0 +1,69 @@
+name: Apply rejected Admin reapplication UI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Enable reapplication form for rejected users
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          old = """function showRejectedScreen(){
+  document.getElementById('reg-icon').textContent='🚫';
+  document.getElementById('reg-title').textContent='Доступ отклонён';
+  document.getElementById('reg-sub').textContent='Обратись к администратору клуба за подробностями.';
+  document.getElementById('reg-form').style.display='none';
+  document.getElementById('reg-status-wrap').style.display='block';
+  document.getElementById('reg-status-wrap').innerHTML='<div class=\"status-badge rejected\">🚫 Отклонено</div>';
+  showScreen('s-register');
+}
+"""
+          new = """function showRejectedScreen(){
+  document.getElementById('reg-icon').textContent='↻';
+  document.getElementById('reg-title').textContent='Заявка была отклонена';
+  document.getElementById('reg-sub').textContent='Ты можешь уточнить имя и подать заявку повторно.';
+  document.getElementById('reg-form').style.display='block';
+  document.getElementById('reg-status-wrap').style.display='block';
+  document.getElementById('reg-status-wrap').innerHTML='<div class=\"status-badge rejected\">Повторная заявка будет отправлена администратору</div>';
+  var nameInput=document.getElementById('reg-name');
+  if(nameInput&&!nameInput.value){nameInput.value=myTgName||'';}
+  showScreen('s-register');
+}
+"""
+          if new in text:
+              print('Reapplication UI already applied')
+          elif old not in text:
+              raise SystemExit('Target showRejectedScreen block not found')
+          else:
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          final = path.read_text(encoding='utf-8')
+          for marker in ['Ты можешь уточнить имя и подать заявку повторно.', "reg-form').style.display='block'"]:
+              if marker not in final:
+                  raise SystemExit('Missing marker: ' + marker)
+          PY
+      - name: Commit migration
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "feat: allow rejected Admin applicants to reapply"
+          git push
