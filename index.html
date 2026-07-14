@@ -3551,6 +3551,49 @@ var __rpOldSwitchTab=switchTab;switchTab=function(tab){if(tab==='request-parser'
 })();
 /* ===== END NEWS PERMISSION ENFORCEMENT V1 ===== */
 
+
+/* ===== ADMIN ACCESS API MIGRATION V2 ===== */
+savePersonCard=function(){
+  if(!editingPersonId)return;
+  var role=document.getElementById('person-role').value;
+  var comment=document.getElementById('person-comment').value.trim();
+  var st=(editingPersonData&&editingPersonData.status)||'pending';
+  var original=adminPeople.find(function(x){return String(x.id)===String(editingPersonId);})||{};
+  var permissions={admin:collectAccess('admin')};
+  var metadata={adminComment:comment,documentAccess:collectAccess('knowledge'),updatedAt:Date.now(),updatedBy:myTgId};
+  var apiPath='/admin/v1/users/'+encodeURIComponent(editingPersonId);
+  var chain;
+
+  if(st==='approved'){
+    chain=(original.status==='approved'||original.status==='active')
+      ? Promise.resolve()
+      : adminUserApiRequest('POST',apiPath+'/approve',{role:role});
+    chain=chain.then(function(){
+      return adminUserApiRequest('PATCH',apiPath+'/access',{role:role,permissions:permissions});
+    });
+  }else if(st==='rejected'){
+    chain=adminUserApiRequest('POST',apiPath+'/reject');
+  }else if(st==='pending'&&original.status==='pending'){
+    chain=Promise.resolve();
+  }else{
+    showToast('Возврат в статус «Новая» пока недоступен');
+    return;
+  }
+
+  chain.then(function(){
+    if(!fbDb)return;
+    return fbDb.collection('admin_users').doc(String(editingPersonId)).set(metadata,{merge:true});
+  }).then(function(){
+    showToast('Карточка сохранена');
+    closePersonCard();
+    loadRequestsAndUsers();
+  }).catch(function(err){
+    console.warn(err);
+    showToast(err.message||'Ошибка сохранения');
+  });
+};
+/* ===== END ADMIN ACCESS API MIGRATION V2 ===== */
+
 </script>
 </body>
 </html>
