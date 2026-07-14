@@ -3,13 +3,15 @@ name: Apply News permission UI migration
 on:
   issues:
     types: [opened]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
 
 jobs:
   migrate:
-    if: github.event.issue.title == 'RUN_NEWS_LOCK_UI_MIGRATION'
+    if: github.event_name == 'pull_request' && github.head_ref == 'security/news-lock-ui-v1' || github.event_name == 'issues' && github.event.issue.title == 'RUN_NEWS_LOCK_UI_MIGRATION'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,61 +38,16 @@ jobs:
   var style=document.createElement('style');
   style.textContent='.permission-lock-host{position:relative!important;overflow:hidden!important}.permission-lock-host>.permission-lock-content{filter:blur(7px);pointer-events:none;user-select:none;opacity:.48}.permission-lock-overlay{position:absolute;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(22,24,26,.38);backdrop-filter:blur(2px)}.permission-lock-card{width:min(330px,92%);padding:25px 20px;border-radius:18px;text-align:center;background:rgba(30,33,36,.96);border:1px solid rgba(45,212,191,.24);box-shadow:0 16px 40px rgba(0,0,0,.42)}.permission-lock-icon{font-size:43px;margin-bottom:12px}.permission-lock-title{font-size:17px;font-weight:750;color:var(--text);margin-bottom:8px}.permission-lock-text{font-size:12px;line-height:1.55;color:var(--text2)}.manage-hub-item.permission-locked .manage-hub-arrow{font-size:0}.manage-hub-item.permission-locked .manage-hub-arrow:after{content:"🔒";font-size:16px}.manage-hub-item.permission-locked{opacity:.82}';
   document.head.appendChild(style);
-
   function isOwner(){return String(myTgId||'')===String(SUPER_ADMIN_ID||'')||(myUser&&myUser.role==='owner');}
-  function hasNewsPermission(){
-    if(isOwner()||(myUser&&myUser.role==='admin'))return true;
-    var explicit=myUser&&myUser.permissions&&myUser.permissions.admin&&myUser.permissions.admin.news;
-    if(typeof explicit==='boolean')return explicit;
-    return !!(myUser&&['news_editor','content_editor'].indexOf(myUser.role)!==-1);
-  }
-  function newsApi(method,path,body){
-    var user=firebase.auth().currentUser;
-    if(!user)return Promise.reject(new Error('Нет подтверждённой Admin-сессии'));
-    return user.getIdToken(true).then(function(token){
-      return fetch(AUTH_SERVER+path,{method:method,headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
-    }).then(function(res){return res.json().catch(function(){return {};}).then(function(data){if(!res.ok)throw new Error((data&&data.error)||('HTTP '+res.status));return data;});});
-  }
-  function applyNewsLock(){
-    var screen=document.getElementById('s-news');
-    if(!screen)return;
-    var old=screen.querySelector('.permission-lock-overlay');
-    if(old)old.remove();
-    screen.classList.remove('permission-lock-host');
-    Array.prototype.forEach.call(screen.children,function(el){el.classList.remove('permission-lock-content');});
-    if(hasNewsPermission())return;
-    screen.classList.add('permission-lock-host');
-    Array.prototype.forEach.call(screen.children,function(el){el.classList.add('permission-lock-content');});
-    var overlay=document.createElement('div');
-    overlay.className='permission-lock-overlay';
-    overlay.innerHTML='<div class="permission-lock-card"><div class="permission-lock-icon">🔒</div><div class="permission-lock-title">Раздел недоступен</div><div class="permission-lock-text">У вас нет прав на раздел «Новости». Обратитесь к администратору проекта, чтобы получить доступ.</div></div>';
-    screen.appendChild(overlay);
-  }
-
-  var oldCanSee=canSeeManageItem;
-  canSeeManageItem=function(item){if(item&&item.id==='news')return true;return oldCanSee(item);};
-  var oldManageHtml=manageItemHtml;
-  manageItemHtml=function(item,pinned){var html=oldManageHtml(item,pinned);if(item&&item.id==='news'&&!hasNewsPermission())html=html.replace('manage-hub-item ','manage-hub-item permission-locked ');return html;};
-  var oldSwitch=switchTab;
-  switchTab=function(tab){oldSwitch(tab);if(tab==='news')setTimeout(applyNewsLock,0);};
-  var oldLaunch=launchApp;
-  launchApp=function(){oldLaunch();setTimeout(function(){try{renderManageHub();}catch(e){}applyNewsLock();},0);};
-
-  saveNews=function(){
-    if(!hasNewsPermission()){applyNewsLock();showToast('Нет права на публикацию новостей');return;}
-    var title=document.getElementById('news-title').value.trim();
-    var body=document.getElementById('news-body').value.trim();
-    if(!title||!body){showToast('Заполни заголовок и текст');return;}
-    var method=editingNewsId?'PUT':'POST';
-    var path='/admin/v1/news'+(editingNewsId?'/'+encodeURIComponent(editingNewsId):'');
-    newsApi(method,path,{title:title,body:body}).then(function(){showToast(editingNewsId?'Сохранено':'Опубликовано');closeNewsModal();loadNews();}).catch(function(err){console.warn(err);showToast(err.message||'Ошибка сохранения');});
-  };
-  deleteNews=function(){
-    if(!hasNewsPermission()){applyNewsLock();showToast('Нет права на удаление новостей');return;}
-    if(!editingNewsId)return;
-    if(!confirm('Удалить новость?'))return;
-    newsApi('DELETE','/admin/v1/news/'+encodeURIComponent(editingNewsId)).then(function(){showToast('Удалено');closeNewsModal();loadNews();}).catch(function(err){console.warn(err);showToast(err.message||'Ошибка удаления');});
-  };
+  function hasNewsPermission(){if(isOwner()||(myUser&&myUser.role==='admin'))return true;var explicit=myUser&&myUser.permissions&&myUser.permissions.admin&&myUser.permissions.admin.news;if(typeof explicit==='boolean')return explicit;return !!(myUser&&['news_editor','content_editor'].indexOf(myUser.role)!==-1);}
+  function newsApi(method,path,body){var user=firebase.auth().currentUser;if(!user)return Promise.reject(new Error('Нет подтверждённой Admin-сессии'));return user.getIdToken(true).then(function(token){return fetch(AUTH_SERVER+path,{method:method,headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});}).then(function(res){return res.json().catch(function(){return {};}).then(function(data){if(!res.ok)throw new Error((data&&data.error)||('HTTP '+res.status));return data;});});}
+  function applyNewsLock(){var screen=document.getElementById('s-news');if(!screen)return;var old=screen.querySelector('.permission-lock-overlay');if(old)old.remove();screen.classList.remove('permission-lock-host');Array.prototype.forEach.call(screen.children,function(el){el.classList.remove('permission-lock-content');});if(hasNewsPermission())return;screen.classList.add('permission-lock-host');Array.prototype.forEach.call(screen.children,function(el){el.classList.add('permission-lock-content');});var overlay=document.createElement('div');overlay.className='permission-lock-overlay';overlay.innerHTML='<div class="permission-lock-card"><div class="permission-lock-icon">🔒</div><div class="permission-lock-title">Раздел недоступен</div><div class="permission-lock-text">У вас нет прав на раздел «Новости». Обратитесь к администратору проекта, чтобы получить доступ.</div></div>';screen.appendChild(overlay);}
+  var oldCanSee=canSeeManageItem;canSeeManageItem=function(item){if(item&&item.id==='news')return true;return oldCanSee(item);};
+  var oldManageHtml=manageItemHtml;manageItemHtml=function(item,pinned){var html=oldManageHtml(item,pinned);if(item&&item.id==='news'&&!hasNewsPermission())html=html.replace('manage-hub-item ','manage-hub-item permission-locked ');return html;};
+  var oldSwitch=switchTab;switchTab=function(tab){oldSwitch(tab);if(tab==='news')setTimeout(applyNewsLock,0);};
+  var oldLaunch=launchApp;launchApp=function(){oldLaunch();setTimeout(function(){try{renderManageHub();}catch(e){}applyNewsLock();},0);};
+  saveNews=function(){if(!hasNewsPermission()){applyNewsLock();showToast('Нет права на публикацию новостей');return;}var title=document.getElementById('news-title').value.trim();var body=document.getElementById('news-body').value.trim();if(!title||!body){showToast('Заполни заголовок и текст');return;}var method=editingNewsId?'PUT':'POST';var path='/admin/v1/news'+(editingNewsId?'/'+encodeURIComponent(editingNewsId):'');newsApi(method,path,{title:title,body:body}).then(function(){showToast(editingNewsId?'Сохранено':'Опубликовано');closeNewsModal();loadNews();}).catch(function(err){console.warn(err);showToast(err.message||'Ошибка сохранения');});};
+  deleteNews=function(){if(!hasNewsPermission()){applyNewsLock();showToast('Нет права на удаление новостей');return;}if(!editingNewsId)return;if(!confirm('Удалить новость?'))return;newsApi('DELETE','/admin/v1/news/'+encodeURIComponent(editingNewsId)).then(function(){showToast('Удалено');closeNewsModal();loadNews();}).catch(function(err){console.warn(err);showToast(err.message||'Ошибка удаления');});};
 })();
 /* ===== END NEWS PERMISSION ENFORCEMENT V1 ===== */
 '''
@@ -106,6 +63,7 @@ jobs:
           grep -q "Раздел недоступен" index.html
       - name: Commit branch
         run: |
+          if git diff --quiet -- index.html; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
