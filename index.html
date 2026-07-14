@@ -1268,14 +1268,23 @@ function showScreen(id){
 function submitRegistration(){
   var name=document.getElementById('reg-name').value.trim();
   if(!name){showToast('Введи имя');return;}
-  if(!fbDb){showToast('Нет подключения к базе');return;}
-  var data={id:myTgId,name:name,role:'pending_role',status:'pending',requestedAt:Date.now()};
-  fbDb.collection('admin_users').doc(myTgId).set(data).then(function(){
-    myUser=data;
+  var initData=(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData)||'';
+  if(!initData){showToast('Открой админку через Telegram');return;}
+  fetch(AUTH_SERVER+'/admin/v1/registration',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({initData:initData,name:name})
+  }).then(function(res){
+    return res.json().catch(function(){return {};}).then(function(data){
+      if(!res.ok)throw new Error((data&&data.error)||('HTTP '+res.status));
+      return data;
+    });
+  }).then(function(data){
+    myUser={id:String(data.uid||myTgId),name:name,role:'pending_role',status:'pending'};
     showPendingScreen();
   }).catch(function(err){
     console.warn(err);
-    showToast('Ошибка отправки заявки');
+    showToast(err.message||'Ошибка отправки заявки');
   });
 }
 
