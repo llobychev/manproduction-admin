@@ -1,0 +1,85 @@
+name: Apply Admin access API migration
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Admin person access save flow
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          old = """function savePersonCard(){if(!editingPersonId)return;var role=document.getElementById('person-role').value;var comment=document.getElementById('person-comment').value.trim();var st=(editingPersonData&&editingPersonData.status)||'pending';var payload={role:role,status:st,adminComment:comment,updatedAt:Date.now(),updatedBy:myTgId,permissions:{admin:collectAccess('admin')},documentAccess:collectAccess('knowledge')};if(st==='approved'){payload.approvedAt=Date.now();payload.approvedBy=myTgId;}if(st==='rejected'){payload.rejectedAt=Date.now();payload.rejectedBy=myTgId;}savePersonAccess(editingPersonId,payload,function(){closePersonCard();});}
+"""
+          new = """function savePersonCard(){
+  if(!editingPersonId)return;
+  var role=document.getElementById('person-role').value;
+  var comment=document.getElementById('person-comment').value.trim();
+  var st=(editingPersonData&&editingPersonData.status)||'pending';
+  var original=adminPeople.find(function(x){return String(x.id)===String(editingPersonId);})||{};
+  var permissions={admin:collectAccess('admin')};
+  var metadata={adminComment:comment,documentAccess:collectAccess('knowledge'),updatedAt:Date.now(),updatedBy:myTgId};
+  var path='/admin/v1/users/'+encodeURIComponent(editingPersonId);
+  var chain;
+
+  if(st==='approved'){
+    chain=(original.status==='approved'||original.status==='active')
+      ? Promise.resolve()
+      : adminUserApiRequest('POST',path+'/approve',{role:role});
+    chain=chain.then(function(){
+      return adminUserApiRequest('PATCH',path+'/access',{role:role,permissions:permissions});
+    });
+  }else if(st==='rejected'){
+    chain=adminUserApiRequest('POST',path+'/reject');
+  }else if(st==='pending'&&original.status==='pending'){
+    chain=Promise.resolve();
+  }else{
+    showToast('Возврат в статус «Новая» пока недоступен');
+    return;
+  }
+
+  chain.then(function(){
+    if(!fbDb)return;
+    return fbDb.collection('admin_users').doc(String(editingPersonId)).set(metadata,{merge:true});
+  }).then(function(){
+    showToast('Карточка сохранена');
+    closePersonCard();
+    loadRequestsAndUsers();
+  }).catch(function(err){
+    console.warn(err);
+    showToast(err.message||'Ошибка сохранения');
+  });
+}
+"""
+          if new in text:
+            print('Patch already applied')
+          elif old not in text:
+            raise SystemExit('Target savePersonCard block not found; aborting')
+          else:
+            path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          final = path.read_text(encoding='utf-8')
+          required = ["adminUserApiRequest('PATCH',path+'/access'", "permissions:permissions", "Карточка сохранена"]
+          for marker in required:
+            if marker not in final:
+              raise SystemExit('Missing marker: '+marker)
+      - name: Commit migration
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "security: save Admin roles and permissions through backend API"
+          git push
