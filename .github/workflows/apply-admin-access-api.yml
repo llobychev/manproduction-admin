@@ -11,9 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
       - name: Patch Admin person access save flow
-        shell: python
+        shell: bash
         run: |
+          set -euo pipefail
+          python3 - <<'PY'
           from pathlib import Path
 
           path = Path('index.html')
@@ -60,26 +66,31 @@ jobs:
   });
 }
 """
+
           if new in text:
-            print('Patch already applied')
+              print('Patch already applied')
           elif old not in text:
-            raise SystemExit('Target savePersonCard block not found; aborting')
+              raise SystemExit('Target savePersonCard block not found; aborting')
           else:
-            path.write_text(text.replace(old, new, 1), encoding='utf-8')
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
 
           final = path.read_text(encoding='utf-8')
           required = ["adminUserApiRequest('PATCH',path+'/access'", "permissions:permissions", "Карточка сохранена"]
           for marker in required:
-            if marker not in final:
-              raise SystemExit('Missing marker: '+marker)
+              if marker not in final:
+                  raise SystemExit('Missing marker: '+marker)
+          PY
+
       - name: Commit migration
+        shell: bash
         run: |
+          set -euo pipefail
           if git diff --quiet -- index.html; then
             echo "No changes"
             exit 0
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m "security: save Admin roles and permissions through backend API"
-          git push
+          git commit -m 'security: save Admin roles and permissions through backend API'
+          git push origin HEAD:main
