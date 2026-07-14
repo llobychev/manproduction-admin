@@ -4,4 +4,4 @@ This branch migrates approve, reject, and delete operations for `admin_users` fr
 
 Production must not restrict Firestore writes until the client migration is merged and smoke-tested.
 
-Migration workflow retry: exact legacy block replacement.
+The client now obtains the Firebase ID Token and sends protected mutations through the backend API.
