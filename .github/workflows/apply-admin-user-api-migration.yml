@@ -1,8 +1,8 @@
 name: Apply Admin user API migration
 
 on:
-  issues:
-    types: [opened]
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   migrate:
-    if: github.event_name == 'workflow_dispatch' || github.event.issue.title == 'RUN_ADMIN_USER_API_MIGRATION'
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'security/use-admin-user-api-v1'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout migration branch
