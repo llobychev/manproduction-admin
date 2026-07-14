@@ -1,0 +1,101 @@
+name: Apply Admin access API migration v2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply Admin access API client override
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '/* ===== ADMIN ACCESS API MIGRATION V2 ===== */'
+
+          if marker in text:
+              print('Already applied')
+              raise SystemExit(0)
+
+          block = r'''
+          /* ===== ADMIN ACCESS API MIGRATION V2 ===== */
+          savePersonCard=function(){
+            if(!editingPersonId)return;
+            var role=document.getElementById('person-role').value;
+            var comment=document.getElementById('person-comment').value.trim();
+            var st=(editingPersonData&&editingPersonData.status)||'pending';
+            var original=adminPeople.find(function(x){return String(x.id)===String(editingPersonId);})||{};
+            var permissions={admin:collectAccess('admin')};
+            var metadata={adminComment:comment,documentAccess:collectAccess('knowledge'),updatedAt:Date.now(),updatedBy:myTgId};
+            var apiPath='/admin/v1/users/'+encodeURIComponent(editingPersonId);
+            var chain;
+
+            if(st==='approved'){
+              chain=(original.status==='approved'||original.status==='active')
+                ? Promise.resolve()
+                : adminUserApiRequest('POST',apiPath+'/approve',{role:role});
+              chain=chain.then(function(){
+                return adminUserApiRequest('PATCH',apiPath+'/access',{role:role,permissions:permissions});
+              });
+            }else if(st==='rejected'){
+              chain=adminUserApiRequest('POST',apiPath+'/reject');
+            }else if(st==='pending'&&original.status==='pending'){
+              chain=Promise.resolve();
+            }else{
+              showToast('Возврат в статус «Новая» пока недоступен');
+              return;
+            }
+
+            chain.then(function(){
+              if(!fbDb)return;
+              return fbDb.collection('admin_users').doc(String(editingPersonId)).set(metadata,{merge:true});
+            }).then(function(){
+              showToast('Карточка сохранена');
+              closePersonCard();
+              loadRequestsAndUsers();
+            }).catch(function(err){
+              console.warn(err);
+              showToast(err.message||'Ошибка сохранения');
+            });
+          };
+          /* ===== END ADMIN ACCESS API MIGRATION V2 ===== */
+          '''
+
+          pos = text.rfind('</script>')
+          if pos < 0:
+              raise SystemExit('Closing script tag not found')
+
+          text = text[:pos] + block + '\n' + text[pos:]
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Verify migration
+        run: |
+          grep -q "ADMIN ACCESS API MIGRATION V2" index.html
+          grep -q "adminUserApiRequest('PATCH',apiPath+'/access'" index.html
+          grep -q "permissions:permissions" index.html
+
+      - name: Commit migrated client
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No changes required"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'security: save Admin roles and permissions through backend API'
+          git push origin HEAD:main
