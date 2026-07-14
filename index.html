@@ -1390,20 +1390,36 @@ function renderUsers(){
     wrap.appendChild(row);
   });
 }
+function adminUserApiRequest(method,path,body){
+  var user=firebase.auth().currentUser;
+  if(!user)return Promise.reject(new Error('Нет подтверждённой Admin-сессии'));
+  return user.getIdToken().then(function(token){
+    return fetch(AUTH_SERVER+path,{
+      method:method,
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:body?JSON.stringify(body):undefined
+    });
+  }).then(function(res){
+    return res.json().catch(function(){return {};}).then(function(data){
+      if(!res.ok)throw new Error((data&&data.error)||('HTTP '+res.status));
+      return data;
+    });
+  });
+}
 function approveRequest(id,role){
-  fbDb.collection('admin_users').doc(id).update({status:'approved',role:role,approvedAt:Date.now()}).then(function(){
+  adminUserApiRequest('POST','/admin/v1/users/'+encodeURIComponent(id)+'/approve',{role:role}).then(function(){
     showToast('Одобрено');loadRequestsAndUsers();
-  }).catch(function(err){console.warn(err);showToast('Ошибка');});
+  }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
 }
 function rejectRequest(id){
-  fbDb.collection('admin_users').doc(id).update({status:'rejected'}).then(function(){
+  adminUserApiRequest('POST','/admin/v1/users/'+encodeURIComponent(id)+'/reject').then(function(){
     showToast('Отклонено');loadRequestsAndUsers();
-  }).catch(function(err){console.warn(err);showToast('Ошибка');});
+  }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
 }
 function removeUser(id){
-  fbDb.collection('admin_users').doc(id).delete().then(function(){
+  adminUserApiRequest('DELETE','/admin/v1/users/'+encodeURIComponent(id)).then(function(){
     showToast('Удалено');loadRequestsAndUsers();
-  }).catch(function(err){console.warn(err);showToast('Ошибка');});
+  }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
 }
 
 // NEWS
