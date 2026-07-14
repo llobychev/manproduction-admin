@@ -25,7 +25,6 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import re
 
           path = Path('index.html')
           text = path.read_text(encoding='utf-8')
@@ -34,11 +33,23 @@ jobs:
               print('Migration already applied')
               raise SystemExit(0)
 
-          anchor = "function approveRequest(id,role){"
-          if text.count(anchor) != 1:
-              raise SystemExit(f'Expected one approveRequest, found {text.count(anchor)}')
+          old = """function approveRequest(id,role){
+            fbDb.collection('admin_users').doc(id).update({status:'approved',role:role,approvedAt:Date.now()}).then(function(){
+              showToast('Одобрено');loadRequestsAndUsers();
+            }).catch(function(err){console.warn(err);showToast('Ошибка');});
+          }
+          function rejectRequest(id){
+            fbDb.collection('admin_users').doc(id).update({status:'rejected'}).then(function(){
+              showToast('Отклонено');loadRequestsAndUsers();
+            }).catch(function(err){console.warn(err);showToast('Ошибка');});
+          }
+          function removeUser(id){
+            fbDb.collection('admin_users').doc(id).delete().then(function(){
+              showToast('Удалено');loadRequestsAndUsers();
+            }).catch(function(err){console.warn(err);showToast('Ошибка');});
+          }"""
 
-          helper = '''function adminUserApiRequest(method,path,body){
+          new = """function adminUserApiRequest(method,path,body){
             var user=firebase.auth().currentUser;
             if(!user)return Promise.reject(new Error('Нет подтверждённой Admin-сессии'));
             return user.getIdToken().then(function(token){
@@ -54,32 +65,25 @@ jobs:
               });
             });
           }
-
-          '''
-          text = text.replace(anchor, helper + anchor, 1)
-
-          replacements = [
-            (r"function approveRequest\(id,role\)\{.*?\n\}", '''function approveRequest(id,role){
+          function approveRequest(id,role){
             adminUserApiRequest('POST','/admin/v1/users/'+encodeURIComponent(id)+'/approve',{role:role}).then(function(){
               showToast('Одобрено');loadRequestsAndUsers();
             }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
-          }'''),
-            (r"function rejectRequest\(id\)\{.*?\n\}", '''function rejectRequest(id){
+          }
+          function rejectRequest(id){
             adminUserApiRequest('POST','/admin/v1/users/'+encodeURIComponent(id)+'/reject').then(function(){
               showToast('Отклонено');loadRequestsAndUsers();
             }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
-          }'''),
-            (r"function removeUser\(id\)\{.*?\n\}", '''function removeUser(id){
+          }
+          function removeUser(id){
             adminUserApiRequest('DELETE','/admin/v1/users/'+encodeURIComponent(id)).then(function(){
               showToast('Удалено');loadRequestsAndUsers();
             }).catch(function(err){console.warn(err);showToast(err.message||'Ошибка');});
-          }''')
-          ]
+          }"""
 
-          for pattern, replacement in replacements:
-              text, count = re.subn(pattern, replacement, text, count=1, flags=re.S)
-              if count != 1:
-                  raise SystemExit(f'Expected one replacement for {pattern}, got {count}')
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected exact legacy block once, found {text.count(old)}')
+          text = text.replace(old, new, 1)
 
           forbidden = [
             "fbDb.collection('admin_users').doc(id).update({status:'approved'",
@@ -91,10 +95,12 @@ jobs:
                   raise SystemExit('Legacy direct mutation remains: '+value)
 
           required = [
+            "function adminUserApiRequest(method,path,body){",
             "getIdToken()",
             "'Authorization':'Bearer '+token",
             "'/admin/v1/users/'+encodeURIComponent(id)+'/approve'",
-            "'/admin/v1/users/'+encodeURIComponent(id)+'/reject'"
+            "'/admin/v1/users/'+encodeURIComponent(id)+'/reject'",
+            "adminUserApiRequest('DELETE','/admin/v1/users/'+encodeURIComponent(id))"
           ]
           for value in required:
               if value not in text:
