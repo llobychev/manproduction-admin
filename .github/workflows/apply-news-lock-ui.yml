@@ -1,17 +1,17 @@
 name: Apply News permission UI migration
 
 on:
-  issues:
-    types: [opened]
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - security/news-lock-ui-v1
+    paths:
+      - .news-lock-ui-trigger
 
 permissions:
   contents: write
 
 jobs:
   migrate:
-    if: github.event_name == 'pull_request' && github.head_ref == 'security/news-lock-ui-v1' || github.event_name == 'issues' && github.event.issue.title == 'RUN_NEWS_LOCK_UI_MIGRATION'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,14 +24,12 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-
           path=Path('index.html')
           text=path.read_text(encoding='utf-8')
           marker='/* ===== NEWS PERMISSION ENFORCEMENT V1 ===== */'
           if marker in text:
               print('Already applied')
               raise SystemExit(0)
-
           block=r'''
 /* ===== NEWS PERMISSION ENFORCEMENT V1 ===== */
 (function(){
