@@ -1,0 +1,91 @@
+name: Patch challenges permissions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/triggers/challenges-permissions.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply challenges permission enforcement
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
+          marker='/* ===== PERMISSION MATRIX V1 ===== */'
+          tag='/* ===== CHALLENGES PERMISSION ENFORCEMENT V1 ===== */'
+          if tag not in text:
+              block=r'''
+/* ===== CHALLENGES PERMISSION ENFORCEMENT V1 ===== */
+(function(){
+  function challengeOwner(){return String(myTgId||'')===String(SUPER_ADMIN_ID||'')||(myUser&&myUser.role==='owner');}
+  function challengeAllowed(action){
+    if(challengeOwner())return true;
+    var raw=myUser&&myUser.permissions&&myUser.permissions.admin&&myUser.permissions.admin.challenges;
+    if(raw&&typeof raw==='object'){
+      if(typeof raw[action]==='boolean')return raw[action];
+      if(typeof raw.manage==='boolean'&&action!=='view')return raw.manage;
+      if(typeof raw.view==='boolean')return action==='view'?raw.view:false;
+    }
+    if(typeof raw==='boolean')return raw;
+    return !!(myUser&&['admin','content_editor'].indexOf(myUser.role)!==-1);
+  }
+  window.hasChallengePermission=challengeAllowed;
+  function applyChallengesLock(){
+    var screen=document.getElementById('s-challenges');if(!screen)return;
+    var old=screen.querySelector('.permission-lock-overlay');if(old)old.remove();
+    screen.classList.remove('permission-lock-host');
+    Array.prototype.forEach.call(screen.children,function(el){el.classList.remove('permission-lock-content');});
+    if(challengeAllowed('view'))return;
+    screen.classList.add('permission-lock-host');
+    Array.prototype.forEach.call(screen.children,function(el){el.classList.add('permission-lock-content');});
+    var overlay=document.createElement('div');overlay.className='permission-lock-overlay';
+    overlay.innerHTML='<div class="permission-lock-card"><div class="permission-lock-icon">🔒</div><div class="permission-lock-title">Раздел недоступен</div><div class="permission-lock-text">У вас нет прав на раздел «Челленджи». Обратитесь к администратору проекта, чтобы получить доступ.</div></div>';
+    screen.appendChild(overlay);
+  }
+  window.applyChallengesLock=applyChallengesLock;
+  var prevCanSee=canSeeManageItem;canSeeManageItem=function(item){if(item&&item.id==='challenges')return true;return prevCanSee(item);};
+  var prevHtml=manageItemHtml;manageItemHtml=function(item,pinned){var html=prevHtml(item,pinned);if(item&&item.id==='challenges'&&!challengeAllowed('view'))html=html.replace('manage-hub-item ','manage-hub-item permission-locked ');return html;};
+  var prevSwitch=switchTab;switchTab=function(tab){prevSwitch(tab);if(tab==='challenges')setTimeout(applyChallengesLock,0);};
+  var prevLaunch=launchApp;launchApp=function(){prevLaunch();setTimeout(function(){try{renderManageHub();}catch(e){}applyChallengesLock();},0);};
+  var prevLoad=loadChallenges;loadChallenges=function(){if(!challengeAllowed('view')){challengeItems=[];var list=document.getElementById('challenges-list');if(list)list.innerHTML='';applyChallengesLock();return;}return prevLoad();};
+  var prevRender=renderChallenges;renderChallenges=function(){prevRender();var list=document.getElementById('challenges-list');if(list&&!challengeAllowed('edit'))Array.prototype.forEach.call(list.querySelectorAll('[data-act="edit"]'),function(btn){btn.style.display='none';});var fab=document.querySelector('#s-challenges .add-fab');if(fab)fab.style.display=challengeAllowed('create')?'flex':'none';};
+  var prevOpen=openChallengeModal;openChallengeModal=function(id){var action=id?'edit':'create';if(!challengeAllowed(action)){showToast(id?'Нет права на редактирование челленджей':'Нет права на создание челленджей');return;}prevOpen(id);var del=document.getElementById('challenge-btn-delete');if(del&&id)del.style.display=challengeAllowed('delete')?'block':'none';};
+  var prevSave=saveChallenge;saveChallenge=function(){var action=editingChallengeId?'edit':'create';if(!challengeAllowed(action)){showToast(editingChallengeId?'Нет права на редактирование челленджей':'Нет права на создание челленджей');return;}return prevSave();};
+  var prevDelete=deleteChallenge;deleteChallenge=function(){if(!challengeAllowed('delete')){showToast('Нет права на удаление челленджей');return;}if(!editingChallengeId)return;if(!confirm('Удалить челлендж?'))return;return prevDelete();};
+})();
+/* ===== END CHALLENGES PERMISSION ENFORCEMENT V1 ===== */
+
+'''
+              if marker not in text: raise SystemExit('Permission matrix marker not found')
+              text=text.replace(marker,block+marker,1)
+          text=text.replace("onAdmin(['news','channels','campaigns','contentFactory','tasks','training','instructions','stats']);","onAdmin(['news','challenges','channels','campaigns','contentFactory','tasks','training','instructions','stats']);",1)
+          path.write_text(text,encoding='utf-8')
+          PY
+      - name: Validate JavaScript
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          html=Path('index.html').read_text(encoding='utf-8')
+          scripts=re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',html,re.S|re.I)
+          Path('/tmp/admin-scripts.js').write_text('\n'.join(scripts),encoding='utf-8')
+          PY
+          node --check /tmp/admin-scripts.js
+      - name: Commit patched index
+        run: |
+          if git diff --quiet -- index.html; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'security: enforce challenge permissions [skip ci]'
+          git push
