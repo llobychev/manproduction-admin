@@ -1,0 +1,132 @@
+name: Apply Permission Matrix v1
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Patch role templates and permissions
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='/* ===== PERMISSION MATRIX V1 ===== */'
+          if marker in s:
+              print('already applied')
+              raise SystemExit(0)
+          block=r'''
+
+/* ===== PERMISSION MATRIX V1 ===== */
+(function(){
+  ROLES=[
+    {id:'admin',label:'Администратор'},
+    {id:'content_editor',label:'Контент'},
+    {id:'partnerships',label:'Партнёрства'},
+    {id:'hr',label:'HR / Найм'},
+    {id:'finance',label:'Финансы'},
+    {id:'analyst',label:'Аналитик'},
+    {id:'knowledge_editor',label:'Редактор базы'},
+    {id:'work_team_member',label:'Work Team'},
+    {id:'news_editor',label:'Редактор новостей'},
+    {id:'staff',label:'Сотрудник'},
+    {id:'partner_viewer',label:'Партнёр'},
+    {id:'viewer',label:'Просмотр'}
+  ];
+
+  ADMIN_ACCESS_KEYS=[
+    {key:'news',label:'Новости',sub:'Создание и редактирование новостей'},
+    {key:'challenges',label:'Челленджи',sub:'Создание и редактирование челленджей'},
+    {key:'tasks',label:'Задачи',sub:'Раздел задач команды'},
+    {key:'quests',label:'Квесты дня',sub:'Ежедневные задания'},
+    {key:'promo',label:'Промокоды',sub:'Скидки и коды доступа'},
+    {key:'subscriptions',label:'Подписки',sub:'Одобрение оплат вручную'},
+    {key:'demoAccess',label:'Демо-доступ',sub:'Выдача демо пользователям'},
+    {key:'lyovaKnowledge',label:'База Лёвы',sub:'Интенты и шаги тура'},
+    {key:'users',label:'Пользователи',sub:'Список пользователей приложения'},
+    {key:'stats',label:'Статистика',sub:'Аналитика проекта'},
+    {key:'training',label:'Обучения',sub:'Обучающие модули'},
+    {key:'instructions',label:'Инструкции',sub:'Командные инструкции'},
+    {key:'fund',label:'Финансы / фонд',sub:'Фонд команды, выплаты и операции'},
+    {key:'partners',label:'Партнёры',sub:'Партнёрские контакты и договорённости'},
+    {key:'events',label:'Мероприятия',sub:'Создание и управление мероприятиями'},
+    {key:'channels',label:'Каналы',sub:'Каналы, публикации и источники'},
+    {key:'campaigns',label:'Кампании',sub:'Центр кампаний и трекинг'},
+    {key:'crm',label:'CRM участников',sub:'Лиды, клиенты и участники'},
+    {key:'workTeam',label:'Work Team / найм',sub:'Воронка найма и карточки команды'},
+    {key:'resources',label:'Ресурсы',sub:'Реестр сервисов и активов'},
+    {key:'analytics',label:'Расширенная аналитика',sub:'Отчёты и диагностические панели'},
+    {key:'behaviorIntelligence',label:'Behavior Intelligence',sub:'Исследования поведения и гипотезы'},
+    {key:'contentFactory',label:'Контент-завод',sub:'Материалы, AI-черновики и публикации'},
+    {key:'settings',label:'Настройки',sub:'Системные настройки проекта'}
+  ];
+
+  roleDefaultPermissions=function(role){
+    var a={},k={};
+    ADMIN_ACCESS_KEYS.forEach(function(x){a[x.key]=false;});
+    KNOWLEDGE_ACCESS_KEYS.forEach(function(x){k[x.key]=false;});
+    function onAdmin(keys){keys.forEach(function(x){a[x]=true;});}
+    function onKnowledge(keys){keys.forEach(function(x){k[x]=true;});}
+    if(role==='admin'){
+      ADMIN_ACCESS_KEYS.forEach(function(x){a[x.key]=true;});
+      KNOWLEDGE_ACCESS_KEYS.forEach(function(x){k[x.key]=true;});
+    }else if(role==='content_editor'||role==='news_editor'){
+      onAdmin(['news','channels','campaigns','contentFactory','tasks','training','instructions','stats']);
+      onKnowledge(['view','search','aiReadOnly','marketing','roadmap','draftChanges']);
+    }else if(role==='partnerships'){
+      onAdmin(['partners','events','channels','campaigns','crm','tasks','training','instructions','stats']);
+      onKnowledge(['view','search','aiReadOnly','marketing','resources','roadmap']);
+    }else if(role==='hr'){
+      onAdmin(['users','workTeam','crm','tasks','training','instructions']);
+      onKnowledge(['view','search','aiReadOnly','workTeam','roadmap','resources']);
+    }else if(role==='finance'){
+      onAdmin(['fund','subscriptions','promo','stats','analytics','tasks','instructions']);
+      onKnowledge(['view','search','aiReadOnly','roadmap','resources','security']);
+    }else if(role==='analyst'){
+      onAdmin(['stats','analytics','channels','campaigns','crm','behaviorIntelligence','instructions']);
+      onKnowledge(['view','search','aiReadOnly','roadmap','marketing','resources']);
+    }else if(role==='knowledge_editor'){
+      onAdmin(['lyovaKnowledge','tasks','training','instructions']);
+      onKnowledge(['view','search','aiReadOnly','coreDocs','roadmap','marketing','workTeam','lyova','resources','draftChanges']);
+    }else if(role==='staff'||role==='work_team_member'){
+      onAdmin(['tasks','training','instructions','workTeam']);
+      onKnowledge(['view','search','aiReadOnly','workTeam','roadmap']);
+    }else if(role==='partner_viewer'){
+      onAdmin(['instructions']);
+      onKnowledge(['view','search','aiReadOnly']);
+    }else{
+      onAdmin(['instructions']);
+      onKnowledge(['view']);
+    }
+    return {admin:a,knowledge:k};
+  };
+})();
+/* ===== END PERMISSION MATRIX V1 ===== */
+'''
+          anchor='/* ===== ADMIN ACCESS API MIGRATION V2 ===== */'
+          if anchor not in s:
+              raise SystemExit('anchor not found')
+          s=s.replace(anchor,block+'\n'+anchor,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "security: add role templates and full permission matrix"
+            git push origin main
+          fi
