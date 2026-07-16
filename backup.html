@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>MenClub Backup</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#16181a;color:#e8eaed;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif}.wrap{max-width:480px;margin:0 auto;padding:22px 16px 40px}.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2dd4bf;font-weight:700}.title{font-size:27px;font-weight:750;margin:8px 0 8px}.sub{font-size:13px;color:#9aa0a6;line-height:1.55}.card{margin-top:18px;background:#272a2e;border:1px solid rgba(45,212,191,.16);border-radius:16px;padding:16px}.status{display:flex;gap:10px;align-items:center;font-size:13px}.dot{width:9px;height:9px;border-radius:50%;background:#e0a83a;box-shadow:0 0 0 4px rgba(224,168,58,.12)}.dot.ok{background:#2dd4bf;box-shadow:0 0 0 4px rgba(45,212,191,.12)}.dot.bad{background:#e05555;box-shadow:0 0 0 4px rgba(224,85,85,.12)}button{width:100%;border:0;border-radius:12px;padding:14px 16px;font-size:14px;font-weight:750;cursor:pointer;margin-top:14px}.primary{background:#2dd4bf;color:#071412}.ghost{background:#1e2124;color:#e8eaed;border:1px solid rgba(45,212,191,.16)}button:disabled{opacity:.45;cursor:not-allowed}.note{margin-top:12px;font-size:11px;color:#777f87;line-height:1.5}.section{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#777f87;margin:24px 0 10px}.item{background:#272a2e;border-radius:13px;padding:13px 14px;margin-bottom:8px;border:1px solid rgba(255,255,255,.05)}.item-title{font-size:12px;font-weight:650;word-break:break-all}.item-meta{font-size:10px;color:#777f87;margin-top:5px;line-height:1.5}.empty{font-size:12px;color:#777f87;text-align:center;padding:20px}.error{color:#ff7b7b;font-size:12px;line-height:1.5;margin-top:12px;display:none}.loader{display:none;margin-top:12px;font-size:12px;color:#9aa0a6}.back{display:inline-block;color:#2dd4bf;text-decoration:none;font-size:12px;margin-bottom:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="./index.html">← Назад в админку</a>
+<div class="eyebrow">Security / Backup</div>
+<div class="title">Резервная копия Firestore</div>
+<div class="sub">Полный серверный экспорт всех коллекций и подколлекций в JSON. Доступ разрешён только владельцу MenClub OS.</div>
+
+<div class="card">
+  <div class="status"><span class="dot" id="dot"></span><span id="status">Проверка защищённого доступа…</span></div>
+  <button class="primary" id="backupBtn" disabled onclick="createBackup()">📦 Создать и скачать копию</button>
+  <button class="ghost" id="refreshBtn" disabled onclick="loadHistory()">Обновить историю</button>
+  <div class="loader" id="loader">Читаю Firestore и формирую архив. Не закрывай экран…</div>
+  <div class="error" id="error"></div>
+  <div class="note">Копия не удаляет и не изменяет рабочие данные. В файл включаются Timestamp, GeoPoint, DocumentReference, Bytes и вложенные подколлекции. SHA-256 записывается внутрь файла и в журнал.</div>
+</div>
+
+<div class="section">Последние операции</div>
+<div id="history"><div class="empty">История загружается…</div></div>
+</div>
+<script>
+var AUTH_SERVER='https://llobychev-manproduction-networking-server-6f2d.twc1.net';
+var firebaseConfig={apiKey:'AIzaSyD195j33cTr6labXodSH_jTeZsvs4L3U4w',authDomain:'manproduction-club.firebaseapp.com',projectId:'manproduction-club',storageBucket:'manproduction-club.firebasestorage.app',messagingSenderId:'962650441642',appId:'1:962650441642:web:1be30d07d1ca62058c0dd3'};
+var currentToken='';
+firebase.initializeApp(firebaseConfig);
+
+function setState(type,text){var dot=document.getElementById('dot');dot.className='dot'+(type?' '+type:'');document.getElementById('status').textContent=text;}
+function showError(text){var el=document.getElementById('error');el.textContent=text;el.style.display='block';}
+function clearError(){document.getElementById('error').style.display='none';}
+function fmtDate(value){if(!value)return 'дата не указана';try{return new Date(value).toLocaleString('ru-RU');}catch(e){return value;}}
+function fmtDuration(ms){if(ms<1000)return ms+' мс';return (ms/1000).toFixed(1)+' сек';}
+function escapeHtml(value){return String(value||'').replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+
+async function getFreshToken(){var user=firebase.auth().currentUser;if(!user)throw new Error('Нет Firebase-сессии');currentToken=await user.getIdToken(true);return currentToken;}
+
+async function authenticate(){
+  var tg=window.Telegram&&window.Telegram.WebApp;
+  if(tg){tg.ready();tg.expand();}
+  if(!tg||!tg.initData)throw new Error('Открой страницу внутри Telegram Admin Mini App');
+  var response=await fetch(AUTH_SERVER+'/auth/admin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData})});
+  var data=await response.json().catch(function(){return {};});
+  if(!response.ok)throw new Error(data.error||('Ошибка авторизации '+response.status));
+  if(data.role!=='owner')throw new Error('Резервные копии доступны только владельцу');
+  await firebase.auth().signInWithCustomToken(data.token);
+  await getFreshToken();
+  setState('ok','Защищённый доступ подтверждён');
+  document.getElementById('backupBtn').disabled=false;
+  document.getElementById('refreshBtn').disabled=false;
+  await loadHistory();
+}
+
+async function loadHistory(){
+  clearError();
+  try{
+    var token=await getFreshToken();
+    var response=await fetch(AUTH_SERVER+'/admin/v1/backups/history',{headers:{Authorization:'Bearer '+token}});
+    var data=await response.json().catch(function(){return {};});
+    if(!response.ok)throw new Error(data.error||('Ошибка '+response.status));
+    var items=data.items||[];
+    if(!items.length){document.getElementById('history').innerHTML='<div class="empty">Резервных копий пока нет</div>';return;}
+    document.getElementById('history').innerHTML=items.map(function(item){return '<div class="item"><div class="item-title">'+escapeHtml(item.filename)+'</div><div class="item-meta">'+fmtDate(item.createdAt)+'<br>Документов: '+Number(item.documentCount||0)+' · коллекций: '+Number(item.collectionCount||0)+' · '+fmtDuration(Number(item.durationMs||0))+'<br>SHA-256: '+escapeHtml((item.checksum||'').slice(0,20))+'…</div></div>';}).join('');
+  }catch(error){showError(error.message);}
+}
+
+async function createBackup(){
+  clearError();
+  var btn=document.getElementById('backupBtn');var loader=document.getElementById('loader');
+  btn.disabled=true;loader.style.display='block';setState('','Формируется резервная копия…');
+  try{
+    var token=await getFreshToken();
+    var response=await fetch(AUTH_SERVER+'/admin/v1/backups/export',{headers:{Authorization:'Bearer '+token}});
+    if(!response.ok){var data=await response.json().catch(function(){return {};});throw new Error(data.error||('Ошибка экспорта '+response.status));}
+    var blob=await response.blob();
+    var disposition=response.headers.get('Content-Disposition')||'';
+    var match=disposition.match(/filename="?([^";]+)"?/i);
+    var filename=match?match[1]:'menclub-firestore-backup.json';
+    var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1000);
+    setState('ok','Копия создана и передана на скачивание');
+    await loadHistory();
+  }catch(error){setState('bad','Создание копии завершилось ошибкой');showError(error.message);}
+  finally{btn.disabled=false;loader.style.display='none';}
+}
+
+authenticate().catch(function(error){setState('bad','Доступ не подтверждён');showError(error.message);document.getElementById('history').innerHTML='<div class="empty">История недоступна</div>';});
+</script>
+</body>
+</html>
