@@ -8,7 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#16181a;color:#e8eaed;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif}.wrap{max-width:480px;margin:0 auto;padding:22px 16px 40px}.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2dd4bf;font-weight:700}.title{font-size:27px;font-weight:750;margin:8px 0 8px}.sub{font-size:13px;color:#9aa0a6;line-height:1.55}.card{margin-top:18px;background:#272a2e;border:1px solid rgba(45,212,191,.16);border-radius:16px;padding:16px}.status{display:flex;gap:10px;align-items:center;font-size:13px}.dot{width:9px;height:9px;border-radius:50%;background:#e0a83a;box-shadow:0 0 0 4px rgba(224,168,58,.12)}.dot.ok{background:#2dd4bf;box-shadow:0 0 0 4px rgba(45,212,191,.12)}.dot.bad{background:#e05555;box-shadow:0 0 0 4px rgba(224,85,85,.12)}button{width:100%;border:0;border-radius:12px;padding:14px 16px;font-size:14px;font-weight:750;cursor:pointer;margin-top:14px}.primary{background:#2dd4bf;color:#071412}.ghost{background:#1e2124;color:#e8eaed;border:1px solid rgba(45,212,191,.16)}button:disabled{opacity:.45;cursor:not-allowed}.note{margin-top:12px;font-size:11px;color:#777f87;line-height:1.5}.section{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#777f87;margin:24px 0 10px}.item{background:#272a2e;border-radius:13px;padding:13px 14px;margin-bottom:8px;border:1px solid rgba(255,255,255,.05)}.item-title{font-size:12px;font-weight:650;word-break:break-all}.item-meta{font-size:10px;color:#777f87;margin-top:5px;line-height:1.5}.empty{font-size:12px;color:#777f87;text-align:center;padding:20px}.error{color:#ff7b7b;font-size:12px;line-height:1.5;margin-top:12px;display:none}.loader{display:none;margin-top:12px;font-size:12px;color:#9aa0a6}.back{display:inline-block;color:#2dd4bf;text-decoration:none;font-size:12px;margin-bottom:16px}
+*{box-sizing:border-box}body{margin:0;background:#16181a;color:#e8eaed;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif}.wrap{max-width:480px;margin:0 auto;padding:22px 16px 40px}.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2dd4bf;font-weight:700}.title{font-size:27px;font-weight:750;margin:8px 0}.sub{font-size:13px;color:#9aa0a6;line-height:1.55}.card{margin-top:18px;background:#272a2e;border:1px solid rgba(45,212,191,.16);border-radius:16px;padding:16px}.status{display:flex;gap:10px;align-items:center;font-size:13px}.dot{width:9px;height:9px;border-radius:50%;background:#e0a83a;box-shadow:0 0 0 4px rgba(224,168,58,.12)}.dot.ok{background:#2dd4bf;box-shadow:0 0 0 4px rgba(45,212,191,.12)}.dot.bad{background:#e05555;box-shadow:0 0 0 4px rgba(224,85,85,.12)}button{width:100%;border:0;border-radius:12px;padding:14px 16px;font-size:14px;font-weight:750;cursor:pointer;margin-top:14px}.primary{background:#2dd4bf;color:#071412}.ghost{background:#1e2124;color:#e8eaed;border:1px solid rgba(45,212,191,.16)}button:disabled{opacity:.45;cursor:not-allowed}.note{margin-top:12px;font-size:11px;color:#777f87;line-height:1.5}.section{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#777f87;margin:24px 0 10px}.item{background:#272a2e;border-radius:13px;padding:13px 14px;margin-bottom:8px;border:1px solid rgba(255,255,255,.05)}.item-title{font-size:12px;font-weight:650;word-break:break-all}.item-meta{font-size:10px;color:#777f87;margin-top:5px;line-height:1.5}.empty{font-size:12px;color:#777f87;text-align:center;padding:20px}.error{color:#ff7b7b;font-size:12px;line-height:1.5;margin-top:12px;display:none}.loader{display:none;margin-top:12px;font-size:12px;color:#9aa0a6}.back{display:inline-block;color:#2dd4bf;text-decoration:none;font-size:12px;margin-bottom:16px}.result{display:none;margin-top:14px;padding:12px;border-radius:12px;background:#1e2124;font-size:11px;line-height:1.65;color:#b9c0c6;word-break:break-word}.result strong{color:#e8eaed}.ok-text{color:#2dd4bf}.warn-text{color:#e0a83a}
 </style>
 </head>
 <body>
@@ -17,82 +17,93 @@
 <div class="eyebrow">Security / Backup</div>
 <div class="title">Резервная копия Firestore</div>
 <div class="sub">Полный серверный экспорт всех коллекций и подколлекций в JSON. Доступ разрешён только владельцу MenClub OS.</div>
-
 <div class="card">
   <div class="status"><span class="dot" id="dot"></span><span id="status">Проверка защищённого доступа…</span></div>
   <button class="primary" id="backupBtn" disabled onclick="createBackup()">📦 Создать и скачать копию</button>
+  <button class="ghost" id="fallbackBtn" style="display:none" onclick="openBackupFallback()">Открыть файл отдельно</button>
   <button class="ghost" id="refreshBtn" disabled onclick="loadHistory()">Обновить историю</button>
-  <div class="loader" id="loader">Читаю Firestore и формирую архив. Не закрывай экран…</div>
+  <div class="loader" id="loader">Читаю Firestore, проверяю целостность и формирую файл…</div>
   <div class="error" id="error"></div>
-  <div class="note">Копия не удаляет и не изменяет рабочие данные. В файл включаются Timestamp, GeoPoint, DocumentReference, Bytes и вложенные подколлекции. SHA-256 записывается внутрь файла и в журнал.</div>
+  <div class="result" id="result"></div>
+  <div class="note">Перед сообщением об успехе интерфейс проверяет формат, количество документов, SHA-256 и структуру коллекций. Копия не изменяет рабочие данные.</div>
 </div>
-
 <div class="section">Последние операции</div>
 <div id="history"><div class="empty">История загружается…</div></div>
 </div>
 <script>
 var AUTH_SERVER='https://llobychev-manproduction-networking-server-6f2d.twc1.net';
 var firebaseConfig={apiKey:'AIzaSyD195j33cTr6labXodSH_jTeZsvs4L3U4w',authDomain:'manproduction-club.firebaseapp.com',projectId:'manproduction-club',storageBucket:'manproduction-club.firebasestorage.app',messagingSenderId:'962650441642',appId:'1:962650441642:web:1be30d07d1ca62058c0dd3'};
-var currentToken='';
+var currentToken='';var lastBackupUrl='';var lastBackupFilename='';
 firebase.initializeApp(firebaseConfig);
-
 function setState(type,text){var dot=document.getElementById('dot');dot.className='dot'+(type?' '+type:'');document.getElementById('status').textContent=text;}
 function showError(text){var el=document.getElementById('error');el.textContent=text;el.style.display='block';}
 function clearError(){document.getElementById('error').style.display='none';}
 function fmtDate(value){if(!value)return 'дата не указана';try{return new Date(value).toLocaleString('ru-RU');}catch(e){return value;}}
 function fmtDuration(ms){if(ms<1000)return ms+' мс';return (ms/1000).toFixed(1)+' сек';}
 function escapeHtml(value){return String(value||'').replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
-
+function hex(buffer){return Array.from(new Uint8Array(buffer)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');}
+async function sha256(text){if(!window.crypto||!window.crypto.subtle)throw new Error('Браузер не поддерживает SHA-256 validation');return hex(await window.crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)));}
+function scanValue(value,path,errors){
+  if(value===null||typeof value==='string'||typeof value==='boolean'||typeof value==='number')return;
+  if(Array.isArray(value)){value.forEach(function(v,i){scanValue(v,path+'['+i+']',errors);});return;}
+  if(typeof value!=='object'){errors.push(path+': неподдерживаемый тип');return;}
+  if(value.__type){
+    if(value.__type==='timestamp'&&typeof value.value==='string'&&!isNaN(Date.parse(value.value)))return;
+    if(value.__type==='geopoint'&&typeof value.latitude==='number'&&typeof value.longitude==='number')return;
+    if(value.__type==='reference'&&typeof value.path==='string'&&value.path)return;
+    if(value.__type==='bytes'&&typeof value.value==='string')return;
+    errors.push(path+': повреждённый Firestore special type '+String(value.__type));return;
+  }
+  Object.keys(value).forEach(function(key){scanValue(value[key],path+'.'+key,errors);});
+}
+async function validateBackup(payload,headerChecksum){
+  if(!payload||payload.format!=='menclub-firestore-json-backup')throw new Error('Неизвестный формат backup');
+  if(payload.formatVersion!==1)throw new Error('Неподдерживаемая formatVersion: '+payload.formatVersion);
+  if(!payload.collections||typeof payload.collections!=='object'||Array.isArray(payload.collections))throw new Error('Объект collections отсутствует или повреждён');
+  if(!payload.counters||Number(payload.counters.documents)<=0)throw new Error('Backup не содержит документов');
+  if(!payload.integrity||payload.integrity.algorithm!=='sha256'||!payload.integrity.checksum)throw new Error('Integrity checksum отсутствует');
+  var canonical=Object.assign({},payload);delete canonical.integrity;
+  var calculated=await sha256(JSON.stringify(canonical));
+  if(calculated!==payload.integrity.checksum)throw new Error('Embedded SHA-256 checksum не совпадает');
+  if(headerChecksum&&headerChecksum!==calculated)throw new Error('HTTP checksum header не совпадает с файлом');
+  var errors=[];scanValue(payload.collections,'collections',errors);
+  if(errors.length)throw new Error('Обнаружены повреждённые значения: '+errors.slice(0,3).join('; '));
+  return {checksum:calculated,collectionNames:Object.keys(payload.collections),documents:Number(payload.counters.documents),collections:Number(payload.counters.collections||Object.keys(payload.collections).length)};
+}
 async function getFreshToken(){var user=firebase.auth().currentUser;if(!user)throw new Error('Нет Firebase-сессии');currentToken=await user.getIdToken(true);return currentToken;}
-
 async function authenticate(){
-  var tg=window.Telegram&&window.Telegram.WebApp;
-  if(tg){tg.ready();tg.expand();}
+  var tg=window.Telegram&&window.Telegram.WebApp;if(tg){tg.ready();tg.expand();}
   if(!tg||!tg.initData)throw new Error('Открой страницу внутри Telegram Admin Mini App');
   var response=await fetch(AUTH_SERVER+'/auth/admin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData})});
-  var data=await response.json().catch(function(){return {};});
-  if(!response.ok)throw new Error(data.error||('Ошибка авторизации '+response.status));
+  var data=await response.json().catch(function(){return {};});if(!response.ok)throw new Error(data.error||('Ошибка авторизации '+response.status));
   if(data.role!=='owner')throw new Error('Резервные копии доступны только владельцу');
-  await firebase.auth().signInWithCustomToken(data.token);
-  await getFreshToken();
-  setState('ok','Защищённый доступ подтверждён');
-  document.getElementById('backupBtn').disabled=false;
-  document.getElementById('refreshBtn').disabled=false;
-  await loadHistory();
+  await firebase.auth().signInWithCustomToken(data.token);await getFreshToken();setState('ok','Защищённый доступ подтверждён');
+  document.getElementById('backupBtn').disabled=false;document.getElementById('refreshBtn').disabled=false;await loadHistory();
 }
-
 async function loadHistory(){
-  clearError();
-  try{
-    var token=await getFreshToken();
-    var response=await fetch(AUTH_SERVER+'/admin/v1/backups/history',{headers:{Authorization:'Bearer '+token}});
-    var data=await response.json().catch(function(){return {};});
-    if(!response.ok)throw new Error(data.error||('Ошибка '+response.status));
-    var items=data.items||[];
-    if(!items.length){document.getElementById('history').innerHTML='<div class="empty">Резервных копий пока нет</div>';return;}
-    document.getElementById('history').innerHTML=items.map(function(item){return '<div class="item"><div class="item-title">'+escapeHtml(item.filename)+'</div><div class="item-meta">'+fmtDate(item.createdAt)+'<br>Документов: '+Number(item.documentCount||0)+' · коллекций: '+Number(item.collectionCount||0)+' · '+fmtDuration(Number(item.durationMs||0))+'<br>SHA-256: '+escapeHtml((item.checksum||'').slice(0,20))+'…</div></div>';}).join('');
+  clearError();try{var token=await getFreshToken();var response=await fetch(AUTH_SERVER+'/admin/v1/backups/history',{headers:{Authorization:'Bearer '+token}});var data=await response.json().catch(function(){return {};});if(!response.ok)throw new Error(data.error||('Ошибка '+response.status));
+  var items=data.items||[];if(!items.length){document.getElementById('history').innerHTML='<div class="empty">Резервных копий пока нет</div>';return;}
+  document.getElementById('history').innerHTML=items.map(function(item){return '<div class="item"><div class="item-title">'+escapeHtml(item.filename)+'</div><div class="item-meta">'+fmtDate(item.createdAt)+'<br>Документов: '+Number(item.documentCount||0)+' · коллекций: '+Number(item.collectionCount||0)+' · '+fmtDuration(Number(item.durationMs||0))+'<br>SHA-256: '+escapeHtml((item.checksum||'').slice(0,20))+'…</div></div>';}).join('');
   }catch(error){showError(error.message);}
 }
-
+function triggerDownload(url,filename){var a=document.createElement('a');a.href=url;a.download=filename;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();}
+function openBackupFallback(){if(!lastBackupUrl)return;var opened=window.open(lastBackupUrl,'_blank','noopener');if(!opened)showError('Telegram заблокировал новое окно. Открой страницу в системном браузере и повтори сохранение.');}
 async function createBackup(){
-  clearError();
-  var btn=document.getElementById('backupBtn');var loader=document.getElementById('loader');
-  btn.disabled=true;loader.style.display='block';setState('','Формируется резервная копия…');
+  clearError();document.getElementById('result').style.display='none';document.getElementById('fallbackBtn').style.display='none';
+  var btn=document.getElementById('backupBtn'),loader=document.getElementById('loader');btn.disabled=true;loader.style.display='block';setState('','Формируется и проверяется резервная копия…');
   try{
-    var token=await getFreshToken();
-    var response=await fetch(AUTH_SERVER+'/admin/v1/backups/export',{headers:{Authorization:'Bearer '+token}});
-    if(!response.ok){var data=await response.json().catch(function(){return {};});throw new Error(data.error||('Ошибка экспорта '+response.status));}
-    var blob=await response.blob();
-    var disposition=response.headers.get('Content-Disposition')||'';
-    var match=disposition.match(/filename="?([^";]+)"?/i);
-    var filename=match?match[1]:'menclub-firestore-backup.json';
-    var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1000);
-    setState('ok','Копия создана и передана на скачивание');
-    await loadHistory();
-  }catch(error){setState('bad','Создание копии завершилось ошибкой');showError(error.message);}
+    var token=await getFreshToken();var response=await fetch(AUTH_SERVER+'/admin/v1/backups/export',{headers:{Authorization:'Bearer '+token}});
+    if(!response.ok){var errorData=await response.json().catch(function(){return {};});throw new Error(errorData.error||('Ошибка экспорта '+response.status));}
+    var text=await response.text();var payload;try{payload=JSON.parse(text);}catch(e){throw new Error('Сервер вернул повреждённый JSON');}
+    var validation=await validateBackup(payload,response.headers.get('X-Backup-Checksum-SHA256')||'');
+    var disposition=response.headers.get('Content-Disposition')||'';var match=disposition.match(/filename="?([^";]+)"?/i);var filename=match?match[1]:'menclub-firestore-backup.json';
+    if(lastBackupUrl)URL.revokeObjectURL(lastBackupUrl);lastBackupUrl=URL.createObjectURL(new Blob([text],{type:'application/json;charset=utf-8'}));lastBackupFilename=filename;
+    triggerDownload(lastBackupUrl,filename);document.getElementById('fallbackBtn').style.display='block';
+    var result=document.getElementById('result');result.innerHTML='<strong class="ok-text">Проверка файла пройдена</strong><br>formatVersion: 1<br>Документов: '+validation.documents+'<br>Коллекций: '+validation.collections+'<br>Корневые коллекции: '+escapeHtml(validation.collectionNames.join(', '))+'<br>SHA-256: '+escapeHtml(validation.checksum);result.style.display='block';
+    setState('ok','Копия создана, проверена и передана на скачивание');await loadHistory();
+  }catch(error){setState('bad','Создание или проверка копии завершились ошибкой');showError(error.message);}
   finally{btn.disabled=false;loader.style.display='none';}
 }
-
 authenticate().catch(function(error){setState('bad','Доступ не подтверждён');showError(error.message);document.getElementById('history').innerHTML='<div class="empty">История недоступна</div>';});
 </script>
 </body>
