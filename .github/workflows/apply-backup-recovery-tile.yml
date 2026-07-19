@@ -1,0 +1,113 @@
+name: Apply Backup Recovery Manage Tile
+
+on:
+  push:
+    branches:
+      - agent/backup-recovery-manage-tile
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message != 'feat(admin): add Backup & Recovery manage tile'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/backup-recovery-manage-tile
+          fetch-depth: 0
+
+      - name: Apply minimal HTML patch
+        shell: python
+        run: |
+          from pathlib import Path
+
+          files = [Path('index.html'), Path('backup.html')]
+          old_item_tail = "{id:'users',icon:'👥',title:'Пользователи',sub:'Все пользователи основного приложения',tab:'users'}];"
+          new_item_tail = "{id:'users',icon:'👥',title:'Пользователи',sub:'Все пользователи основного приложения',tab:'users'},{id:'backup-recovery',icon:'🔐',title:'Backup & Recovery',sub:'Резервное копирование и безопасное восстановление',adminOnly:true,href:'recovery.html'}];"
+          old_renderer = "function manageItemHtml(item,pinned){var pendingCount=adminPeople.filter(function(p){return p.status==='pending';}).length;var badge=(item.id==='requests'&&pendingCount)?'<span class=\"inline-count\">'+pendingCount+'</span>':'';return '<div class=\"manage-hub-item '+(pinned?'pinned':'')+'\" onclick=\"switchTab(\\''+item.tab+'\\')\"><button class=\"pin-btn\" onclick=\"toggleManagePin(\\''+item.id+'\\',event)\">'+(pinned?'★':'☆')+'</button><div class=\"manage-hub-icon\">'+item.icon+'</div><div class=\"manage-hub-info\"><div class=\"manage-hub-title\">'+item.title+badge+'</div><div class=\"manage-hub-sub\">'+item.sub+'</div></div><div class=\"manage-hub-arrow\">›</div></div>'; }"
+          old_renderer = old_renderer.replace("'; }", "';}")
+          new_renderer = "function manageItemHtml(item,pinned){var pendingCount=adminPeople.filter(function(p){return p.status==='pending';}).length;var badge=(item.id==='requests'&&pendingCount)?'<span class=\"inline-count\">'+pendingCount+'</span>':'';var action=item.href?\"window.location.href='\"+item.href+\"'\":\"switchTab('"+item.tab+"')\";return '<div class=\"manage-hub-item '+(pinned?'pinned':'')+'\" onclick=\"'+action+'\"><button class=\"pin-btn\" onclick=\"toggleManagePin(\\''+item.id+'\\',event)\">'+(pinned?'★':'☆')+'</button><div class=\"manage-hub-icon\">'+item.icon+'</div><div class=\"manage-hub-info\"><div class=\"manage-hub-title\">'+item.title+badge+'</div><div class=\"manage-hub-sub\">'+item.sub+'</div></div><div class=\"manage-hub-arrow\">›</div></div>'; }"
+          new_renderer = new_renderer.replace("'; }", "';}")
+
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              if old_item_tail not in text:
+                  raise SystemExit(f'MANAGE_ITEMS anchor missing in {path}')
+              if old_renderer not in text:
+                  raise SystemExit(f'manageItemHtml anchor missing in {path}')
+              text = text.replace(old_item_tail, new_item_tail, 1)
+              text = text.replace(old_renderer, new_renderer, 1)
+              path.write_text(text, encoding='utf-8')
+
+      - name: Add persistent static check
+        shell: bash
+        run: |
+          cat > .github/workflows/backup-recovery-tile-check.yml <<'YAML'
+          name: Backup Recovery Tile Check
+
+          on:
+            pull_request:
+              paths:
+                - index.html
+                - backup.html
+                - recovery.html
+                - backup-tool.html
+                - restore.html
+                - .github/workflows/backup-recovery-tile-check.yml
+            push:
+              branches:
+                - main
+              paths:
+                - index.html
+                - backup.html
+                - recovery.html
+                - backup-tool.html
+                - restore.html
+                - .github/workflows/backup-recovery-tile-check.yml
+
+          jobs:
+            static-check:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - name: Verify Backup & Recovery navigation safety
+                  shell: python
+                  run: |
+                    from pathlib import Path
+                    for name in ('index.html', 'backup.html'):
+                        text = Path(name).read_text(encoding='utf-8')
+                        assert "id:'backup-recovery'" in text, f'missing tile in {name}'
+                        assert "title:'Backup & Recovery'" in text, f'missing title in {name}'
+                        assert "adminOnly:true" in text, f'missing admin guard in {name}'
+                        assert "href:'recovery.html'" in text, f'missing recovery link in {name}'
+                        assert "item.href" in text, f'missing href renderer in {name}'
+                    assert Path('recovery.html').exists()
+                    assert Path('backup-tool.html').exists()
+                    restore = Path('restore.html').read_text(encoding='utf-8').lower()
+                    assert 'dry-run' in restore or 'dry run' in restore
+                    assert '/api/admin/firestore/restore/execute' not in restore
+          YAML
+
+      - name: Verify patch before commit
+        shell: python
+        run: |
+          from pathlib import Path
+          for name in ('index.html', 'backup.html'):
+              text = Path(name).read_text(encoding='utf-8')
+              assert text.count("id:'backup-recovery'") == 1
+              assert "href:'recovery.html'" in text
+              assert "adminOnly:true" in text
+              assert "item.href" in text
+          assert Path('.github/workflows/backup-recovery-tile-check.yml').exists()
+
+      - name: Remove bootstrap workflow and commit
+        shell: bash
+        run: |
+          rm .github/workflows/apply-backup-recovery-tile.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html backup.html .github/workflows/backup-recovery-tile-check.yml .github/workflows/apply-backup-recovery-tile.yml
+          git commit -m "feat(admin): add Backup & Recovery manage tile"
+          git push origin HEAD:agent/backup-recovery-manage-tile
