@@ -1,0 +1,38 @@
+name: Recovery Static Checks
+
+on:
+  pull_request:
+    paths:
+      - 'backup.html'
+      - 'restore.html'
+      - 'recovery.html'
+      - '.github/workflows/recovery-static-checks.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'backup.html'
+      - 'restore.html'
+      - 'recovery.html'
+      - '.github/workflows/recovery-static-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify recovery pages exist
+        run: test -f backup.html && test -f restore.html && test -f recovery.html
+      - name: Verify protected endpoints and safety copy
+        run: |
+          grep -q '/admin/v1/backups/export' backup.html
+          grep -q '/admin/v1/backups/restore/dry-run' restore.html
+          grep -q 'Dry-run only' recovery.html
+          grep -q 'Firestor' restore.html
+      - name: Verify no production restore button is exposed
+        run: '! grep -q "/admin/v1/backups/restore/execute" restore.html'
