@@ -19,13 +19,14 @@
 <div class="sub">Полный серверный экспорт всех коллекций и подколлекций в JSON. Доступ разрешён только владельцу MenClub OS.</div>
 <div class="card">
   <div class="status"><span class="dot" id="dot"></span><span id="status">Проверка защищённого доступа…</span></div>
-  <button class="primary" id="backupBtn" disabled onclick="createBackup()">📦 Создать и скачать копию</button>
-  <button class="ghost" id="fallbackBtn" style="display:none" onclick="openBackupFallback()">Открыть файл отдельно</button>
+  <button class="primary" id="backupBtn" disabled onclick="createBackup()">📦 Создать резервную копию</button>
+  <button class="primary" id="saveBtn" style="display:none" onclick="saveBackup()">💾 Сохранить файл на устройство</button>
+  <button class="ghost" id="fallbackBtn" style="display:none" onclick="downloadBackupFallback()">Другой способ скачивания</button>
   <button class="ghost" id="refreshBtn" disabled onclick="loadHistory()">Обновить историю</button>
   <div class="loader" id="loader">Читаю Firestore, проверяю целостность и формирую файл…</div>
   <div class="error" id="error"></div>
   <div class="result" id="result"></div>
-  <div class="note">Перед сообщением об успехе интерфейс проверяет формат, количество документов, SHA-256 и структуру коллекций. Копия не изменяет рабочие данные.</div>
+  <div class="note">После создания нажмите «Сохранить файл на устройство». На iPhone откроется стандартное меню, где можно выбрать «Сохранить в Файлы».</div>
 </div>
 <div class="section">Последние операции</div>
 <div id="history"><div class="empty">История загружается…</div></div>
@@ -33,7 +34,7 @@
 <script>
 var AUTH_SERVER='https://llobychev-manproduction-networking-server-6f2d.twc1.net';
 var firebaseConfig={apiKey:'AIzaSyD195j33cTr6labXodSH_jTeZsvs4L3U4w',authDomain:'manproduction-club.firebaseapp.com',projectId:'manproduction-club',storageBucket:'manproduction-club.firebasestorage.app',messagingSenderId:'962650441642',appId:'1:962650441642:web:1be30d07d1ca62058c0dd3'};
-var currentToken='';var lastBackupUrl='';var lastBackupFilename='';
+var currentToken='';var lastBackupUrl='';var lastBackupFilename='';var lastBackupText='';
 firebase.initializeApp(firebaseConfig);
 function setState(type,text){var dot=document.getElementById('dot');dot.className='dot'+(type?' '+type:'');document.getElementById('status').textContent=text;}
 function showError(text){var el=document.getElementById('error');el.textContent=text;el.style.display='block';}
@@ -87,9 +88,27 @@ async function loadHistory(){
   }catch(error){showError(error.message);}
 }
 function triggerDownload(url,filename){var a=document.createElement('a');a.href=url;a.download=filename;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();}
-function openBackupFallback(){if(!lastBackupUrl)return;var opened=window.open(lastBackupUrl,'_blank','noopener');if(!opened)showError('Telegram заблокировал новое окно. Открой страницу в системном браузере и повтори сохранение.');}
+async function saveBackup(){
+  clearError();
+  if(!lastBackupText||!lastBackupFilename){showError('Сначала создайте резервную копию');return;}
+  var file=new File([lastBackupText],lastBackupFilename,{type:'application/json'});
+  try{
+    if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){
+      await navigator.share({files:[file],title:'Резервная копия MenClub Firestore'});
+      setState('ok','Файл передан в системное меню сохранения');
+      return;
+    }
+  }catch(error){if(error&&error.name==='AbortError')return;}
+  triggerDownload(lastBackupUrl,lastBackupFilename);
+  setState('ok','Скачивание файла запущено');
+}
+function downloadBackupFallback(){
+  if(!lastBackupUrl)return;
+  triggerDownload(lastBackupUrl,lastBackupFilename||'menclub-firestore-backup.json');
+  setTimeout(function(){var opened=window.open(lastBackupUrl,'_blank','noopener');if(!opened)showError('Telegram заблокировал скачивание. Откройте админку в Safari и нажмите «Сохранить файл на устройство».');},350);
+}
 async function createBackup(){
-  clearError();document.getElementById('result').style.display='none';document.getElementById('fallbackBtn').style.display='none';
+  clearError();document.getElementById('result').style.display='none';document.getElementById('saveBtn').style.display='none';document.getElementById('fallbackBtn').style.display='none';
   var btn=document.getElementById('backupBtn'),loader=document.getElementById('loader');btn.disabled=true;loader.style.display='block';setState('','Формируется и проверяется резервная копия…');
   try{
     var token=await getFreshToken();var response=await fetch(AUTH_SERVER+'/admin/v1/backups/export',{headers:{Authorization:'Bearer '+token}});
@@ -97,10 +116,10 @@ async function createBackup(){
     var text=await response.text();var payload;try{payload=JSON.parse(text);}catch(e){throw new Error('Сервер вернул повреждённый JSON');}
     var validation=await validateBackup(payload,response.headers.get('X-Backup-Checksum-SHA256')||'');
     var disposition=response.headers.get('Content-Disposition')||'';var match=disposition.match(/filename="?([^";]+)"?/i);var filename=match?match[1]:'menclub-firestore-backup.json';
-    if(lastBackupUrl)URL.revokeObjectURL(lastBackupUrl);lastBackupUrl=URL.createObjectURL(new Blob([text],{type:'application/json;charset=utf-8'}));lastBackupFilename=filename;
-    triggerDownload(lastBackupUrl,filename);document.getElementById('fallbackBtn').style.display='block';
+    if(lastBackupUrl)URL.revokeObjectURL(lastBackupUrl);lastBackupText=text;lastBackupUrl=URL.createObjectURL(new Blob([text],{type:'application/json;charset=utf-8'}));lastBackupFilename=filename;
+    document.getElementById('saveBtn').style.display='block';document.getElementById('fallbackBtn').style.display='block';
     var result=document.getElementById('result');result.innerHTML='<strong class="ok-text">Проверка файла пройдена</strong><br>formatVersion: 1<br>Документов: '+validation.documents+'<br>Коллекций: '+validation.collections+'<br>Корневые коллекции: '+escapeHtml(validation.collectionNames.join(', '))+'<br>SHA-256: '+escapeHtml(validation.checksum);result.style.display='block';
-    setState('ok','Копия создана, проверена и передана на скачивание');await loadHistory();
+    setState('ok','Копия создана и готова к сохранению');await loadHistory();
   }catch(error){setState('bad','Создание или проверка копии завершились ошибкой');showError(error.message);}
   finally{btn.disabled=false;loader.style.display='none';}
 }
