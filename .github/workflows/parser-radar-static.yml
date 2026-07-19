@@ -1,0 +1,52 @@
+name: Parser Radar Static Check
+
+on:
+  push:
+    paths:
+      - 'parser-radar.html'
+      - '.github/workflows/parser-radar-static.yml'
+  pull_request:
+    paths:
+      - 'parser-radar.html'
+      - '.github/workflows/parser-radar-static.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate production contour and secure API usage
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('parser-radar.html', 'utf8');
+          const required = [
+            'llobychev-manproduction-networking-server-6f2d.twc1.net',
+            'manproduction-club.firebaseapp.com',
+            "projectId:'manproduction-club'",
+            '/internal/v1/intent-signals/health',
+            '/auth/admin',
+            '/admin/v1/intent-signals',
+            "'Authorization':'Bearer '+idToken"
+          ];
+          const forbidden = [
+            'llobychev-manproduction-networking-server-0fdf.twc1.net',
+            'manclub-project.firebaseapp.com',
+            "projectId:'manclub-project'",
+            "firebase.firestore()"
+          ];
+          for (const value of required) {
+            if (!html.includes(value)) throw new Error('Missing required parser radar marker: ' + value);
+          }
+          for (const value of forbidden) {
+            if (html.includes(value)) throw new Error('Forbidden stale parser radar marker: ' + value);
+          }
+          console.log('Parser Radar production contour is consistent.');
+          NODE
