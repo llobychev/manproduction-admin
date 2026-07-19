@@ -4,13 +4,16 @@ on:
   push:
     branches:
       - agent/backup-recovery-manage-tile
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   patch:
-    if: github.event.head_commit.message != 'feat(admin): add Backup & Recovery manage tile'
+    if: github.event_name == 'pull_request' || github.event.head_commit.message != 'feat(admin): add Backup & Recovery manage tile'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,6 +36,8 @@ jobs:
 
           for path in files:
               text = path.read_text(encoding='utf-8')
+              if "id:'backup-recovery'" in text:
+                  continue
               if old_item_tail not in text:
                   raise SystemExit(f'MANAGE_ITEMS anchor missing in {path}')
               if old_renderer not in text:
@@ -109,5 +114,8 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add index.html backup.html .github/workflows/backup-recovery-tile-check.yml .github/workflows/apply-backup-recovery-tile.yml
+          if git diff --cached --quiet; then
+            exit 0
+          fi
           git commit -m "feat(admin): add Backup & Recovery manage tile"
           git push origin HEAD:agent/backup-recovery-manage-tile
