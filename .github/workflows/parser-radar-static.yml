@@ -35,6 +35,10 @@ jobs:
             '/auth/admin',
             '/admin/v1/intent-signals',
             '/admin/v1/parser-sessions',
+            '/admin/v1/parser-runtime/instances',
+            '/admin/v1/parser-runtime/dead-letters',
+            '/admin/v1/parser-runtime/checkpoints',
+            'data-mode="runtime"',
             '/chats',
             "'Authorization':'Bearer '+idToken"
           ];
