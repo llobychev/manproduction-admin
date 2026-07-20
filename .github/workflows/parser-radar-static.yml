@@ -34,6 +34,8 @@ jobs:
             '/internal/v1/intent-signals/health',
             '/auth/admin',
             '/admin/v1/intent-signals',
+            '/admin/v1/parser-sessions',
+            '/chats',
             "'Authorization':'Bearer '+idToken"
           ];
           const forbidden = [
