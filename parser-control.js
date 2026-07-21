@@ -134,7 +134,13 @@
       state.runs=results[3]&&results[3].items||[];
       renderAll();
       var create=el('pc-create-checkpoint');
-      if(create)create.disabled=!(state.manifest&&state.manifest.valid===true);
+      var openHandoff=state.handoffs.some(function(item){return item&&['prepared','in_progress'].includes(item.status);});
+      var openRun=state.runs.some(function(item){return item&&item.status==='open';});
+      if(create){
+        var alreadyOpen=openHandoff||openRun;
+        create.disabled=!(state.manifest&&state.manifest.valid===true)||alreadyOpen;
+        create.textContent=alreadyOpen?'Контрольная запись уже создана':'Создать контрольную запись';
+      }
       var errors=results.filter(function(result){return result&&result.ok===false;}).map(function(result){return result.error;});
       if(errors.length)notify('Часть данных не загружена: '+errors.join('; '));
     }).catch(function(error){
@@ -147,6 +153,7 @@
 
   function createCheckpoint(){
     if(!state.manifest||state.manifest.valid!==true){notify('Сначала устраните блокеры манифеста');return;}
+    if(state.handoffs.some(function(item){return item&&['prepared','in_progress'].includes(item.status);})||state.runs.some(function(item){return item&&item.status==='open';})){notify('Открытая контрольная запись уже существует');return;}
     if(!window.confirm('Создать безопасные служебные записи handoff и evidence run? Это не включает парсер и не отправляет сообщения.'))return;
     var button=el('pc-create-checkpoint');
     if(button)button.disabled=true;
