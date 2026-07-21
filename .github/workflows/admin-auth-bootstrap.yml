@@ -1,0 +1,30 @@
+name: Admin auth bootstrap
+
+on:
+  pull_request:
+    paths:
+      - index.html
+      - admin-app.html
+      - scripts/validate-admin-auth-bootstrap.js
+      - .github/workflows/admin-auth-bootstrap.yml
+  push:
+    branches:
+      - main
+    paths:
+      - index.html
+      - admin-app.html
+      - scripts/validate-admin-auth-bootstrap.js
+      - .github/workflows/admin-auth-bootstrap.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node scripts/validate-admin-auth-bootstrap.js
