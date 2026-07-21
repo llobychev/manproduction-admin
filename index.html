@@ -22,7 +22,27 @@ html,body{height:100%;margin:0;background:#16181a;color:#e8eaed;font-family:-app
   var LOAD_OPEN_PATCH="function __adminAppBoot(){\n  if(window.__adminAppBooted)return;\n  window.__adminAppBooted=true;";
   var LOAD_CLOSE_MARKER="  });\n});\n\nfunction showScreen(id){";
   var LOAD_CLOSE_PATCH="  });\n}\n\nfunction showScreen(id){";
+  var HEAD_CLOSE_MARKER='</head>';
+  var PARSER_GRID_MARKER='      <div class="rp-grid">';
+  var BOTTOM_NAV_MARKER='  <nav class="bottomnav" id="bottomnav">';
   var BODY_CLOSE_MARKER='</body>';
+  var CONTROL_STYLE='<link rel="stylesheet" href="parser-control.css?v=20260721-control1">\n</head>';
+  var CONTROL_LAUNCH='      <div class="pc-launch"><b>Рабочее управление парсером</b><p>Здесь показаны реальные данные production-сервера: версия, dry_run, блокеры, preflight и контрольные записи. Демонстрационные цифры ниже не запускают Telegram-сбор.</p><button class="btn-accent" onclick="openParserProductionControl()">Открыть production status →</button></div>\n      <div class="rp-grid">';
+  var CONTROL_SCREEN='  <div class="app-screen" id="s-parser-production">\n'+
+    '    <div class="topbar"><div><div class="topbar-logo">🛡 Production status</div><div class="topbar-sub" style="cursor:pointer" onclick="switchTab(\'request-parser\')">← Парсер запросов</div></div><span class="role-pill">SAFE</span></div>\n'+
+    '    <div class="pc-wrap">\n'+
+    '      <div id="pc-message" class="pc-message"></div>\n'+
+    '      <div class="pc-actions"><button class="btn-ghost" id="pc-refresh">Обновить статус</button><button class="btn-accent" id="pc-create-checkpoint" disabled>Создать контрольную запись</button></div>\n'+
+    '      <div id="pc-loading" class="pc-loading">Получаю production-данные…</div>\n'+
+    '      <section class="pc-section"><h3>Развёртывание</h3><div class="pc-panel" id="pc-manifest"><div class="pc-empty">Загрузка…</div></div></section>\n'+
+    '      <section class="pc-section"><h3>Готовность к одному тесту</h3><div class="pc-panel" id="pc-preflight"><div class="pc-empty">Загрузка…</div></div></section>\n'+
+    '      <section class="pc-section"><h3>Последние handoff</h3><div class="pc-panel" id="pc-handoffs"><div class="pc-empty">Загрузка…</div></div></section>\n'+
+    '      <section class="pc-section"><h3>Последние evidence run</h3><div class="pc-panel" id="pc-runs"><div class="pc-empty">Загрузка…</div></div></section>\n'+
+    '      <button class="btn-ghost" id="pc-test-locked" disabled>Одиночный тест заблокирован</button>\n'+
+    '      <div class="pc-danger-note">Этот экран не меняет переменные Timeweb и не отправляет сообщения. Controlled test будет выполняться отдельным подтверждённым шагом только после готового preflight.</div>\n'+
+    '    </div>\n'+
+    '  </div>\n\n'+BOTTOM_NAV_MARKER;
+  var CONTROL_SCRIPT='<script src="parser-control.js?v=20260721-control1"><\/script>\n';
   var BOOT_CALL='<scr'+'ipt>__adminAppBoot();</scr'+'ipt>\n</body>';
 
   function requireMarker(html,marker,label){
@@ -39,13 +59,19 @@ html,body{height:100%;margin:0;background:#16181a;color:#e8eaed;font-family:-app
       requireMarker(html,AUTH_OPEN_MARKER,'auth request');
       requireMarker(html,LOAD_OPEN_MARKER,'load open');
       requireMarker(html,LOAD_CLOSE_MARKER,'load close');
+      requireMarker(html,HEAD_CLOSE_MARKER,'head close');
+      requireMarker(html,PARSER_GRID_MARKER,'parser overview grid');
+      requireMarker(html,BOTTOM_NAV_MARKER,'bottom navigation');
       requireMarker(html,BODY_CLOSE_MARKER,'body close');
 
       html=html.split(OLD_SERVER).join(ACTIVE_SERVER);
       html=html.replace(AUTH_OPEN_MARKER,AUTH_OPEN_PATCH);
       html=html.replace(LOAD_OPEN_MARKER,LOAD_OPEN_PATCH);
       html=html.replace(LOAD_CLOSE_MARKER,LOAD_CLOSE_PATCH);
-      html=html.replace(BODY_CLOSE_MARKER,BOOT_CALL);
+      html=html.replace(HEAD_CLOSE_MARKER,CONTROL_STYLE);
+      html=html.replace(PARSER_GRID_MARKER,CONTROL_LAUNCH);
+      html=html.replace(BOTTOM_NAV_MARKER,CONTROL_SCREEN);
+      html=html.replace(BODY_CLOSE_MARKER,CONTROL_SCRIPT+BOOT_CALL);
 
       document.open();
       document.write(html);
