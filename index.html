@@ -13,11 +13,21 @@ html,body{height:100%;margin:0;background:#16181a;color:#e8eaed;font-family:-app
 <script>
 (function(){
   'use strict';
-  var SOURCE='admin-app.html?v=20260721-authfix1';
+  var SOURCE='admin-app.html?v=20260721-authfix2';
   var OLD_SERVER='https://llobychev-manproduction-networking-server-6f2d.twc1.net';
   var ACTIVE_SERVER='https://llobychev-manproduction-networking-server-0fdf.twc1.net';
   var AUTH_OPEN_MARKER="xhr.open('POST',AUTH_SERVER+'/auth/admin',true);";
   var AUTH_OPEN_PATCH=AUTH_OPEN_MARKER+"\n  xhr.timeout=10000;\n  xhr.ontimeout=function(){console.warn('Auth request timeout');callback();};";
+  var LOAD_OPEN_MARKER="window.addEventListener('load',function(){";
+  var LOAD_OPEN_PATCH="function __adminAppBoot(){\n  if(window.__adminAppBooted)return;\n  window.__adminAppBooted=true;";
+  var LOAD_CLOSE_MARKER="  });\n});\n\nfunction showScreen(id){";
+  var LOAD_CLOSE_PATCH="  });\n}\n\nfunction showScreen(id){";
+  var BODY_CLOSE_MARKER='</body>';
+  var BOOT_CALL='<scr'+'ipt>__adminAppBoot();</scr'+'ipt>\n</body>';
+
+  function requireMarker(html,marker,label){
+    if(html.indexOf(marker)===-1)throw new Error('Missing '+label+' marker');
+  }
 
   fetch(SOURCE,{cache:'no-store'})
     .then(function(response){
@@ -25,10 +35,18 @@ html,body{height:100%;margin:0;background:#16181a;color:#e8eaed;font-family:-app
       return response.text();
     })
     .then(function(html){
+      requireMarker(html,OLD_SERVER,'retired backend');
+      requireMarker(html,AUTH_OPEN_MARKER,'auth request');
+      requireMarker(html,LOAD_OPEN_MARKER,'load open');
+      requireMarker(html,LOAD_CLOSE_MARKER,'load close');
+      requireMarker(html,BODY_CLOSE_MARKER,'body close');
+
       html=html.split(OLD_SERVER).join(ACTIVE_SERVER);
-      if(html.indexOf(AUTH_OPEN_MARKER)!==-1){
-        html=html.replace(AUTH_OPEN_MARKER,AUTH_OPEN_PATCH);
-      }
+      html=html.replace(AUTH_OPEN_MARKER,AUTH_OPEN_PATCH);
+      html=html.replace(LOAD_OPEN_MARKER,LOAD_OPEN_PATCH);
+      html=html.replace(LOAD_CLOSE_MARKER,LOAD_CLOSE_PATCH);
+      html=html.replace(BODY_CLOSE_MARKER,BOOT_CALL);
+
       document.open();
       document.write(html);
       document.close();
