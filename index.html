@@ -23,7 +23,7 @@ html,body{height:100%;margin:0;background:#16181a;color:#e8eaed;font-family:-app
   var LOAD_CLOSE_MARKER="  });\n});\n\nfunction showScreen(id){";
   var LOAD_CLOSE_PATCH="  });\n}\n\nfunction showScreen(id){";
   var BODY_CLOSE_MARKER='</body>';
-  var BOOT_CALL='<script>__adminAppBoot();<\\/script>\n</body>';
+  var BOOT_CALL='<scr'+'ipt>__adminAppBoot();</scr'+'ipt>\n</body>';
 
   function requireMarker(html,marker,label){
     if(html.indexOf(marker)===-1)throw new Error('Missing '+label+' marker');
